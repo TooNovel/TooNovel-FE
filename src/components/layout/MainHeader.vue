@@ -27,7 +27,7 @@
           class="searchInput"
         />
         <!-- <b-avatar class="searchIcon" icon="search"></b-avatar> -->
-        <b-button size="sm" class="my-2 my-sm-0">Search</b-button>
+        <b-button size="sm" class="my-2 my-sm-0">검색</b-button>
       </b-nav-form>
     </b-navbar-nav>
   </b-navbar>
