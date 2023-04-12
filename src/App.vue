@@ -2,10 +2,10 @@
   <div id="app">
     <header>
       <main-header></main-header>
-      <main>
-        <router-view />
-      </main>
     </header>
+    <main>
+      <router-view />
+    </main>
     <footer>
       <main-footer></main-footer>
     </footer>
@@ -27,9 +27,8 @@ export default {
   data: () => ({}),
 };
 </script>
-<style scoped>
+<style>
 @import url("https://fonts.googleapis.com/earlyaccess/hanna.css");
-
 footer {
   margin-top: 5%;
   background-color: whitesmoke;

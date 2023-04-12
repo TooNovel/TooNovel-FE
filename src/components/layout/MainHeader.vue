@@ -3,6 +3,7 @@
     class="navbar d-flex justify-content-between align-items-center"
     type="dark"
     variant="dark"
+    id="header"
   >
     <b-navbar-nav>
       <b-navbar-brand href="/" tag="h1">ㅤTooNovel</b-navbar-brand>
@@ -36,7 +37,11 @@
 export default {};
 </script>
 
-<style>
+<style scoped>
+#header {
+  font-family: "Hanna";
+}
+
 #searchForm {
   display: flex;
   align-items: center;
