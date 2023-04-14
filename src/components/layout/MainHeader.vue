@@ -13,7 +13,7 @@
       <b-nav-item style="font-size: 20px">리뷰</b-nav-item>
       <b-nav-item style="font-size: 20px">추천</b-nav-item>
       <b-nav-item style="font-size: 20px">작품찾기</b-nav-item>
-      <b-nav-item style="font-size: 20px" @click="getList()"
+      <b-nav-item style="font-size: 20px" @click="toCommunity()"
         >커뮤니티</b-nav-item
       >
       <b-nav-item style="font-size: 20px">팬클럽</b-nav-item>
@@ -41,6 +41,8 @@
 </template>
 
 <script>
+import axios from "axios";
+
 export default {
   data() {
     return {
@@ -51,9 +53,13 @@ export default {
     goToLogin() {
       this.$router.push("/login");
     },
-
-    getList() {
-      this.$router.push("/community");
+    toCommunity() {
+      axios.get("/post/readall").then((data) => {
+        this.$router.push({
+          name: "Community",
+          params: data,
+        });
+      });
     },
   },
   created() {

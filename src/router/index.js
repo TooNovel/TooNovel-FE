@@ -5,6 +5,7 @@ import MainPage from "@/components/MainPage.vue";
 import Login from "@/views/LoginPage.vue";
 import Join from "@/views/JoinPage.vue";
 import Community from "@/components/CommunityPage.vue";
+import PostWritePage from "@/views/PostWritePage.vue";
 
 Vue.use(Router);
 
@@ -30,6 +31,11 @@ export default new Router({
       path: "/community",
       name: "Community",
       component: Community,
+    },
+    {
+      path: "/community/write",
+      name: "PostWritePage",
+      component: PostWritePage,
     },
   ],
 });
