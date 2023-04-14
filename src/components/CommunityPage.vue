@@ -10,8 +10,16 @@
       <b-button pill>이벤트</b-button>
     </div>
     <br />
-    <b-table striped hover :items="items" :fields="fields"></b-table>
-    <b-button variant="outline-primary">글쓰기</b-button>
+    <!-- <tr v-for="post in posts" :key="{ post }">
+            <td>{{ post.postId }}</td>
+            <td>{{ post.title }}</td>
+            <td>{{ post.authorName }}</td>
+            <td>{{ post.viewCount }}</td>
+            <td>{{ post.createDate }}</td>
+        </tr> -->
+    <b-button variant="outline-primary">
+      <a href="/community/write">글쓰기</a>
+    </b-button>
   </div>
 </template>
 
@@ -19,20 +27,11 @@
 export default {
   data() {
     return {
-      // Note `isActive` is left out and will not appear in the rendered table
-      fields: ["카테고리", "제목", "작성자", "날짜", "조회수"],
-      items: [
-        {
-          isActive: true,
-          작성자: 40,
-          카테고리: "Dickerson",
-          제목: "Macdonald",
-        },
-        { isActive: false, 작성자: 21, 카테고리: "Larsen", 제목: "Shaw" },
-        { isActive: false, 작성자: 89, 카테고리: "Geneva", 제목: "Wilson" },
-        { isActive: true, 작성자: 38, 카테고리: "Jami", 제목: "Carney" },
-      ],
+      posts: [],
     };
+  },
+  created() {
+    this.posts = this.$route.params.data;
   },
 };
 </script>
