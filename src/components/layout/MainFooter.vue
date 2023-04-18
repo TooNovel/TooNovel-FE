@@ -4,34 +4,39 @@
       <div class="container">
         <div class="row">
           <div class="col-sm-6 col-md-3 item">
-            <h3>Services</h3>
+            <h3>장르</h3>
             <ul>
-              <li><a href="#">Web design</a></li>
-              <li><a href="#">Development</a></li>
-              <li><a href="#">Hosting</a></li>
+              <li><a href="#">로맨스</a></li>
+              <li><a href="#">로판</a></li>
+              <li><a href="#">판타지</a></li>
+              <li><a href="#">현판</a></li>
+              <li><a href="#">무협</a></li>
+              <li><a href="#">미스테리</a></li>
+              <li><a href="#">역사</a></li>
+              <li><a href="#">SF</a></li>
             </ul>
           </div>
           <div class="col-sm-6 col-md-3 item">
-            <h3>About</h3>
+            <h3>기타</h3>
             <ul>
-              <li><a href="#">Company</a></li>
-              <li><a href="#">Team</a></li>
-              <li><a href="#">Careers</a></li>
+              <li><a href="#">작품찾기</a></li>
+              <li><a href="#">커뮤니티</a></li>
+              <li><a href="#">팬클럽</a></li>
             </ul>
           </div>
-          <div class="col-md-6 item text">
-            <h3>Company Name</h3>
-            <p>
-              Praesent sed lobortis mi. Suspendisse vel placerat ligula. Vivamus
-              ac sem lacus. Ut vehicula rhoncus elementum. Etiam quis tristique
-              lectus. Aliquam in arcu eget velit pulvinar dictum vel in justo.
-            </p>
+          <div class="col-sm-6 col-md-3 item">
+            <h3>계정</h3>
+            <ul>
+              <li>
+                <a href="#">로그인</a>
+              </li>
+              <li><a href="#">회원가입</a></li>
+            </ul>
           </div>
           <div class="col item social">
-            <a href="#"><i class="icon ion-social-facebook"></i></a
-            ><a href="#"><i class="icon ion-social-twitter"></i></a
-            ><a href="#"><i class="icon ion-social-snapchat"></i></a
-            ><a href="#"><i class="icon ion-social-instagram"></i></a>
+            <a><b-icon-instagram></b-icon-instagram></a>
+            <a><b-icon-facebook></b-icon-facebook></a>
+            <a><b-icon-twitter></b-icon-twitter></a>
           </div>
         </div>
         <p class="copyright">
