@@ -1,17 +1,16 @@
+require('dotenv').config();
 
-const { createProxyMiddleware } = require('http-proxy-middleware');
-
-module.exports = {   
-  devServer: {
-    proxy: {
-      '/work': {
-        target : 'http://172.26.16.213:8080',
-        changeOrigin: true
-      },
-      '/post': {
-        target : 'http://172.26.16.213:8080',
-        changeOrigin: true
-      }
+module.exports = {
+    devServer: {
+        proxy: {
+            "/work": {
+                target: process.env.VUE_APP_API_URL,
+                changeOrigin: true,
+            },
+            "/post": {
+                target: process.env.VUE_APP_API_URL,
+                changeOrigin: true,
+            }
+        }
     }
-  }
-};
+}
