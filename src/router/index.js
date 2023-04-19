@@ -1,10 +1,10 @@
 import Vue from "vue";
 import Router from "vue-router";
 
-import MainPage from "@/components/MainPage.vue";
+import MainPage from "@/views/MainPage.vue";
 import Login from "@/views/LoginPage.vue";
 import Join from "@/views/JoinPage.vue";
-import Community from "@/components/CommunityPage.vue";
+import Community from "@/views/CommunityPage.vue";
 import PostWritePage from "@/views/PostWritePage.vue";
 
 Vue.use(Router);
