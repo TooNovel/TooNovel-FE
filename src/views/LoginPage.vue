@@ -2,8 +2,9 @@
   <div>
     <div class="login">
       <h3>Login</h3>
-      <b-button variant="warning">카카오 로그인</b-button><br />
-      <b-button variant="danger">구글 로그인</b-button>
+      <a :href="GoogleLogin">구글 로그인</a>
+      <br />
+      <a :href="KaKaoLogin">카카오 로그인</a>
       <p></p>
       <div>회원이 아니신가요? <a href="/join">회원가입</a> 하러가기</div>
     </div>
@@ -14,7 +15,10 @@
 export default {
   name: "loginPage",
   data() {
-    return {};
+    return {
+      GoogleLogin: process.env.VUE_APP_API_URL + `/oauth2/authorize/google`,
+      KaKaoLogin: process.env.VUE_APP_API_URL + `/oauth2/authorize/kakao`,
+    };
   },
 };
 </script>
