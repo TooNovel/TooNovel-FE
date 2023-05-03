@@ -19,7 +19,8 @@
     "vue-carousel-3d": "^1.0.1",
     "vue-infinite-scroll": "^2.0.2",
     "vue-router": "^3.5.3",
-    "vuex": "^2.5.0"
+    "vuex": "^2.5.0",
+    "vuex-persistedstate": "^2.5.4"
   },
   "devDependencies": {
     "@babel/core": "^7.12.16",

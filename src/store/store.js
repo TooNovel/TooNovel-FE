@@ -1,9 +1,11 @@
 import Vue from "vue";
 import Vuex from "vuex";
+import createPersistedState from "vuex-persistedstate";
 
 Vue.use(Vuex);
 
 const store = new Vuex.Store({
+  plugins: [createPersistedState()],
   //state : 애플리케이션의 전역 상태를 저장하는 객체
   state: {
     accessToken: null,
