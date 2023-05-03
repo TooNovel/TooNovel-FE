@@ -18,7 +18,15 @@
           :index="index"
           style="width: 250px; height: 300px"
         >
-          <img :src="product.image" width="250px" height="300px" />
+          <img
+            :src="product.image"
+            width="250px"
+            height="300px"
+            @click="detailWorkList(product)"
+          />
+          <p>{{ product.title }}</p>
+          <p>{{ product.author }}</p>
+          <p>{{ product.price }}</p>
         </slide>
       </carousel-3d>
     </div>
@@ -81,10 +89,8 @@ import AllProduct from "./AllProductList.vue";
 export default {
   name: "MainPage",
   created() {
-    const URL = process.env.VUE_APP_TEST_URL;
-
     axios
-      .get(URL + "/work/readall")
+      .get("/api/v1/novel/readall")
       .then((response) => {
         this.products = response.data.products;
         console.log(response.data.products);
@@ -122,6 +128,9 @@ export default {
   methods: {
     goToSlide(index) {
       this.$refs.carousel.goToSlide(index);
+    },
+    detailWorkList(res) {
+      location.href = "/work/detailView/" + res.novel_id;
     },
   },
 };

@@ -1,9 +1,9 @@
-require('dotenv').config();
+require("dotenv").config();
 module.exports = {
   devServer: {
     proxy: {
-      "/api": {
-        target: process.env.VUE_APP_API_URL,
+      "/api/v1": {
+        target: process.env.VUE_APP_TEST_URL,
         changeOrigin: true,
       },
     },
