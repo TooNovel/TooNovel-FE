@@ -4,6 +4,9 @@ import App from "./App.vue";
 // router
 import router from "./router";
 
+// store
+import store from "./store/store";
+
 // bootstrap
 import "bootstrap/dist/css/bootstrap.css";
 import "bootstrap-vue/dist/bootstrap-vue.css";
@@ -15,10 +18,10 @@ Vue.use(BootstrapVue);
 Vue.use(IconsPlugin);
 Vue.use(Carousel3d, Slide);
 Vue.use(infiniteScroll);
-
 Vue.config.productionTip = false;
 
 new Vue({
   render: (h) => h(App),
   router,
+  store,
 }).$mount("#app");
