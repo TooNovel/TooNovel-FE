@@ -39,15 +39,45 @@
 </template>
 
 <script>
+import Cookies from "js-cookie";
+import axios from "axios";
+import router from "@/router/index";
+
 export default {
+  name: "SignupView",
   data() {
     return {
-      selected: null,
-      options: [
-        { text: "남자", value: "option1" },
-        { text: "여자", value: "option2" },
-      ],
+      tokenCookie: "",
     };
+  },
+
+  methods: {
+    signup() {
+      const gender = document.querySelector(
+        'input[name="gender"]:checked'
+      ).value;
+      const birth = document.getElementById("birth_id").value;
+      const nickname = document.getElementById("nick_id").value;
+
+      const obj = {
+        gender: gender,
+        birth: birth,
+        nickname: nickname,
+      };
+      axios
+        .patch("/api/v1/user/register", obj, {
+          headers: {
+            Authorization: "Bearer " + this.tokenCookie,
+          },
+        })
+        .then((res) => {
+          alert(res.data);
+          router.push({ path: "/" });
+        });
+    },
+  },
+  mounted() {
+    this.tokenCookie = Cookies.get("accessTokenCookie");
   },
 };
 </script>
