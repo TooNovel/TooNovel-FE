@@ -37,14 +37,13 @@ export default {
     };
   },
   mounted() {
-    const URL = "https://aee2de78-332d-40e2-af1e-ee62eb99672d.mock.pstmn.io";
+    const URL = process.env.VUE_APP_TEST_URL;
 
     axios
       .get(URL + "/work/readall")
       .then((response) => {
         this.products = response.data.products;
         console.log(response.data.products);
-        console.log("왜 안돼!");
       })
       .catch((error) => {
         console.log(error);
