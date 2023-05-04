@@ -10,9 +10,7 @@
         >ㅤTooNovel</b-navbar-brand
       >
       <b-nav-item style="font-size: 20px">랭킹</b-nav-item>
-      <b-nav-item style="font-size: 20px">
-        <button @click="getAllReview()">리뷰</button>
-      </b-nav-item>
+      <b-nav-item style="font-size: 20px">리뷰</b-nav-item>
       <b-nav-item style="font-size: 20px">추천</b-nav-item>
       <b-nav-item style="font-size: 20px">작품찾기</b-nav-item>
       <b-nav-item style="font-size: 20px" @click="toCommunity()"
@@ -41,8 +39,6 @@
 </template>
 
 <script>
-import axios from "axios";
-
 export default {
   data() {
     return {
@@ -50,14 +46,6 @@ export default {
     };
   },
   methods: {
-    getAllReview() {
-      axios.get("/api/v1/review/0").then((data) => {
-        this.$router.push({
-          name: "reviews",
-          params: data,
-        });
-      });
-    },
     goToLogin() {
       this.$router.push("/login");
     },
