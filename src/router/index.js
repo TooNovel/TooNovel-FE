@@ -6,6 +6,7 @@ import Login from "@/views/LoginPage.vue";
 import Join from "@/views/JoinPage.vue";
 import Community from "@/views/CommunityPage.vue";
 import PostWritePage from "@/views/PostWritePage.vue";
+import WorkDetailPage from "@/views/WorkDetailPage.vue";
 
 Vue.use(Router);
 
@@ -36,6 +37,11 @@ export default new Router({
       path: "/community/write",
       name: "PostWritePage",
       component: PostWritePage,
+    },
+    {
+      path: "/work/detailView/:novel_id",
+      name: "WorkDetailPage",
+      component: WorkDetailPage,
     },
   ],
 });

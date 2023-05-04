@@ -31,6 +31,9 @@ export default {
 @import url("https://fonts.googleapis.com/earlyaccess/hanna.css");
 footer {
   margin-top: 5%;
+  background-color: rgb(212, 212, 212);
+}
+#app {
   background-color: whitesmoke;
 }
 </style>

@@ -19,11 +19,9 @@
       <b-nav-item style="font-size: 20px">팬클럽</b-nav-item>
     </b-navbar-nav>
 
-    <!-- Right aligned nav items -->
     <b-navbar-nav class="right">
       <b-nav-form class="mt-1" style="margin-right: 10px" id="searchForm">
         <input placeholder="작품을 검색하세요!" type="text" />
-        <!-- <b-avatar class="searchIcon" icon="search"></b-avatar> -->
         <b-button size="sm" class="my-2 my-sm-0">검색</b-button>
       </b-nav-form>
       <b-nav-form class="mt-1">
@@ -41,8 +39,6 @@
 </template>
 
 <script>
-import axios from "axios";
-
 export default {
   data() {
     return {
@@ -54,16 +50,8 @@ export default {
       this.$router.push("/login");
     },
     toCommunity() {
-      axios.get("/post/readall").then((data) => {
-        this.$router.push({
-          name: "Community",
-          params: data,
-        });
-      });
+      this.$router.push("/community");
     },
-  },
-  created() {
-    console.log("컴포넌트 생성!");
   },
 };
 </script>

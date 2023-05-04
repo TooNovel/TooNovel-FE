@@ -37,14 +37,11 @@ export default {
     };
   },
   mounted() {
-    const URL = "https://aee2de78-332d-40e2-af1e-ee62eb99672d.mock.pstmn.io";
-
     axios
-      .get(URL + "/work/readall")
+      .get("/api/v1/novel/")
       .then((response) => {
         this.products = response.data.products;
         console.log(response.data.products);
-        console.log("왜 안돼!");
       })
       .catch((error) => {
         console.log(error);
