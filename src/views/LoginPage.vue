@@ -6,7 +6,6 @@
       <br />
       <a :href="KaKaoLogin">카카오 로그인</a>
       <p></p>
-      <div>회원이 아니신가요? <a href="/join">회원가입</a> 하러가기</div>
     </div>
   </div>
 </template>

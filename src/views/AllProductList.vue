@@ -37,10 +37,8 @@ export default {
     };
   },
   mounted() {
-    const URL = process.env.VUE_APP_TEST_URL;
-
     axios
-      .get(URL + "/work/readall")
+      .get("/api/v1/novel/")
       .then((response) => {
         this.products = response.data.products;
         console.log(response.data.products);
