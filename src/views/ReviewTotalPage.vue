@@ -7,23 +7,26 @@
         <hr />
         <div id="reviewBox">
           <div v-for="review in reviews.content" v-bind:key="review.id">
-            <div>
-              <div>
-                <img :src="review.image" />
+            <div class="pretty-box">
+              <div class="review-item">
+                <div class="review-img">
+                  <img :src="review.image" />
+                </div>
+                <div class="novel-info">
+                  장르 : {{ review.genre }} <br />
+                  작가 : {{ review.author }} <br />
+                  제목 : {{ review.title }} <br />
+                  평점 : 필요 <br />
+                  작품 소개 : {{ review.description }} <br />
+                </div>
               </div>
-              <div>
-                장르 : {{ review.genre }} <br />
-                작가 : {{ review.author }} <br />
-                제목 : {{ review.title }} <br />
-                평점 : 필요 <br />
-                작품 소개 : {{ review.description }} <br />
+              <hr />
+              <div class="review-info">
+                작성자 : {{ review.nickname }} <br />
+                리뷰 평점 : {{ review.reviewGrade }} <br />
+                리뷰 내용 : {{ review.reviewContent }} <br />
+                좋아요 : {{ review.reviewLike }} <br />
               </div>
-            </div>
-            <div>
-              작성자 : {{ review.nickname }} <br />
-              리뷰 평점 : {{ review.reviewGrade }} <br />
-              리뷰 내용 : {{ review.reviewContent }} <br />
-              좋아요 : {{ review.reviewLike }} <br />
             </div>
           </div>
         </div>
@@ -79,11 +82,44 @@ section {
   background-color: white;
 }
 
-#reviewBox {
-  border: 1px solid black;
-  display: flex;
-  float: left;
+#ReviewTotalPage {
+  display: block;
 }
+
+#reviewBox {
+  width: 1000px;
+}
+
+.pretty-box {
+  background-color: #f9f9f9;
+  border: 1px solid #e5e5e5;
+  border-radius: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  margin: 20px;
+  overflow: hidden;
+}
+
+.review-item {
+  display: flex;
+  margin-bottom: 20px;
+}
+
+.review-img {
+  width: auto;
+}
+
+.novel-info {
+  padding: 10px;
+  width: 500px;
+  margin-left: 100px;
+  display: inline-block;
+}
+
+.review-info {
+  flex-direction: column;
+}
+
 li {
   margin: 0;
   padding: 0;
