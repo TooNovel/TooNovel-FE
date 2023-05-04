@@ -7,6 +7,7 @@ import Join from "@/views/JoinPage.vue";
 import Community from "@/views/CommunityPage.vue";
 import PostWritePage from "@/views/PostWritePage.vue";
 import WorkDetailPage from "@/views/WorkDetailPage.vue";
+import ReviewTotalPage from "@/views/ReviewTotalPage.vue";
 
 Vue.use(Router);
 
@@ -42,6 +43,12 @@ export default new Router({
       path: "/work/detailView/:novel_id",
       name: "WorkDetailPage",
       component: WorkDetailPage,
+    },
+    {
+      path: "/reviews",
+      component: ReviewTotalPage,
+      name: "reviews",
+      props: true,
     },
   ],
 });
