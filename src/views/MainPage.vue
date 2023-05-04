@@ -92,8 +92,8 @@ export default {
     axios
       .get("/api/v1/novel")
       .then((response) => {
-        this.products = response.data.products;
-        console.log(response.data.products);
+        this.products = response.data;
+        console.log(response.data);
       })
       .catch((error) => {
         console.log(error);
@@ -129,8 +129,8 @@ export default {
     goToSlide(index) {
       this.$refs.carousel.goToSlide(index);
     },
-    detailWorkList(res) {
-      location.href = "/work/detailView/" + res.novel_id;
+    detailWorkList(item) {
+      location.href = "/work/detailView/" + item.novelId;
     },
   },
 };
