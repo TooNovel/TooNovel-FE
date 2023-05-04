@@ -90,7 +90,7 @@ export default {
   name: "MainPage",
   created() {
     axios
-      .get("/api/v1/novel/readall")
+      .get("/api/v1/novel")
       .then((response) => {
         this.products = response.data.products;
         console.log(response.data.products);

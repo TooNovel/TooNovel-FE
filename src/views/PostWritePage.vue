@@ -55,7 +55,7 @@ export default {
         title: title,
         content: content,
       };
-      axios.post("/post/write", post).then((res) => {
+      axios.post("/api/v1/post/write", post).then((res) => {
         alert(res.data);
         router.push({ path: "/" });
       });
