@@ -11,29 +11,28 @@
     </b-nav>
     <main>
       <article>
-        <div class="container">
-          <div class="works">
-            <div class="row m-b-40">
-              <div
-                class="col-lg-2 mb-3"
-                style="background-color: white; margin-right: 10px"
-              >
-                <img :src="novel.image" />
-              </div>
-              <div class="col-lg-8" style="background-color: white">
-                <b>제목</b>
-                <p>{{ novel.title }}</p>
-                <b>장르</b>
-                <p>{{ novel.genre }}</p>
-                <b>작가</b>
-                <p>{{ novel.author }}</p>
-                <label><b>간단 소개</b></label>
-                <p>{{ novel.description }}</p>
-              </div>
+        <b-container class="bv-example-row">
+          <b-row class="rows">
+            <b-col>
+              <img :src="novel.image" />
+            </b-col>
+            <b-col class="col-9">
+              <b>제목</b>
+              <p>{{ novel.title }}</p>
+              <b>장르</b>
+              <p>{{ novel.genre }}</p>
+              <b>작가</b>
+              <p>{{ novel.author }}</p>
+            </b-col>
+          </b-row>
+          <br />
+          <div class="row">
+            <div class="descrption">
+              <label><b>간단 소개</b></label>
+              <p>{{ novel.description }}</p>
             </div>
           </div>
-        </div>
-        <h1>리뷰 부분</h1>
+        </b-container>
       </article>
     </main>
   </div>
@@ -49,8 +48,9 @@ export default {
   },
   async created() {
     console.log(this.$route.params.novel_id);
+    const id = this.$route.params.novel_id;
     await axios
-      .get("/api/v1/novel/" + this.$route.params.novel_id)
+      .get("/api/v1/novel/" + id)
       .then((response) => {
         this.novel = response.data;
       })
@@ -61,7 +61,20 @@ export default {
 };
 </script>
 <style scoped>
-main {
-  margin: 5%;
+img {
+  border-width: 30px;
+  border-style: solid;
+  border-color: white;
+  border-radius: 10px;
+}
+.col-9 {
+  background-color: white;
+  border-radius: 10px;
+  padding: 2%;
+}
+.descrption {
+  background-color: white;
+  border-radius: 10px;
+  padding: 2%;
 }
 </style>
