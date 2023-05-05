@@ -88,8 +88,9 @@ export default {
     axios
       .get("/api/v1/novel")
       .then((response) => {
-        this.products = response.data;
-        console.log(response.data);
+        let temp = response.data;
+        this.shuffle(temp);
+        this.products = temp;
       })
       .catch((error) => {
         console.log(error);
@@ -126,6 +127,9 @@ export default {
     },
     detailWorkList(item) {
       location.href = "/work/detailView/" + item.novelId;
+    },
+    shuffle(arr) {
+      arr.sort(() => Math.random() - 0.5);
     },
   },
 };
