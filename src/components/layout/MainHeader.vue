@@ -26,27 +26,53 @@
         <input placeholder="작품을 검색하세요!" type="text" />
         <b-button size="sm" class="my-2 my-sm-0">검색</b-button>
       </b-nav-form>
-      <b-nav-form class="mt-1">
-        <b-button
-          size="sm"
-          @click="goToLogin()"
-          id="loginBtn"
-          style="margin-right: 20px"
-          variant="primary"
-          >로그인</b-button
-        >
-      </b-nav-form>
+      <div v-if="accessToken">
+        <b-nav-form class="mt-1">
+          <b-button
+            size="sm"
+            @click="goToLogin()"
+            id="loginBtn"
+            style="margin-right: 20px"
+            variant="primary"
+          >
+            마이페이지
+          </b-button>
+          <b-button
+            size="sm"
+            @click="logout()"
+            id="loginBtn"
+            style="margin-right: 20px"
+            variant="primary"
+          >
+            로그아웃
+          </b-button>
+        </b-nav-form>
+      </div>
+      <div v-else>
+        <b-nav-form class="mt-1">
+          <b-button
+            size="sm"
+            @click="goToLogin()"
+            id="loginBtn"
+            style="margin-right: 20px"
+            variant="primary"
+          >
+            로그인
+          </b-button>
+        </b-nav-form>
+      </div>
     </b-navbar-nav>
   </b-navbar>
 </template>
-
 <script>
 import axios from "axios";
+import Cookies from "js-cookie";
 
 export default {
   data() {
     return {
       message: "MainHeader",
+      accessToken: this.$store.state.accessToken,
     };
   },
   methods: {
@@ -61,9 +87,21 @@ export default {
     goToLogin() {
       this.$router.push("/login");
     },
+    // 추후 구현 예정
+    // logout() {
+    //   document.cookie = "accessTokenCookie=; path=/;";
+    //   document.cookie = "refreshTokenCookie=; path=/;";
+    //   this.$store.commit("setAccessToken", null);
+    //   this.$store.commit("setRefreshToken", null);
+    //   window.location.href = "/";
+    // },
     toCommunity() {
       this.$router.push("/community");
     },
+  },
+  mounted() {
+    const token = Cookies.get("accessTokenCookie");
+    this.$store.commit("setAccessToken", token);
   },
 };
 </script>

@@ -42,7 +42,6 @@
 </template>
 
 <script>
-import Cookies from "js-cookie";
 import axios from "axios";
 import router from "@/router/index";
 
@@ -53,7 +52,6 @@ export default {
       date: null,
     };
   },
-
   methods: {
     signup() {
       const gender = document.querySelector(
@@ -81,10 +79,6 @@ export default {
           console.log(error);
         });
     },
-  },
-  mounted() {
-    const token = Cookies.get("accessTokenCookie");
-    this.$store.commit("setAccessToken", token);
   },
 };
 </script>
