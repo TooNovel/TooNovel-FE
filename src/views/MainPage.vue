@@ -27,19 +27,27 @@
         </slide>
       </carousel-3d>
     </div>
-    <div>
+    <div v-if="novelList.length > 0">
       <h3>인기 상승 중인 작품</h3>
       <carousel-3d
         :disable3d="true"
-        :space="365"
         :clickable="false"
         :controls-visible="true"
+        :space="320"
       >
-        <slide :index="0"> Slide 1 Content </slide>
-        <slide :index="1"> Slide 1 Content </slide>
-        <slide :index="2"> Slide 1 Content </slide>
-        <slide :index="3"> Slide 1 Content </slide>
-        <slide :index="4"> Slide 1 Content </slide>
+        <slide
+          v-for="(novel, index) in novelList"
+          :key="index"
+          :index="index"
+          style="width: 250px; height: 300px"
+        >
+          <img
+            :src="novel.image"
+            width="250px"
+            height="300px"
+            @click="detailWorkList(novel)"
+          />
+        </slide>
       </carousel-3d>
     </div>
     <br />
@@ -84,8 +92,8 @@ import { Carousel3d, Slide } from "vue-carousel-3d";
 
 export default {
   name: "MainPage",
-  created() {
-    axios
+  async created() {
+    await axios
       .get("/api/v1/novel")
       .then((response) => {
         let temp = response.data;
@@ -95,9 +103,18 @@ export default {
       .catch((error) => {
         console.log(error);
       });
+    await axios
+      .get("/api/v1/novel?novelId=4000")
+      .then((res) => {
+        this.novelList = res.data;
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   },
   data() {
     return {
+      novelList: [],
       products: [],
       paginationCustom: {
         style: {
