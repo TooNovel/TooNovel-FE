@@ -61,7 +61,7 @@ export default {
         .catch((err) => {
           console.log(err);
           alert("에러");
-          this.$router.push("/");
+          window.location.href = "/";
         });
     },
     handleImageError(event) {
