@@ -94,7 +94,7 @@ export default {
       return new Promise((resolve) => setTimeout(resolve, sec));
     },
     detailWorkList(novelId) {
-      location.href = "/work/detailView/" + novelId;
+      location.href = "/novel/detailView/" + novelId;
     },
   },
 };
