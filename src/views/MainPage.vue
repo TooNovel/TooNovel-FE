@@ -1,8 +1,5 @@
 <template>
   <div id="products">
-    <div>
-      <all-product></all-product>
-    </div>
     <br />
     <div v-if="products.length > 0">
       <h3>주간 인기 작품</h3>
@@ -84,7 +81,6 @@
 <script>
 import axios from "axios";
 import { Carousel3d, Slide } from "vue-carousel-3d";
-import AllProduct from "./AllProductList.vue";
 
 export default {
   name: "MainPage",
@@ -92,8 +88,9 @@ export default {
     axios
       .get("/api/v1/novel")
       .then((response) => {
-        this.products = response.data;
-        console.log(response.data);
+        let temp = response.data;
+        this.shuffle(temp);
+        this.products = temp;
       })
       .catch((error) => {
         console.log(error);
@@ -123,7 +120,6 @@ export default {
   components: {
     Carousel3d,
     Slide,
-    "all-product": AllProduct,
   },
   methods: {
     goToSlide(index) {
@@ -131,6 +127,9 @@ export default {
     },
     detailWorkList(item) {
       location.href = "/work/detailView/" + item.novelId;
+    },
+    shuffle(arr) {
+      arr.sort(() => Math.random() - 0.5);
     },
   },
 };
