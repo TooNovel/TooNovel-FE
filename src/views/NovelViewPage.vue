@@ -1,9 +1,9 @@
 <template>
-  <div>
-    <h3><b>전체 작품 리스트</b></h3>
+  <div class="container">
+    <h3 class="title"><b>전체 작품 리스트</b></h3>
     <!-- 내가 좋아요 한 작품 좋아요 기능 완료되면 구현 예정 -->
-    <button @click="novelLikeList()">내가 좋아요 한 작품</button>
-    <div ref="allProductList" @scroll="handleNotificationListScroll()">
+    <!-- <button @click="novelLikeList()">내가 좋아요 한 작품</button> -->
+    <div class="novel-list-box" ref="allProductList">
       <b-row>
         <b-col
           v-for="(novel, index) in novels"
@@ -15,7 +15,11 @@
           lg="3"
         >
           <b-card>
-            <b-card-img :src="novel.image" @error="handleImageError">
+            <b-card-img
+              :src="novel.image"
+              class="card-image"
+              @click="detailNovelList(novel.novelId)"
+            >
             </b-card-img>
             <b-card-title>{{ novel.title }}</b-card-title>
             <b-card-text>{{ novel.author }}</b-card-text>
@@ -64,6 +68,9 @@ export default {
           window.location.href = "/";
         });
     },
+    detailNovelList(novelId) {
+      location.href = "/novel/detailView/" + novelId;
+    },
     handleImageError(event) {
       event.target.src =
         "https://via.placeholder.com/600x600.png?text=No+Image";
@@ -86,5 +93,16 @@ export default {
 <style scoped>
 #allProductList {
   height: 400px; /* 스크롤이 표시될 최대 높이값 */
+}
+.title {
+  margin: 20px;
+}
+.novel-list-box {
+  margin-top: 2%;
+  margin-left: 5%;
+  margin-right: 5%;
+}
+.card-image {
+  height: 350px;
 }
 </style>

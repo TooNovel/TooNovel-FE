@@ -25,7 +25,7 @@
           sm="6"
           md="4"
           lg="3"
-          @click="detailWorkList(novel.novelId)"
+          @click="detailNovelList(novel.novelId)"
         >
           <b-card>
             <b-card-img
@@ -93,7 +93,7 @@ export default {
     async sleep(sec) {
       return new Promise((resolve) => setTimeout(resolve, sec));
     },
-    detailWorkList(novelId) {
+    detailNovelList(novelId) {
       location.href = "/novel/detailView/" + novelId;
     },
   },
