@@ -8,6 +8,7 @@ import Community from "@/views/CommunityPage.vue";
 import PostWritePage from "@/views/PostWritePage.vue";
 import WorkDetailPage from "@/views/WorkDetailPage.vue";
 import ReviewTotalPage from "@/views/ReviewTotalPage.vue";
+import RecommendPage from "@/views/RecommendPage.vue";
 
 Vue.use(Router);
 
@@ -49,6 +50,11 @@ export default new Router({
       component: ReviewTotalPage,
       name: "reviews",
       props: true,
+    },
+    {
+      path: "/recommend",
+      name: "RecommendPage",
+      component: RecommendPage,
     },
   ],
 });
