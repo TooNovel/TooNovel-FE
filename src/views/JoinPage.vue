@@ -68,7 +68,7 @@ export default {
       axios
         .patch("/api/v1/user/register", obj, {
           headers: {
-            Authorization: "Bearer " + this.$store.state.accessToken,
+            Authorization: "Bearer " + this.$store.getters.getAccessToken,
           },
         })
         .then((res) => {
