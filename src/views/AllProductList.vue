@@ -1,10 +1,12 @@
 <template>
   <div>
     <h3><b>전체 작품 리스트</b></h3>
-    <div id="allProductList">
+    <!-- 내가 좋아요 한 작품 좋아요 기능 완료되면 구현 예정 -->
+    <button @click="novelLikeList()">내가 좋아요 한 작품</button>
+    <div ref="allProductList" @scroll="handleNotificationListScroll()">
       <b-row>
         <b-col
-          v-for="(product, index) in products"
+          v-for="(novel, index) in novels"
           :key="index"
           class="mb-3"
           cols="12"
@@ -13,69 +15,76 @@
           lg="3"
         >
           <b-card>
-            <b-card-img
-              :src="product.image"
-              :alt="product.title"
-              @error="handleImageError"
-            ></b-card-img>
-            <b-card-title>{{ product.title }}</b-card-title>
-            <b-card-text>{{ product.contents }}</b-card-text>
+            <b-card-img :src="novel.image" @error="handleImageError">
+            </b-card-img>
+            <b-card-title>{{ novel.title }}</b-card-title>
+            <b-card-text>{{ novel.author }}</b-card-text>
+            <b-card-text>{{ novel.genre }}</b-card-text>
           </b-card>
         </b-col>
       </b-row>
     </div>
+    <infinite-loading
+      @infinite="infiniteHandler"
+      spinner="waveDots"
+    ></infinite-loading>
   </div>
 </template>
 
 <script>
 import axios from "axios";
+import InfiniteLoading from "vue-infinite-loading";
 
 export default {
   data() {
     return {
-      products: [],
+      novels: [],
+      novelId: 0,
     };
   },
-  mounted() {
-    axios
-      .get("/api/v1/novel/")
-      .then((response) => {
-        this.products = response.data.products;
-        console.log(response.data.products);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  },
   methods: {
-    handleNotificationListScroll(e) {
-      const { scrollHeight, scrollTop, clientHeight } = e.target;
-      const isAtTheBottom = scrollHeight === scrollTop + clientHeight;
-      // 일정 이상 밑으로 내려오면 함수 실행 / 반복된 호출을 막기위해 1초마다 스크롤 감지 후 실행
-      if (isAtTheBottom) {
-        setTimeout(() => this.handleLoadMore(), 1000);
-      }
+    async infiniteHandler($state) {
+      await axios
+        .get(`/api/v1/novel?novelId=${this.novelId}`)
+        .then((res) => {
+          if (res.data.length) {
+            this.novels = this.novels.concat(res.data);
+            $state.loaded(); //데이터 로딩
+            this.novelId = Number(Object.keys(this.novels).length) - 1;
+            if (Number(Object.keys(this.novels).length) / 30 == 0) {
+              $state.complete(); //데이터가 없으면 로딩 끝
+            }
+          } else {
+            $state.complete();
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+          alert("에러");
+          this.$router.push("/");
+        });
     },
-
-    // 내려오면 api를 호출하여 아래에 더 추가,
-    handleLoadMore() {
-      console.log("리스트 추가");
-      // api를 호출하여 리스트 추가하면 됨, 현재는 pushList에 1개의 index 추가
-      this.pushList.push(2);
-    },
-
     handleImageError(event) {
       event.target.src =
         "https://via.placeholder.com/600x600.png?text=No+Image";
     },
+    novelLikeList() {
+      alert("내가 좋아요 한 작품");
+    },
+  },
+  mounted() {
+    const novelList = this.$route.params.data;
+    this.novels = novelList;
+    this.novelId = Number(Object.keys(this.novels).length) - 1;
+  },
+  components: {
+    InfiniteLoading,
   },
 };
 </script>
 
 <style scoped>
 #allProductList {
-  margin-top: 2%;
-  margin-left: 5%;
-  margin-right: 5%;
+  height: 400px; /* 스크롤이 표시될 최대 높이값 */
 }
 </style>

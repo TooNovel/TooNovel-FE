@@ -15,6 +15,10 @@
       >
       <b-nav-item style="font-size: 20px" to="/recommend">추천</b-nav-item>
       <b-nav-item style="font-size: 20px">작품찾기</b-nav-item>
+      <b-nav-item style="font-size: 20px">추천</b-nav-item>
+      <b-nav-item style="font-size: 20px" @click="getAllNovel()">
+        웹소설
+      </b-nav-item>
       <b-nav-item style="font-size: 20px" @click="toCommunity()"
         >커뮤니티</b-nav-item
       >
@@ -35,6 +39,7 @@
             style="margin-right: 20px"
             variant="primary"
           >
+            <!-- 마이페이지 추후 구현 예정 -->
             마이페이지
           </b-button>
           <b-button
@@ -80,6 +85,14 @@ export default {
       axios.get("/api/v1/review/0").then((data) => {
         this.$router.push({
           name: "reviews",
+          params: data,
+        });
+      });
+    },
+    getAllNovel() {
+      axios.get("/api/v1/novel").then((data) => {
+        this.$router.push({
+          name: "novels",
           params: data,
         });
       });
