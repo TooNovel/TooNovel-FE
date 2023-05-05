@@ -50,7 +50,6 @@ export default {
   name: "SignupView",
   data() {
     return {
-      tokenCookie: "",
       date: null,
     };
   },
@@ -71,7 +70,7 @@ export default {
       axios
         .patch("/api/v1/user/register", obj, {
           headers: {
-            Authorization: "Bearer " + this.tokenCookie,
+            Authorization: "Bearer " + this.$store.state.accessToken,
           },
         })
         .then((res) => {
@@ -84,7 +83,8 @@ export default {
     },
   },
   mounted() {
-    this.tokenCookie = Cookies.get("accessTokenCookie");
+    const token = Cookies.get("accessTokenCookie");
+    this.$store.commit("setAccessToken", token);
   },
 };
 </script>

@@ -6,25 +6,27 @@ Vue.use(Vuex);
 
 const store = new Vuex.Store({
   plugins: [createPersistedState()],
-  //state : 애플리케이션의 전역 상태를 저장하는 객체
+  // [변수들의 집합]
   state: {
     accessToken: null,
+    refreshToken: null,
   },
-  //mutations : 상태를 변경하는 함수, 상태를 직접 변경하지 핞고 mutation을 통해 변경
+  // [변수들을 조작하는 함수들]
   mutations: {
-    setToken(state, accessToken) {
+    setAccessToken(state, accessToken) {
       state.accessToken = accessToken;
     },
+    setRefreshToken(state, refreshToken) {
+      state.refreshToken = refreshToken;
+    },
   },
+  // [state의 변수들을 get 호출]
   getters: {
-    getToken(state) {
-      return state.token === null ? 0 : 1;
+    getAccessToken(state) {
+      return state.accessToken;
     },
-    getUserInfo(state) {
-      return state.userInfo;
-    },
-    getSub(state) {
-      return state.sub;
+    getRefreshToken(state) {
+      return state.refreshToken;
     },
   },
 });
