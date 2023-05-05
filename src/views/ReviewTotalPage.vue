@@ -3,7 +3,7 @@
     <br />
     <section>
       <div>
-        <h1>최신리뷰</h1>
+        <h1 class="title">최신리뷰</h1>
         <hr />
         <div id="reviewBox">
           <div v-for="review in reviews.content" v-bind:key="review.id">
@@ -13,19 +13,19 @@
                   <img :src="review.image" />
                 </div>
                 <div class="novel-info">
-                  장르 : {{ review.genre }} <br />
-                  작가 : {{ review.author }} <br />
-                  제목 : {{ review.title }} <br />
-                  평점 : 필요 <br />
-                  작품 소개 : {{ review.description }} <br />
+                  <b>장르 :</b> {{ review.genre }} <br />
+                  <b>작가 :</b> {{ review.author }} <br />
+                  <b>제목 :</b> {{ review.title }} <br />
+                  <b>평점 :</b> {{ review.reviewGrade }} <br />
+                  <b>작품 소개 :</b> {{ review.description }} <br />
                 </div>
               </div>
               <hr />
               <div class="review-info">
-                작성자 : {{ review.nickname }} <br />
-                리뷰 평점 : {{ review.reviewGrade }} <br />
-                리뷰 내용 : {{ review.reviewContent }} <br />
-                좋아요 : {{ review.reviewLike }} <br />
+                <b>작성자 :</b> {{ review.nickname }} <br />
+                <b>리뷰 평점 :</b> {{ review.reviewGrade }} <br />
+                <b>리뷰 내용 :</b> {{ review.reviewContent }} <br />
+                <b>좋아요 :</b> {{ review.reviewLike }} <br />
               </div>
             </div>
           </div>
@@ -38,8 +38,9 @@
           <a
             :href="`/reviews?page=${n - 1}`"
             @click.prevent="reviewPaging(n - 1)"
+            class="paging-btn"
           >
-            [{{ n }}]
+            {{ n }}
           </a>
         </li>
       </ul>
@@ -78,16 +79,14 @@ header {
   padding: 1rem;
 }
 
-section {
-  background-color: white;
-}
-
 #ReviewTotalPage {
   display: block;
 }
 
 #reviewBox {
-  width: 1000px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .pretty-box {
@@ -98,6 +97,7 @@ section {
   padding: 20px;
   margin: 20px;
   overflow: hidden;
+  width: 800px;
 }
 
 .review-item {
@@ -108,11 +108,13 @@ section {
 .review-img {
   width: auto;
 }
-
+.review-img > img {
+  border-radius: 6px;
+}
 .novel-info {
   padding: 10px;
   width: 500px;
-  margin-left: 100px;
+  margin-left: 20px;
   display: inline-block;
 }
 
@@ -126,8 +128,21 @@ li {
   list-style: none;
 }
 #pagenation {
-  text-align: center;
   display: flex;
-  margin: 0 auto;
+  margin: auto;
+  justify-self: center;
+  align-items: center;
+  width: 0px;
+}
+.title {
+  margin-left: 34px;
+}
+.paging-btn {
+  padding: 3px;
+  margin: 3px;
+  font-size: 20px;
+  font-weight: 600;
+  text-decoration: none;
+  color: dimgray;
 }
 </style>
