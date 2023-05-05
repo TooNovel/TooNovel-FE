@@ -1,8 +1,5 @@
 <template>
   <div id="products">
-    <div>
-      <all-product></all-product>
-    </div>
     <br />
     <div v-if="products.length > 0">
       <h3>주간 인기 작품</h3>
@@ -84,7 +81,6 @@
 <script>
 import axios from "axios";
 import { Carousel3d, Slide } from "vue-carousel-3d";
-import AllProduct from "./AllProductList.vue";
 
 export default {
   name: "MainPage",
@@ -123,7 +119,6 @@ export default {
   components: {
     Carousel3d,
     Slide,
-    "all-product": AllProduct,
   },
   methods: {
     goToSlide(index) {
