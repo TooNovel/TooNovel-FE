@@ -72,7 +72,7 @@ export default {
   data() {
     return {
       message: "MainHeader",
-      accessToken: this.$store.state.accessToken,
+      accessToken: this.$store.getters.getAccessToken,
     };
   },
   methods: {
@@ -88,13 +88,13 @@ export default {
       this.$router.push("/login");
     },
     // 추후 구현 예정
-    // logout() {
-    //   document.cookie = "accessTokenCookie=; path=/;";
-    //   document.cookie = "refreshTokenCookie=; path=/;";
-    //   this.$store.commit("setAccessToken", null);
-    //   this.$store.commit("setRefreshToken", null);
-    //   window.location.href = "/";
-    // },
+    logout() {
+      document.cookie = "accessTokenCookie=; path=/;";
+      document.cookie = "refreshTokenCookie=; path=/;";
+      this.$store.commit("setAccessToken", null);
+      this.$store.commit("setRefreshToken", null);
+      window.location.href = "/";
+    },
     toCommunity() {
       this.$router.push("/community");
     },
@@ -102,6 +102,8 @@ export default {
   mounted() {
     const token = Cookies.get("accessTokenCookie");
     this.$store.commit("setAccessToken", token);
+    this.accessToken = this.$store.getters.getAccessToken;
+    console.log("header - accesstoken : " + this.$store.getters.getAccessToken);
   },
 };
 </script>
