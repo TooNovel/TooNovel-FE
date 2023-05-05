@@ -45,7 +45,7 @@
             :src="novel.image"
             width="250px"
             height="300px"
-            @click="detailWorkList(novel)"
+            @click="detailNovelList(novel)"
           />
         </slide>
       </carousel-3d>
@@ -104,7 +104,7 @@ export default {
         console.log(error);
       });
     await axios
-      .get("/api/v1/novel?novelId=4000")
+      .get("/api/v1/novel?novelId=3994")
       .then((res) => {
         this.novelList = res.data;
       })
