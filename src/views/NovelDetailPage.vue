@@ -131,15 +131,24 @@ export default {
       const reviewGrade = this.reviewGrade;
       const novelId = this.novel.novelId;
       axios
-        .post("/api/v1/review", {
-          reviewContent: reviewContent,
-          reviewGrade: reviewGrade,
-          writerId: 0,
-          novelId: novelId,
-        })
+        .post(
+          "/api/v1/review",
+          {
+            reviewContent: reviewContent,
+            reviewGrade: reviewGrade,
+            writerId: 0,
+            novelId: novelId,
+          },
+          {
+            headers: {
+              Authorization: "Bearer " + this.$store.getters.getAccessToken,
+            },
+          }
+        )
         .then((response) => {
           console.log(response.data);
           this.reviews = response.data;
+          this.$router.go(0);
         })
         .catch((error) => {
           console.log(error);
