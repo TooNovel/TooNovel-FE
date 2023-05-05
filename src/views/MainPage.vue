@@ -19,7 +19,7 @@
             :src="product.image"
             width="250px"
             height="300px"
-            @click="detailWorkList(product)"
+            @click="detailNovelList(product)"
           />
           <p>{{ product.title }}</p>
           <p>{{ product.author }}</p>
@@ -125,8 +125,8 @@ export default {
     goToSlide(index) {
       this.$refs.carousel.goToSlide(index);
     },
-    detailWorkList(item) {
-      location.href = "/work/detailView/" + item.novelId;
+    detailNovelList(item) {
+      location.href = "/novel/detailView/" + item.novelId;
     },
     shuffle(arr) {
       arr.sort(() => Math.random() - 0.5);

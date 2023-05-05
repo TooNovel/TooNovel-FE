@@ -6,10 +6,10 @@ import Login from "@/views/LoginPage.vue";
 import Join from "@/views/JoinPage.vue";
 import Community from "@/views/CommunityPage.vue";
 import PostWritePage from "@/views/PostWritePage.vue";
-import WorkDetailPage from "@/views/WorkDetailPage.vue";
+import NovelDetailPage from "@/views/NovelDetailPage.vue";
 import ReviewTotalPage from "@/views/ReviewTotalPage.vue";
 import RecommendPage from "@/views/RecommendPage.vue";
-import AllProductList from "@/views/AllProductList.vue";
+import NovelViewPage from "@/views/NovelViewPage.vue";
 
 Vue.use(Router);
 
@@ -42,9 +42,9 @@ export default new Router({
       component: PostWritePage,
     },
     {
-      path: "/work/detailView/:novel_id",
-      name: "WorkDetailPage",
-      component: WorkDetailPage,
+      path: "/novel/detailView/:novel_id",
+      name: "NovelDetailPage",
+      component: NovelDetailPage,
     },
     {
       path: "/reviews",
@@ -59,7 +59,7 @@ export default new Router({
     },
     {
       path: "/novels",
-      component: AllProductList,
+      component: NovelViewPage,
       name: "novels",
     },
   ],
