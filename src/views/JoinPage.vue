@@ -42,7 +42,6 @@
 </template>
 
 <script>
-import Cookies from "js-cookie";
 import axios from "axios";
 import router from "@/router/index";
 
@@ -50,11 +49,9 @@ export default {
   name: "SignupView",
   data() {
     return {
-      tokenCookie: "",
       date: null,
     };
   },
-
   methods: {
     signup() {
       const gender = document.querySelector(
@@ -71,7 +68,7 @@ export default {
       axios
         .patch("/api/v1/user/register", obj, {
           headers: {
-            Authorization: "Bearer " + this.tokenCookie,
+            Authorization: "Bearer " + this.$store.state.accessToken,
           },
         })
         .then((res) => {
@@ -82,9 +79,6 @@ export default {
           console.log(error);
         });
     },
-  },
-  mounted() {
-    this.tokenCookie = Cookies.get("accessTokenCookie");
   },
 };
 </script>
