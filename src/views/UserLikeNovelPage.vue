@@ -1,13 +1,13 @@
 <template>
-  <div>
-    <h3><b>전체 작품 리스트</b></h3>
+  <div class="container">
+    <h3 class="title"><b>좋아요 한 작품 리스트</b></h3>
     <!-- 내가 좋아요 한 작품 좋아요 기능 완료되면 구현 예정 -->
     <button @click="getAllNovel()">전체 작품</button>
     <div v-if="novels.length == 0">
       <h1>좋아요를 누른 작품이 없습니다.</h1>
     </div>
     <div v-else>
-      <div>
+      <div class="novel-list-box">
         <b-row>
           <b-col
             v-for="(novel, index) in novels"
@@ -21,8 +21,8 @@
             <b-card>
               <b-card-img
                 :src="novel.image"
-                @error="handleImageError"
-                @click="detailNovel(novel)"
+                class="card-image"
+                @click="detailNovelList(novel.novelId)"
               >
               </b-card-img>
               <b-card-title>{{ novel.title }}</b-card-title>
@@ -88,8 +88,8 @@ export default {
         });
       });
     },
-    detailNovel(item) {
-      location.href = "/novel/detailView/" + item.novelId;
+    detailNovelList(novelId) {
+      location.href = "/novel/detailView/" + novelId;
     },
   },
   mounted() {
@@ -106,5 +106,16 @@ export default {
 <style scoped>
 #allProductList {
   height: 400px; /* 스크롤이 표시될 최대 높이값 */
+}
+.title {
+  margin: 20px;
+}
+.novel-list-box {
+  margin-top: 2%;
+  margin-left: 5%;
+  margin-right: 5%;
+}
+.card-image {
+  height: 350px;
 }
 </style>
