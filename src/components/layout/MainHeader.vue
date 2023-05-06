@@ -117,10 +117,12 @@ export default {
       this.$router.push("/community");
     },
     toSearch() {
-      this.$router.push({
-        path: "/search?novelId=&genre=&author=",
-        query: { title: this.searchKeyword },
-      });
+      // this.$router.push({
+      //   path: "/search?novelId=&genre=&author=",
+      //   query: { title: this.searchKeyword },
+      // });
+      location.href =
+        "/search?novelId=&genre=&author=&title=" + this.searchKeyword;
     },
   },
   mounted() {
