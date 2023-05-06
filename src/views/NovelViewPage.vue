@@ -2,7 +2,7 @@
   <div class="container">
     <h3 class="title"><b>전체 작품 리스트</b></h3>
     <!-- 내가 좋아요 한 작품 좋아요 기능 완료되면 구현 예정 -->
-    <!-- <button @click="novelLikeList()">내가 좋아요 한 작품</button> -->
+    <button @click="novelLikeList()">내가 좋아요 한 작품</button>
     <div class="novel-list-box" ref="allProductList">
       <b-row>
         <b-col
@@ -76,7 +76,24 @@ export default {
         "https://via.placeholder.com/600x600.png?text=No+Image";
     },
     novelLikeList() {
-      alert("내가 좋아요 한 작품");
+      axios
+        .get(`/api/v1/user/novel?novelId=${0}`, {
+          headers: {
+            Authorization: "Bearer " + this.$store.getters.getAccessToken,
+          },
+        })
+        .then((data) => {
+          this.$router.push({
+            name: "novelLike",
+            params: data,
+          });
+        })
+        .catch((err) => {
+          alert(err);
+        });
+    },
+    detailNovel(item) {
+      location.href = "/novel/detailView/" + item.novelId;
     },
   },
   mounted() {
