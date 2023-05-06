@@ -9,12 +9,12 @@
       <b-nav-item>대체역사</b-nav-item>
       <b-nav-item>라이트노벨</b-nav-item>
     </b-nav>
-    <main style="margin-top: 5%">
+    <main style="margin-top: 3%">
       <article>
         <b-container class="bv-example-row">
           <b-row class="rows">
             <b-col>
-              <img :src="novel.image" />
+              <img id="image" :src="novel.image" />
             </b-col>
             <b-col class="col-9">
               <b>제목</b>
@@ -23,6 +23,20 @@
               <p>{{ novel.genre }}</p>
               <b>작가</b>
               <p>{{ novel.author }}</p>
+              <div>
+                <button @click="novelLikeBtn()" :class="{ active: novelLiked }">
+                  <img
+                    :src="
+                      novelLiked
+                        ? 'https://cdn-icons-png.flaticon.com/512/803/803087.png'
+                        : 'https://cdn-icons-png.flaticon.com/512/812/812327.png'
+                    "
+                    :alt="novelLiked ? '좋아요 완료' : '좋아요 하기'"
+                    width="24"
+                    height="24"
+                  />
+                </button>
+              </div>
             </b-col>
           </b-row>
           <br />
@@ -53,7 +67,10 @@
                   <option value="4">4</option>
                   <option value="5">5</option>
                 </b-form-select>
-                <b-button @click="reviewWrite()" style="margin-left: 1%"
+                <b-button
+                  id="reviewBtn"
+                  @click="reviewWrite()"
+                  style="margin-left: 1%"
                   >등록</b-button
                 >
               </div>
@@ -63,10 +80,11 @@
         <br />
         <b-container>
           <h4><b>🗨️리뷰</b></h4>
-          <div v-for="review in reviews.content" v-bind:key="review.id">
+          <div v-for="(review, index) in reviews.content" :key="index">
             <div class="reviewBox">
               <div class="row">
                 <div class="col">
+                  <p>{{ index }}</p>
                   <p><b>작성자ㅤ</b>{{ review.nickname }}</p>
                 </div>
                 <div class="col">
@@ -77,8 +95,27 @@
                 <p>{{ review.reviewContent }}</p>
               </div>
               <div class="row">
-                <p class="col">평점 : {{ review.reviewGrade }}</p>
-                <p class="col">👍좋아요 : {{ review.reviewLike }}</p>
+                <div class="col">평점 : {{ review.reviewGrade }}</div>
+                <div class="col">
+                  <div class="right_area">
+                    <button
+                      @click="likeBtn(index)"
+                      :class="{ active: reviewLiked }"
+                    >
+                      <img
+                        :src="
+                          reviewLiked
+                            ? 'https://cdn-icons-png.flaticon.com/512/803/803087.png'
+                            : 'https://cdn-icons-png.flaticon.com/512/812/812327.png'
+                        "
+                        :alt="reviewLiked ? '좋아요 완료' : '좋아요 하기'"
+                        width="24"
+                        height="24"
+                      />
+                    </button>
+                    좋아요 : {{ review.reviewLike }}
+                  </div>
+                </div>
               </div>
             </div>
             <br />
@@ -91,7 +128,7 @@
 <script scoped>
 import axios from "axios";
 export default {
-  name: "WorkDetailPage",
+  name: "NovelDetailPage",
   data() {
     return {
       novel: {},
@@ -100,6 +137,8 @@ export default {
       reviewGrade: 0,
       selectedGrade: "--",
       createdDate: {},
+      reviewLiked: false,
+      novelLiked: false,
     };
   },
   created() {
@@ -108,6 +147,7 @@ export default {
       .get("/api/v1/novel/" + id)
       .then((response) => {
         this.novel = response.data;
+        console.log(this.novel);
       })
       .catch((error) => {
         console.log(error);
@@ -120,6 +160,7 @@ export default {
         const month = this.reviews.content[0].createdDate[1];
         const day = this.reviews.content[0].createdDate[2];
         this.createdDate = year + "/" + month + "/" + day;
+        console.log(this.reviews);
       })
       .catch((error) => {
         console.log(error);
@@ -146,7 +187,6 @@ export default {
           }
         )
         .then((response) => {
-          console.log(response.data);
           this.reviews = response.data;
           this.$router.go(0);
         })
@@ -154,11 +194,20 @@ export default {
           console.log(error);
         });
     },
+    likeBtn() {
+      this.reviewLiked = !this.reviewLiked;
+    },
+    novelLikeBtn() {
+      this.novelLiked = !this.novelLiked;
+    },
   },
 };
 </script>
 <style scoped>
-img {
+#reviewBtn {
+  border-radius: 1px;
+}
+#image {
   border-width: 30px;
   border-style: solid;
   border-color: white;
@@ -178,5 +227,42 @@ img {
   background-color: white;
   padding: 1rem;
   border-radius: 10px;
+}
+button {
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+  border-radius: 50%;
+  border: solid 2px #eaeaea;
+  background-color: white;
+}
+
+.active {
+  width: calc(100vw * (45 / 1920));
+  height: calc(100vw * (45 / 1920));
+
+  border-radius: 50%;
+  border: solid 2px #eaeaea;
+  background-color: #fff;
+}
+.active img {
+  width: 24px;
+  height: 24px;
+}
+.active img {
+  animation: animateHeart 0.3s linear forwards;
+}
+@keyframes animateHeart {
+  0% {
+    transform: scale(0.2);
+  }
+
+  40% {
+    transform: scale(1.2);
+  }
+
+  100% {
+    transform: scale(1);
+  }
 }
 </style>
