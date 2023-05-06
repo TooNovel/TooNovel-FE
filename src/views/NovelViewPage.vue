@@ -14,13 +14,8 @@
           md="4"
           lg="3"
         >
-          <b-card>
-            <b-card-img
-              :src="novel.image"
-              class="card-image"
-              @click="detailNovelList(novel.novelId)"
-            >
-            </b-card-img>
+          <b-card @click="detailNovelList(novel.novelId)">
+            <b-card-img :src="novel.image" class="card-image"></b-card-img>
             <b-card-title>{{ novel.title }}</b-card-title>
             <b-card-text>{{ novel.author }}</b-card-text>
             <b-card-text>{{ novel.genre }}</b-card-text>
