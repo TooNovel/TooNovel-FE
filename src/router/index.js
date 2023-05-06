@@ -10,6 +10,7 @@ import NovelDetailPage from "@/views/NovelDetailPage.vue";
 import ReviewTotalPage from "@/views/ReviewTotalPage.vue";
 import RecommendPage from "@/views/RecommendPage.vue";
 import NovelViewPage from "@/views/NovelViewPage.vue";
+import UserLikeNovelPage from "@/views/UserLikeNovelPage.vue";
 
 Vue.use(Router);
 
@@ -61,6 +62,11 @@ export default new Router({
       path: "/novels",
       component: NovelViewPage,
       name: "novels",
+    },
+    {
+      path: "/novelLike",
+      component: UserLikeNovelPage,
+      name: "novelLike",
     },
   ],
 });
