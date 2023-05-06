@@ -27,9 +27,9 @@
         cols="12"
         sm="6"
         md="4"
-        lg="3"
+        lg="2"
       >
-        <b-card>
+        <b-card @click="detailNovelList(product.novelId)">
           <b-card-img :src="product.image" :alt="product.title"></b-card-img>
           <b-card-title>{{ product.title }}</b-card-title>
           <b-card-text>{{ product.contents }}</b-card-text>
@@ -99,6 +99,9 @@ export default {
         .catch((error) => {
           console.log(error);
         });
+    },
+    detailNovelList(novelId) {
+      location.href = "/novel/detailView/" + novelId;
     },
   },
 };
