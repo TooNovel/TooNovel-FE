@@ -30,11 +30,7 @@
         lg="3"
       >
         <b-card>
-          <b-card-img
-            :src="product.image"
-            :alt="product.title"
-            @error="handleImageError"
-          ></b-card-img>
+          <b-card-img :src="product.image" :alt="product.title"></b-card-img>
           <b-card-title>{{ product.title }}</b-card-title>
           <b-card-text>{{ product.contents }}</b-card-text>
         </b-card>
@@ -97,6 +93,7 @@ export default {
         )
         .then((response) => {
           this.products = [];
+          this.products = response.data;
           console.log(response.data);
         })
         .catch((error) => {
