@@ -11,7 +11,7 @@ import ReviewTotalPage from "@/views/ReviewTotalPage.vue";
 import RecommendPage from "@/views/RecommendPage.vue";
 import NovelViewPage from "@/views/NovelViewPage.vue";
 import UserLikeNovelPage from "@/views/UserLikeNovelPage.vue";
-import WorkSearchPage from "@/views/WorkSearchPage";
+import NovelSearchPage from "@/views/NovelSearchPage";
 
 Vue.use(Router);
 
@@ -72,7 +72,7 @@ export default new Router({
     {
       path: "/search",
       name: "search",
-      component: WorkSearchPage,
+      component: NovelSearchPage,
     },
   ],
 });

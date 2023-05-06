@@ -122,7 +122,7 @@ export default {
       //   query: { title: this.searchKeyword },
       // });
       location.href =
-        "/search?novelId=&genre=&author=&title=" + this.searchKeyword;
+        "/search?novelId=null&genre=&author=&title=" + this.searchKeyword;
     },
   },
   mounted() {

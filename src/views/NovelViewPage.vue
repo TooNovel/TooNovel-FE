@@ -48,9 +48,9 @@ export default {
         .then((res) => {
           if (res.data.length) {
             this.novels = this.novels.concat(res.data);
+            this.novelId = this.novels[this.novels.length - 1].novelId;
             $state.loaded(); //데이터 로딩
-            this.novelId = Number(Object.keys(this.novels).length) - 1;
-            if (Number(Object.keys(this.novels).length) / 30 == 0) {
+            if (this.novelId / res.data.length == 0) {
               $state.complete(); //데이터가 없으면 로딩 끝
             }
           } else {
@@ -94,7 +94,7 @@ export default {
   mounted() {
     const novelList = this.$route.params.data;
     this.novels = novelList;
-    this.novelId = Number(Object.keys(this.novels).length) - 1;
+    this.novelId = this.novels[this.novels.length - 1].novelId;
   },
   components: {
     InfiniteLoading,
