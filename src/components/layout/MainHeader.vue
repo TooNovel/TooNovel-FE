@@ -25,8 +25,14 @@
 
     <b-navbar-nav class="right">
       <b-nav-form class="mt-1" style="margin-right: 10px" id="searchForm">
-        <input placeholder="작품을 검색하세요!" type="text" />
-        <b-button size="sm" class="my-2 my-sm-0">검색</b-button>
+        <input
+          placeholder="작품을 검색하세요!"
+          type="text"
+          v-model="searchKeyword"
+        />
+        <b-button size="sm" class="my-2 my-sm-0" @click="toSearch()"
+          >검색</b-button
+        >
       </b-nav-form>
       <div v-if="accessToken">
         <b-nav-form class="mt-1">
@@ -76,6 +82,7 @@ export default {
     return {
       message: "MainHeader",
       accessToken: this.$store.getters.getAccessToken,
+      searchKeyword: "",
     };
   },
   methods: {
@@ -108,6 +115,14 @@ export default {
     },
     toCommunity() {
       this.$router.push("/community");
+    },
+    toSearch() {
+      // this.$router.push({
+      //   path: "/search?novelId=&genre=&author=",
+      //   query: { title: this.searchKeyword },
+      // });
+      location.href =
+        "/search?novelId=null&genre=&author=&title=" + this.searchKeyword;
     },
   },
   mounted() {
