@@ -53,12 +53,12 @@
           <div class="row">
             <b-form>
               <div class="col">
-                <b-textarea rows="10" type="text" v-model="reviewcontent">
+                <b-textarea rows="10" type="text" v-model="reviewContent">
                 </b-textarea>
               </div>
               <div class="col" style="margin-top: 1%">
                 <label><b>평점 남기기ㅤ</b></label>
-                <b-form-select v-model="selectedGrade">
+                <b-form-select v-model="reviewGrade">
                   <option value="--">------</option>
                   <option value="0">0</option>
                   <option value="1">1</option>
@@ -133,7 +133,7 @@ export default {
     return {
       novel: {},
       reviews: {},
-      reviewcontent: "",
+      reviewContent: "",
       reviewGrade: 0,
       selectedGrade: "--",
       createdDate: {},
@@ -141,58 +141,53 @@ export default {
       novelLiked: false,
     };
   },
-  created() {
-    const id = this.$route.params.novel_id;
-    axios
-      .get("/api/v1/novel/" + id)
-      .then((response) => {
-        this.novel = response.data;
-        console.log(this.novel);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-    axios
-      .get("/api/v1/review/" + id + "/novel")
-      .then((response) => {
-        this.reviews = response.data;
-        const year = this.reviews.content[0].createdDate[0];
-        const month = this.reviews.content[0].createdDate[1];
-        const day = this.reviews.content[0].createdDate[2];
-        this.createdDate = year + "/" + month + "/" + day;
-        console.log(this.reviews);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+  async created() {
+    try {
+      const id = this.$route.params.novel_id;
+      // const novelRes = await axios.get("/api/v1/novel/" + id);
+      // this.novel = novelRes.data;
+      // const reviewRes = await axios.get("/api/v1/review/" + id + "/novel");
+      // this.reviews = reviewRes.data;
+      const [novelRes, reviewRes] = await Promise.all([
+        axios.get("/api/v1/novel/" + id),
+        axios.get("/api/v1/review/" + id + "/novel"),
+      ]);
+      this.novel = novelRes.data;
+      this.reviews = reviewRes.data;
+
+      // const year = this.reviews.content[0].createdDate[0];
+      // const month = this.reviews.content[0].createdDate[1];
+      // const day = this.reviews.content[0].createdDate[2];
+      const [year, month, day] = this.reviews.content[0].createdDate;
+
+      // this.createdDate = year + "/" + month + "/" + day;
+      this.createdDate = `${year}/${month}/${day}`;
+
+      console.log(this.reviews);
+    } catch (err) {
+      console.log(err);
+    }
   },
   methods: {
-    reviewWrite() {
-      const reviewContent = this.reviewcontent;
-      const reviewGrade = this.reviewGrade;
-      const novelId = this.novel.novelId;
-      axios
-        .post(
-          "/api/v1/review",
-          {
-            reviewContent: reviewContent,
-            reviewGrade: reviewGrade,
-            writerId: 0,
-            novelId: novelId,
+    async reviewWrite() {
+      try {
+        const obj = {
+          reviewContent: this.reviewContent,
+          reviewGrade: this.reviewGrade,
+          writerId: 0,
+          novelId: this.novel.novelId,
+        };
+        const option = {
+          headers: {
+            Authorization: "Bearer " + this.$store.getters.getAccessToken,
           },
-          {
-            headers: {
-              Authorization: "Bearer " + this.$store.getters.getAccessToken,
-            },
-          }
-        )
-        .then((response) => {
-          this.reviews = response.data;
-          this.$router.go(0);
-        })
-        .catch((error) => {
-          console.log(error);
-        });
+        };
+        const res = await axios.post("/api/v1/review", obj, option);
+        this.reviews = res.data;
+        this.$router.go(0);
+      } catch (err) {
+        console.log(err);
+      }
     },
     likeBtn() {
       this.reviewLiked = !this.reviewLiked;
