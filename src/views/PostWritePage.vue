@@ -47,6 +47,8 @@ export default {
   },
   methods: {
     writePost() {
+      // 현재 안쓰는 페이지 같아서 리팩토링에서 제외했습니다.
+      // 반드시 await async를 명시하고, getElementById와 같이 dom을 직접 조작하는 것은 지양해주세요.
       const title = document.getElementById("title").value;
       const content = document.getElementById("content").value;
       const post = {
