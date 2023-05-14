@@ -79,61 +79,55 @@ export default {
     };
   },
   async created() {
-    this.keyword = this.$route.query.title;
-    await axios
-      .get(`/api/v1/novel/?novelId=&title=${this.keyword}`)
-      .then((response) => {
-        this.novels = response.data;
-        this.novelId = this.novels[this.novels.length - 1].novelId;
-        console.log(this.novelId);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+    try {
+      this.keyword = this.$route.query.title;
+      const res = await axios.get(
+        `/api/v1/novel/?novelId=&title=${this.keyword}`
+      );
+      this.novels = res.data;
+      this.novelId = this.novels[this.novels.length - 1].novelId;
+      console.log(this.novelId);
+    } catch (err) {
+      console.log(err);
+    }
   },
   methods: {
     async infiniteHandler($state) {
-      await axios
-        .get(
+      try {
+        const res = await axios.get(
           `/api/v1/novel/?novelId=${this.novelId}&title=${this.title}&author=${this.author}&genre=${this.selected}`
-        )
-        .then((res) => {
-          console.log("length :" + res.data.length);
-          if (res.data.length) {
-            this.novels = this.novels.concat(res.data);
-            this.novelId = this.novels[this.novels.length - 1].novelId;
-            $state.loaded(); //데이터 로딩
-            console.log("스크롤 후 :" + this.novelId);
-            console.log("스크롤 후 :" + res.data.length);
-            if (this.novelId / res.data.length == 0) {
-              $state.complete(); //데이터가 없으면 로딩 끝
-            }
-          } else {
-            $state.complete();
+        );
+        console.log("length :" + res.data.length);
+
+        if (res.data.length) {
+          this.novels = this.novels.concat(res.data);
+          this.novelId = this.novels[this.novels.length - 1].novelId;
+          $state.loaded(); //데이터 로딩
+          console.log("스크롤 후 :" + this.novelId);
+          console.log("스크롤 후 :" + res.data.length);
+          if (this.novelId / res.data.length == 0) {
+            $state.complete(); //데이터가 없으면 로딩 끝
           }
-        })
-        .catch((err) => {
-          console.log(err);
-          alert("에러");
-          window.location.href = "/";
-        });
+        } else {
+          $state.complete();
+        }
+      } catch (err) {
+        console.log(err);
+        alert("에러");
+        location.href = "/";
+      }
     },
     async search() {
-      console.log(this.title);
-      console.log(this.author);
-      console.log(this.selected);
-      await axios
-        .get(
+      try {
+        const res = await axios.get(
           `/api/v1/novel/?novelId=&title=${this.title}&author=${this.author}&genre=${this.selected}`
-        )
-        .then((response) => {
-          this.novels = [];
-          this.novels = response.data;
-          console.log(response.data);
-        })
-        .catch((error) => {
-          console.log(error);
-        });
+        );
+        this.novels = [];
+        this.novels = res.data;
+        console.log(res.data);
+      } catch (err) {
+        console.log(err);
+      }
     },
   },
   components: {
