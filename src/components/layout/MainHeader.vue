@@ -38,7 +38,7 @@
         <b-nav-form class="mt-1">
           <b-button
             size="sm"
-            @click="goToLogin()"
+            @click="goToLoginPage()"
             id="loginBtn"
             style="margin-right: 20px"
             variant="primary"
@@ -61,7 +61,7 @@
         <b-nav-form class="mt-1">
           <b-button
             size="sm"
-            @click="goToLogin()"
+            @click="goToLoginPage()"
             id="loginBtn"
             style="margin-right: 20px"
             variant="primary"
@@ -86,41 +86,37 @@ export default {
     };
   },
   methods: {
-    getAllReview() {
-      axios.get("/api/v1/review/0").then((data) => {
+    async getAllReview() {
+      await axios.get("/api/v1/review/0").then((data) => {
         this.$router.push({
           name: "reviews",
           params: data,
         });
       });
     },
-    getAllNovel() {
-      axios.get("/api/v1/novel").then((data) => {
+    async getAllNovel() {
+      await axios.get("/api/v1/novel").then((data) => {
         this.$router.push({
           name: "novels",
           params: data,
         });
       });
     },
-    goToLogin() {
+    goToLoginPage() {
       this.$router.push("/login");
     },
-    // 추후 구현 예정
+    // 테스트가 덜 된 코드
     logout() {
       document.cookie = "accessTokenCookie=; path=/;";
       document.cookie = "refreshTokenCookie=; path=/;";
       this.$store.commit("setAccessToken", null);
       this.$store.commit("setRefreshToken", null);
-      window.location.href = "/";
+      location.href = "/";
     },
     toCommunity() {
       this.$router.push("/community");
     },
     toSearch() {
-      // this.$router.push({
-      //   path: "/search?novelId=&genre=&author=",
-      //   query: { title: this.searchKeyword },
-      // });
       location.href =
         "/search?novelId=null&genre=&author=&title=" + this.searchKeyword;
     },
