@@ -80,7 +80,7 @@
         <br />
         <b-container>
           <h4><b>🗨️리뷰</b></h4>
-          <div v-for="(review, index) in reviews.content" :key="index">
+          <div v-for="(review, index) in reviews" :key="index">
             <div class="reviewBox">
               <div class="row">
                 <div class="col">
@@ -88,7 +88,7 @@
                   <p><b>작성자ㅤ</b>{{ review.nickname }}</p>
                 </div>
                 <div class="col">
-                  <p><b>작성일자ㅤ</b>{{ createdDate }}</p>
+                  <p><b>작성일자ㅤ</b>{{ review.createdDate }}</p>
                 </div>
               </div>
               <div class="row">
@@ -132,37 +132,34 @@ export default {
   data() {
     return {
       novel: {},
-      reviews: {},
+      reviews: [],
       reviewContent: "",
       reviewGrade: 0,
       selectedGrade: "--",
-      createdDate: {},
       reviewLiked: false,
       novelLiked: false,
     };
   },
   async created() {
     try {
+      // const [novelRes, reviewRes] = await Promise.all([
+      //   axios.get("/api/v1/novel/" + id),
+      //   axios.get("/api/v1/review/" + id + "/novel"),
+      // ]);
       const id = this.$route.params.novel_id;
-      // const novelRes = await axios.get("/api/v1/novel/" + id);
-      // this.novel = novelRes.data;
-      // const reviewRes = await axios.get("/api/v1/review/" + id + "/novel");
-      // this.reviews = reviewRes.data;
-      const [novelRes, reviewRes] = await Promise.all([
-        axios.get("/api/v1/novel/" + id),
-        axios.get("/api/v1/review/" + id + "/novel"),
-      ]);
+
+      const novelRes = await axios.get("/api/v1/novel/" + id);
       this.novel = novelRes.data;
-      this.reviews = reviewRes.data;
 
-      // const year = this.reviews.content[0].createdDate[0];
-      // const month = this.reviews.content[0].createdDate[1];
-      // const day = this.reviews.content[0].createdDate[2];
-      const [year, month, day] = this.reviews.content[0].createdDate;
+      const reviewRes = await axios.get("/api/v1/review/" + id + "/novel");
+      this.reviews = reviewRes.data.content;
 
-      // this.createdDate = year + "/" + month + "/" + day;
-      this.createdDate = `${year}/${month}/${day}`;
+      // const [year, month, day] = this.reviews.content[0].createdDate;
+      // this.createdDate = `${year}/${month}/${day}`;
 
+      this.reviews.forEach((review) => {
+        review.createdDate = `${review.createdDate[0]} / ${review.createdDate[1]} / ${review.createdDate[2]}`;
+      });
       console.log(this.reviews);
     } catch (err) {
       console.log(err);
@@ -182,6 +179,7 @@ export default {
             Authorization: "Bearer " + this.$store.getters.getAccessToken,
           },
         };
+
         const res = await axios.post("/api/v1/review", obj, option);
         this.reviews = res.data;
         this.$router.go(0);
