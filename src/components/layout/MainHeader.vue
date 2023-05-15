@@ -87,20 +87,26 @@ export default {
   },
   methods: {
     async getAllReview() {
-      await axios.get("/api/v1/review/0").then((data) => {
+      try {
+        const res = await axios.get("/api/v1/review");
         this.$router.push({
           name: "reviews",
-          params: data,
+          params: { data: res.data },
         });
-      });
+      } catch (err) {
+        console.log(err);
+      }
     },
     async getAllNovel() {
-      await axios.get("/api/v1/novel").then((data) => {
+      try {
+        const res = await axios.get("/api/v1/novel");
         this.$router.push({
           name: "novels",
-          params: data,
+          params: { data: res.data },
         });
-      });
+      } catch (err) {
+        console.log(err);
+      }
     },
     goToLoginPage() {
       this.$router.push("/login");

@@ -80,12 +80,15 @@ export default {
         "https://via.placeholder.com/600x600.png?text=No+Image";
     },
     async getAllNovel() {
-      await axios.get("/api/v1/novel").then((data) => {
+      try {
+        const res = await axios.get("/api/v1/novel");
         this.$router.push({
           name: "novels",
-          params: data,
+          params: { data: res.data },
         });
-      });
+      } catch (err) {
+        console.log(err);
+      }
     },
     detailNovelList(novelId) {
       location.href = "/novel/detailView/" + novelId;

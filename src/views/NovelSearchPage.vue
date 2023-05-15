@@ -82,7 +82,7 @@ export default {
     try {
       this.keyword = this.$route.query.title;
       const res = await axios.get(
-        `/api/v1/novel/?novelId=&title=${this.keyword}`
+        `/api/v1/novel?novelId=&title=${this.keyword}`
       );
       this.novels = res.data;
       this.novelId = this.novels[this.novels.length - 1].novelId;
@@ -95,7 +95,7 @@ export default {
     async infiniteHandler($state) {
       try {
         const res = await axios.get(
-          `/api/v1/novel/?novelId=${this.novelId}&title=${this.title}&author=${this.author}&genre=${this.selected}`
+          `/api/v1/novel?novelId=${this.novelId}&title=${this.title}&author=${this.author}&genre=${this.selected}`
         );
         console.log("length :" + res.data.length);
 

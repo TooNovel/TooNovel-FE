@@ -59,12 +59,6 @@ export default {
   },
   methods: {
     async signup() {
-      // const gender = document.querySelector(
-      //   'input[name="gender"]:checked'
-      // ).value;
-      // const birth = this.date;
-      // const nickname = document.getElementById("nick_id").value;
-
       if (
         this.gender == null ||
         this.gender == "" ||
@@ -75,25 +69,24 @@ export default {
       ) {
         alert("빈 칸이 있습니다. 모두 작성해주세요.");
       } else {
-        const obj = {
-          gender: this.gender,
-          birth: this.birth,
-          nickname: this.nickname,
-        };
-        const option = {
-          headers: {
-            Authorization: "Bearer " + this.$store.getters.getAccessToken,
-          },
-        };
-        await axios
-          .patch("/api/v1/user/register", obj, option)
-          .then((res) => {
-            console.log(res.data);
-            router.push({ path: "/" });
-          })
-          .catch((error) => {
-            console.log(error);
-          });
+        try {
+          const obj = {
+            gender: this.gender,
+            birth: this.birth,
+            nickname: this.nickname,
+          };
+          const option = {
+            headers: {
+              Authorization: "Bearer " + this.$store.getters.getAccessToken,
+            },
+          };
+
+          const res = await axios.patch("/api/v1/user/register", obj, option);
+          console.log(res.data);
+          router.push({ path: "/" });
+        } catch (err) {
+          console.log(err);
+        }
       }
     },
   },

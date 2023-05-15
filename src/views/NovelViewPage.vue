@@ -71,22 +71,23 @@ export default {
         "https://via.placeholder.com/600x600.png?text=No+Image";
     },
     async novelLikeList() {
-      const option = {
-        headers: {
-          Authorization: "Bearer " + this.$store.getters.getAccessToken,
-        },
-      };
-      await axios
-        .get(`/api/v1/user/novel?novelId=${0}`, option)
-        .then((data) => {
-          this.$router.push({
-            name: "novelLike",
-            params: data,
-          });
-        })
-        .catch((err) => {
-          alert(err);
+      try {
+        const option = {
+          headers: {
+            Authorization: "Bearer " + this.$store.getters.getAccessToken,
+          },
+        };
+
+        const res = await axios.get(`/api/v1/user/novel?novelId=${0}`, option);
+        console.log(res.data);
+
+        this.$router.push({
+          name: "novelLike",
+          params: { data: res.data },
         });
+      } catch (err) {
+        console.log(err);
+      }
     },
     detailNovel(item) {
       location.href = "/novel/detailView/" + item.novelId;

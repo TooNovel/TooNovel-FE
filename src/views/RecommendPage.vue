@@ -58,37 +58,39 @@ export default {
       this.message = "개인 맞춤 추천 작품 리스트를 생성중입니다.";
       this.isLoading = true;
       this.novelList = [];
-      await axios
-        .get("/api/v1/recommend", {
+
+      try {
+        const option = {
           headers: {
             Authorization: "Bearer " + this.$store.getters.getAccessToken,
           },
-        })
-        .then(async (res) => {
-          await this.sleep(2500);
-          this.novelList = res.data;
-          console.log(res.data);
-          this.isLoading = false;
-        })
-        .catch((err) => {
-          console.log(err);
-          alert("로그인 인증에 실패했습니다");
-          location.href = "/";
-        });
+        };
+
+        const res = await axios.get("/api/v1/recommend", option);
+
+        await this.sleep(2500);
+        this.novelList = res.data;
+        console.log(res.data);
+        this.isLoading = false;
+      } catch (err) {
+        alert("로그인 인증에 실패했습니다");
+        console.log(err);
+        location.href = "/";
+      }
     },
     async updateModel() {
       this.message = "추천 모델을 학습중입니다.";
       this.novelList = [];
       this.isLoading = true;
-      await axios
-        .put("/api/v1/recommend")
-        .then(() => {
-          this.isLoading = false;
-          this.generateRecommend();
-        })
-        .catch((err) => {
-          alert(err);
-        });
+
+      try {
+        await axios.put("/api/v1/recommend");
+
+        this.isLoading = false;
+        this.generateRecommend();
+      } catch (err) {
+        alert(err);
+      }
     },
     async sleep(sec) {
       return new Promise((resolve) => setTimeout(resolve, sec));
