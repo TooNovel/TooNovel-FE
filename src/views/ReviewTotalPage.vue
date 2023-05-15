@@ -62,9 +62,12 @@ export default {
   },
   methods: {
     async reviewPaging(n) {
-      await axios.get(`/api/v1/review/${n}`).then((data) => {
-        this.reviews = data.data;
-      });
+      try {
+        const res = await axios.get(`/api/v1/review?page=${n}`);
+        this.reviews = res.data;
+      } catch (err) {
+        console.log(err);
+      }
     },
   },
 };
