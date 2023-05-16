@@ -61,10 +61,13 @@ export default {
     this.reviews = this.$route.params.data;
   },
   methods: {
-    reviewPaging(n) {
-      axios.get(`/api/v1/review/${n}`).then((data) => {
-        this.reviews = data.data;
-      });
+    async reviewPaging(n) {
+      try {
+        const res = await axios.get(`/api/v1/review?page=${n}`);
+        this.reviews = res.data;
+      } catch (err) {
+        console.log(err);
+      }
     },
   },
 };

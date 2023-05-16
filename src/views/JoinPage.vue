@@ -1,20 +1,21 @@
 <template>
   <div>
     <div class="join">
-      <label for="gender" style="font-size: 20px"><b>닉네임</b></label>
+      <b style="font-size: 20px">닉네임</b>
       <b-input-group>
         <b-input
           type="text"
           id="nick_id"
           placeholder="닉네임을 입력해주세요."
+          v-model="nickname"
         />
       </b-input-group>
       <br />
-      <label for="date" style="font-size: 20px"><b>생년월일</b></label>
-      <b-form-datepicker id="birth_id" v-model="date"></b-form-datepicker>
+      <b style="font-size: 20px">생년월일</b>
+      <b-form-datepicker id="birth_id" v-model="birth"></b-form-datepicker>
       <br />
-      <label for="gender" style="font-size: 20px"><b>성별</b></label>
-      <p></p>
+      <b style="font-size: 20px">성별</b>
+      <br />
       <div class="form-check form-check-inline">
         <input
           class="form-check-input"
@@ -22,6 +23,7 @@
           name="gender"
           id="man"
           value="man"
+          v-model="gender"
         />
         <label class="form-check-label" for="man">남자</label>
       </div>
@@ -32,6 +34,7 @@
           name="gender"
           id="woman"
           value="woman"
+          v-model="gender"
         />
         <label class="form-check-label" for="woman">여자</label>
       </div>
@@ -49,35 +52,42 @@ export default {
   name: "SignupView",
   data() {
     return {
-      date: null,
+      birth: null,
+      gender: null,
+      nickname: null,
     };
   },
   methods: {
-    signup() {
-      const gender = document.querySelector(
-        'input[name="gender"]:checked'
-      ).value;
-      const birth = this.date;
-      const nickname = document.getElementById("nick_id").value;
+    async signup() {
+      if (
+        this.gender == null ||
+        this.gender == "" ||
+        this.birth == null ||
+        this.birth == "" ||
+        this.nickname == null ||
+        this.nickname == ""
+      ) {
+        alert("빈 칸이 있습니다. 모두 작성해주세요.");
+      } else {
+        try {
+          const obj = {
+            gender: this.gender,
+            birth: this.birth,
+            nickname: this.nickname,
+          };
+          const option = {
+            headers: {
+              Authorization: "Bearer " + this.$store.getters.getAccessToken,
+            },
+          };
 
-      const obj = {
-        gender: gender,
-        birth: birth,
-        nickname: nickname,
-      };
-      axios
-        .patch("/api/v1/user/register", obj, {
-          headers: {
-            Authorization: "Bearer " + this.$store.getters.getAccessToken,
-          },
-        })
-        .then((res) => {
+          const res = await axios.patch("/api/v1/user/register", obj, option);
           console.log(res.data);
           router.push({ path: "/" });
-        })
-        .catch((error) => {
-          console.log(error);
-        });
+        } catch (err) {
+          console.log(err);
+        }
+      }
     },
   },
 };

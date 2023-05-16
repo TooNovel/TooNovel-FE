@@ -48,40 +48,47 @@ export default {
   },
   methods: {
     async infiniteHandler($state) {
-      await axios
-        .get(`/api/v1/user/novel?novelId=${this.novelId}`, {
+      try {
+        const option = {
           headers: {
             Authorization: "Bearer " + this.$store.getters.getAccessToken,
           },
-        })
-        .then((res) => {
-          if (res.data.length) {
-            this.novels = this.novels.concat(res.data);
-            this.novelId = this.novels[this.novels.length - 1].likeNovelId;
-            $state.loaded(); //데이터 로딩
-            if (Number(Object.keys(this.novels).length) / 10 == 0) {
-              $state.complete(); //데이터가 없으면 로딩 끝
-            }
-          } else {
-            $state.complete();
+        };
+        const res = await axios.get(
+          `/api/v1/user/novel?novelId=${this.novelId}`,
+          option
+        );
+
+        if (res.data.length) {
+          this.novels = this.novels.concat(res.data);
+          this.novelId = this.novels[this.novels.length - 1].likeNovelId;
+          $state.loaded(); //데이터 로딩
+          if (Number(Object.keys(this.novels).length) / 10 == 0) {
+            $state.complete(); //데이터가 없으면 로딩 끝
           }
-        })
-        .catch((err) => {
-          console.log(err);
-          alert(err);
-        });
+        } else {
+          $state.complete();
+        }
+      } catch (err) {
+        console.log(err);
+        alert(err);
+      }
     },
+
     handleImageError(event) {
       event.target.src =
         "https://via.placeholder.com/600x600.png?text=No+Image";
     },
-    getAllNovel() {
-      axios.get("/api/v1/novel").then((data) => {
+    async getAllNovel() {
+      try {
+        const res = await axios.get("/api/v1/novel");
         this.$router.push({
           name: "novels",
-          params: data,
+          params: { data: res.data },
         });
-      });
+      } catch (err) {
+        console.log(err);
+      }
     },
     detailNovelList(novelId) {
       location.href = "/novel/detailView/" + novelId;

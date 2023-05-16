@@ -43,25 +43,25 @@ export default {
   },
   methods: {
     async infiniteHandler($state) {
-      await axios
-        .get(`/api/v1/novel?novelId=${this.novelId}`)
-        .then((res) => {
-          if (res.data.length) {
-            this.novels = this.novels.concat(res.data);
-            this.novelId = this.novels[this.novels.length - 1].novelId;
-            $state.loaded(); //데이터 로딩
-            if (this.novelId / res.data.length == 0) {
-              $state.complete(); //데이터가 없으면 로딩 끝
-            }
-          } else {
-            $state.complete();
+      try {
+        const res = await axios.get(`/api/v1/novel?novelId=${this.novelId}`);
+        console.log("length :" + res.data.length);
+
+        if (res.data.length) {
+          this.novels = this.novels.concat(res.data);
+          this.novelId = this.novels[this.novels.length - 1].novelId;
+          $state.loaded(); //데이터 로딩
+          if (this.novelId / res.data.length == 0) {
+            $state.complete(); //데이터가 없으면 로딩 끝
           }
-        })
-        .catch((err) => {
-          console.log(err);
-          alert("에러");
-          window.location.href = "/";
-        });
+        } else {
+          $state.complete();
+        }
+      } catch (err) {
+        console.log(err);
+        alert("에러");
+        location.href = "/";
+      }
     },
     detailNovelList(novelId) {
       location.href = "/novel/detailView/" + novelId;
@@ -70,22 +70,24 @@ export default {
       event.target.src =
         "https://via.placeholder.com/600x600.png?text=No+Image";
     },
-    novelLikeList() {
-      axios
-        .get(`/api/v1/user/novel?novelId=${0}`, {
+    async novelLikeList() {
+      try {
+        const option = {
           headers: {
             Authorization: "Bearer " + this.$store.getters.getAccessToken,
           },
-        })
-        .then((data) => {
-          this.$router.push({
-            name: "novelLike",
-            params: data,
-          });
-        })
-        .catch((err) => {
-          alert(err);
+        };
+
+        const res = await axios.get(`/api/v1/user/novel?novelId=${0}`, option);
+        console.log(res.data);
+
+        this.$router.push({
+          name: "novelLike",
+          params: { data: res.data },
         });
+      } catch (err) {
+        console.log(err);
+      }
     },
     detailNovel(item) {
       location.href = "/novel/detailView/" + item.novelId;

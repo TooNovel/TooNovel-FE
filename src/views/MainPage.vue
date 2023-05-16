@@ -93,24 +93,17 @@ import { Carousel3d, Slide } from "vue-carousel-3d";
 export default {
   name: "MainPage",
   async created() {
-    await axios
-      .get("/api/v1/novel")
-      .then((response) => {
-        let temp = response.data;
-        this.shuffle(temp);
-        this.products = temp;
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-    await axios
-      .get("/api/v1/novel?novelId=3994")
-      .then((res) => {
-        this.novelList = res.data;
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    try {
+      const productsRes = await axios.get("/api/v1/novel");
+      const temp = productsRes.data;
+      this.shuffle(temp);
+      this.products = temp;
+
+      const novelsRes = await axios.get("/api/v1/novel?novelId=3994");
+      this.novelList = novelsRes.data;
+    } catch (err) {
+      console.log(err);
+    }
   },
   data() {
     return {
