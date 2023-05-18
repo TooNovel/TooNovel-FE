@@ -23,20 +23,7 @@
               <p>{{ novel.genre }}</p>
               <b>작가</b>
               <p>{{ novel.author }}</p>
-              <div>
-                <button @click="novelLikeBtn()" :class="{ active: novelLiked }">
-                  <img
-                    :src="
-                      novelLiked
-                        ? 'https://cdn-icons-png.flaticon.com/512/803/803087.png'
-                        : 'https://cdn-icons-png.flaticon.com/512/812/812327.png'
-                    "
-                    :alt="novelLiked ? '좋아요 완료' : '좋아요 하기'"
-                    width="24"
-                    height="24"
-                  />
-                </button>
-              </div>
+              <novel-like :novel="novel"></novel-like>
             </b-col>
           </b-row>
           <br />
@@ -121,6 +108,7 @@
 </template>
 <script scoped>
 import axios from "axios";
+import NovelLike from "@/components/NovelLike.vue";
 
 export default {
   name: "NovelDetailPage",
@@ -208,9 +196,9 @@ export default {
         }
       }
     },
-    novelLikeBtn() {
-      this.novelLiked = !this.novelLiked;
-    },
+  },
+  components: {
+    "novel-like": NovelLike,
   },
 };
 </script>
