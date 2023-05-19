@@ -1,6 +1,5 @@
 <template>
   <div id="products">
-    <br />
     <div v-if="products.length > 0">
       <h3>주간 인기 작품</h3>
       <carousel-3d
@@ -147,5 +146,8 @@ export default {
 <style scoped>
 #products {
   margin: 5%;
+}
+h3 {
+  font-family: "Hanna";
 }
 </style>

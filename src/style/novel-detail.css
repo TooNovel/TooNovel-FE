@@ -30,11 +30,6 @@
     border: solid 2px white;
     background-color: white;
   }
-  
-  .active {
-    width: calc(100vw * (45 / 1920));
-    height: calc(100vw * (45 / 1920));
-  }
   .active img {
     width: 24px;
     height: 24px;
