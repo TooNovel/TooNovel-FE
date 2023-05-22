@@ -185,9 +185,15 @@ export default {
           null,
           option
         );
-        res.reviewLike++;
+        const result = await axios.get(
+          "/api/v1/review/" + this.novel.novelId + "/novel",
+          option
+        );
+        const clickReview = result.data.content.find(
+          (review) => review.reviewId === res.reviewId
+        );
+        res.reviewLike = clickReview.reviewLike;
       } catch (err) {
-        console.log(err.response.data.code);
         const errStatus = err.response.data;
         if (errStatus.code == "R004") {
           alert(errStatus.message);
