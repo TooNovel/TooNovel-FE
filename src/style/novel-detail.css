@@ -1,0 +1,52 @@
+#reviewBtn {
+    border-radius: 1px;
+  }
+  #image {
+    border-width: 30px;
+    border-style: solid;
+    border-color: white;
+    border-radius: 10px;
+  }
+  .col-9 {
+    background-color: white;
+    border-radius: 10px;
+    padding: 2%;
+  }
+  .descrption {
+    background-color: white;
+    border-radius: 10px;
+    padding: 2%;
+  }
+  .reviewBox {
+    background-color: white;
+    padding: 1rem;
+    border-radius: 10px;
+  }
+  button {
+    text-decoration: none;
+    color: inherit;
+    cursor: pointer;
+    border-radius: 50%;
+    border: solid 2px white;
+    background-color: white;
+  }
+  .active img {
+    width: 24px;
+    height: 24px;
+  }
+  .active img {
+    animation: animateHeart 0.3s linear forwards;
+  }
+  @keyframes animateHeart {
+    0% {
+      transform: scale(0.2);
+    }
+  
+    40% {
+      transform: scale(1.2);
+    }
+  
+    100% {
+      transform: scale(1);
+    }
+  }

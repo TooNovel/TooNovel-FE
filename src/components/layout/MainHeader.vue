@@ -6,21 +6,21 @@
     id="header"
   >
     <b-navbar-nav>
-      <b-navbar-brand style="font-size: 25px" href="/" tag="h1"
-        >ㅤTooNovel</b-navbar-brand
-      >
-      <b-nav-item style="font-size: 20px">랭킹</b-nav-item>
-      <b-nav-item style="font-size: 20px" @click="getAllReview()"
+      <b-navbar-brand href="/"
+        >&nbsp;&nbsp;<img src="/TooNovel-logo.png" width="125" height="50"
+      /></b-navbar-brand>
+      <b-nav-item style="font-size: 27px">랭킹</b-nav-item>
+      <b-nav-item style="font-size: 27px" @click="getAllReview()"
         >리뷰</b-nav-item
       >
-      <b-nav-item style="font-size: 20px" to="/recommend">추천</b-nav-item>
-      <b-nav-item style="font-size: 20px" @click="getAllNovel()">
+      <b-nav-item style="font-size: 27px" to="/recommend">추천</b-nav-item>
+      <b-nav-item style="font-size: 27px" @click="getAllNovel()">
         웹소설
       </b-nav-item>
-      <b-nav-item style="font-size: 20px" @click="toCommunity()"
+      <b-nav-item style="font-size: 27px" @click="toCommunity()"
         >커뮤니티</b-nav-item
       >
-      <b-nav-item style="font-size: 20px">팬클럽</b-nav-item>
+      <b-nav-item style="font-size: 27px">팬클럽</b-nav-item>
     </b-navbar-nav>
 
     <b-navbar-nav class="right">

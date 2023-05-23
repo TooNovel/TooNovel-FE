@@ -23,20 +23,7 @@
               <p>{{ novel.genre }}</p>
               <b>작가</b>
               <p>{{ novel.author }}</p>
-              <div>
-                <button @click="novelLikeBtn()" :class="{ active: novelLiked }">
-                  <img
-                    :src="
-                      novelLiked
-                        ? 'https://cdn-icons-png.flaticon.com/512/803/803087.png'
-                        : 'https://cdn-icons-png.flaticon.com/512/812/812327.png'
-                    "
-                    :alt="novelLiked ? '좋아요 완료' : '좋아요 하기'"
-                    width="24"
-                    height="24"
-                  />
-                </button>
-              </div>
+              <novel-like :novel="novel"></novel-like>
             </b-col>
           </b-row>
           <br />
@@ -80,11 +67,10 @@
         <br />
         <b-container>
           <h4><b>🗨️리뷰</b></h4>
-          <div v-for="(review, index) in reviews" :key="index">
+          <div v-for="review in reviews" v-bind:key="review.reviewId">
             <div class="reviewBox">
               <div class="row">
                 <div class="col">
-                  <p>{{ index }}</p>
                   <p><b>작성자ㅤ</b>{{ review.nickname }}</p>
                 </div>
                 <div class="col">
@@ -99,16 +85,11 @@
                 <div class="col">
                   <div class="right_area">
                     <button
-                      @click="likeBtn(index)"
-                      :class="{ active: reviewLiked }"
+                      @click="reviewLike(review)"
+                      :class="{ active: review.isActived }"
                     >
                       <img
-                        :src="
-                          reviewLiked
-                            ? 'https://cdn-icons-png.flaticon.com/512/803/803087.png'
-                            : 'https://cdn-icons-png.flaticon.com/512/812/812327.png'
-                        "
-                        :alt="reviewLiked ? '좋아요 완료' : '좋아요 하기'"
+                        src="https://cdn-icons-png.flaticon.com/512/803/803087.png"
                         width="24"
                         height="24"
                       />
@@ -127,6 +108,8 @@
 </template>
 <script scoped>
 import axios from "axios";
+import NovelLike from "@/components/NovelLike.vue";
+
 export default {
   name: "NovelDetailPage",
   data() {
@@ -136,8 +119,8 @@ export default {
       reviewContent: "",
       reviewGrade: 0,
       selectedGrade: "--",
-      reviewLiked: false,
       novelLiked: false,
+      accessToken: this.$store.getters.getAccessToken,
     };
   },
   async created() {
@@ -179,83 +162,52 @@ export default {
             Authorization: "Bearer " + this.$store.getters.getAccessToken,
           },
         };
-
         const res = await axios.post("/api/v1/review", obj, option);
-        this.reviews = res.data;
+        const newReview = res.data;
+        this.reviews.push(newReview);
         this.$router.go(0);
       } catch (err) {
+        if (this.accessToken == null || this.accessToken === "") {
+          alert("로그인 후 리뷰 작성할 수 있습니다!");
+        }
         console.log(err);
       }
     },
-    likeBtn() {
-      this.reviewLiked = !this.reviewLiked;
+    async reviewLike(res) {
+      try {
+        const option = {
+          headers: {
+            Authorization: "Bearer " + this.$store.getters.getAccessToken,
+          },
+        };
+        await axios.post(
+          "/api/v1/review/" + res.reviewId + "/like",
+          null,
+          option
+        );
+        const result = await axios.get(
+          "/api/v1/review/" + this.novel.novelId + "/novel",
+          option
+        );
+        const clickReview = result.data.content.find(
+          (review) => review.reviewId === res.reviewId
+        );
+        res.reviewLike = clickReview.reviewLike;
+      } catch (err) {
+        const errStatus = err.response.data;
+        if (errStatus.code == "R004") {
+          alert(errStatus.message);
+        } else if (this.accessToken == null || this.accessToken === "") {
+          alert("로그인 후 좋아요 눌러주세요!");
+        }
+      }
     },
-    novelLikeBtn() {
-      this.novelLiked = !this.novelLiked;
-    },
+  },
+  components: {
+    "novel-like": NovelLike,
   },
 };
 </script>
 <style scoped>
-#reviewBtn {
-  border-radius: 1px;
-}
-#image {
-  border-width: 30px;
-  border-style: solid;
-  border-color: white;
-  border-radius: 10px;
-}
-.col-9 {
-  background-color: white;
-  border-radius: 10px;
-  padding: 2%;
-}
-.descrption {
-  background-color: white;
-  border-radius: 10px;
-  padding: 2%;
-}
-.reviewBox {
-  background-color: white;
-  padding: 1rem;
-  border-radius: 10px;
-}
-button {
-  text-decoration: none;
-  color: inherit;
-  cursor: pointer;
-  border-radius: 50%;
-  border: solid 2px #eaeaea;
-  background-color: white;
-}
-
-.active {
-  width: calc(100vw * (45 / 1920));
-  height: calc(100vw * (45 / 1920));
-
-  border-radius: 50%;
-  border: solid 2px #eaeaea;
-  background-color: #fff;
-}
-.active img {
-  width: 24px;
-  height: 24px;
-}
-.active img {
-  animation: animateHeart 0.3s linear forwards;
-}
-@keyframes animateHeart {
-  0% {
-    transform: scale(0.2);
-  }
-
-  40% {
-    transform: scale(1.2);
-  }
-
-  100% {
-    transform: scale(1);
-  }
-}
+@import "@/style/novel-detail.css";
 </style>
