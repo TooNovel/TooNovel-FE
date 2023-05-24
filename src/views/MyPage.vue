@@ -4,11 +4,11 @@
     <hr />
     <div>
       <label>이미지</label>
-      <div>: {{ imageUrl }}</div>
+      <div>:<img :src="imageUrl" /></div>
     </div>
     <div>
       <label>닉네임</label>
-      <input type="text" v-bind:value="nickname" />
+      <input type="text" v-model="nickname" />
       <button>중복확인</button>
     </div>
     <button>회원탈퇴</button>

@@ -46,8 +46,20 @@ export default {
     },
     async getStatistic() {
       try {
-        const genderRes = await axios.get("/api/v1/statistics/1/1/gender");
-        const ageRes = await axios.get("/api/v1/statistics/1/1/age");
+        const option = {
+          headers: {
+            Authorization: "Bearer " + this.$store.getters.getAccessToken,
+          },
+        };
+        const novelId = ""; //추후 novelId 작품 클릭시 해당 novelId 넘어갈 예정
+        const genderRes = await axios.get(
+          `/api/v1/statistics/${novelId}/gender`,
+          option
+        );
+        const ageRes = await axios.get(
+          `/api/v1/statistics/${novelId}/age`,
+          option
+        );
         this.$router.push({
           name: "writer",
           params: {
