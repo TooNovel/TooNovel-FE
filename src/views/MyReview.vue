@@ -61,7 +61,6 @@ export default {
   },
   created() {
     this.reviews = this.$route.params.data;
-    console.log(this.reviews);
   },
   methods: {
     async reviewPaging(n) {

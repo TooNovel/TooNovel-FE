@@ -30,8 +30,6 @@ export default {
   mounted() {
     this.nickname = this.$route.params.data.nickname;
     this.imageUrl = this.$route.params.data.imageUrl;
-    console.log(this.nickname);
-    console.log(this.imageUrl);
   },
   components: { MyPageHeader },
 };
