@@ -1,10 +1,19 @@
 <template>
-  <div>
-    <canvas ref="myChart" width="400" height="400"></canvas>
-    <canvas ref="myChart2" width="400" height="400"></canvas>
+  <div id="writerStatistics">
+    <MyPageHeader></MyPageHeader>
+    <div>작품 이름</div>
+    <div>
+      연령별 통계
+      <canvas ref="genderChart" width="400" height="400"></canvas>
+    </div>
+    <div>
+      나이별 통계
+      <canvas ref="ageChart" width="400" height="400"></canvas>
+    </div>
   </div>
 </template>
 <script>
+import MyPageHeader from "@/components/MyPageHeader.vue";
 import {
   Chart,
   BarController,
@@ -12,28 +21,27 @@ import {
   LinearScale,
   BarElement,
 } from "chart.js";
-import axios from "axios";
 
 Chart.register(BarController, CategoryScale, LinearScale, BarElement);
 
 export default {
   data() {
     return {
-      myChart: null,
-      myChart2: null,
-      statistics: [],
-      statistics2: [],
+      genderChart: null,
+      ageChart: null,
+      genderStatistics: [],
+      ageStatistics: [],
       idxValue: ["0~10", "10~20", "20~30", "30~40", "40~50", "50~"],
       idxCount: [0, 0, 0, 0, 0, 0],
     };
   },
-  async mounted() {
+  mounted() {
     try {
-      const res = await axios.get("/api/v1/statistics/1/1/gender");
-      const res2 = await axios.get("/api/v1/statistics/1/1/age");
-      this.statistics = res.data;
-      this.statistics2 = res2.data;
-      res2.data.forEach((i) => {
+      this.genderStatistics = this.$route.params.gender;
+      this.ageStatistics = this.$route.params.age;
+      console.log(this.genderStatistics);
+      console.log(this.ageStatistics);
+      this.ageStatistics.forEach((i) => {
         switch (i.age) {
           case "0~10":
             this.idxCount[0] = i.count;
@@ -55,9 +63,9 @@ export default {
     } catch (err) {
       console.log(err);
     }
-    const ctx = this.$refs.myChart.getContext("2d");
-    const ctx2 = this.$refs.myChart2.getContext("2d");
-    this.myChart = new Chart(ctx, {
+    const ctx = this.$refs.genderChart.getContext("2d");
+    const ctx2 = this.$refs.ageChart.getContext("2d");
+    this.genderChart = new Chart(ctx, {
       type: "bar",
       data: {
         labels: this.idxValue,
@@ -101,14 +109,17 @@ export default {
         },
       },
     });
-    this.myChart2 = new Chart(ctx2, {
+    this.ageChart = new Chart(ctx2, {
       type: "bar",
       data: {
         labels: ["남성", "여성"],
         datasets: [
           {
             label: "데이터 개수",
-            data: [this.statistics[0].count, this.statistics[1].count],
+            data: [
+              this.genderStatistics[0].count,
+              this.genderStatistics[1].count,
+            ],
             backgroundColor: [
               "rgba(255, 99, 132, 0.2)",
               "rgba(54, 162, 235, 0.2)",
@@ -135,6 +146,7 @@ export default {
       },
     });
   },
+  components: { MyPageHeader },
 };
 </script>
 

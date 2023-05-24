@@ -14,6 +14,9 @@ import UserLikeNovelPage from "@/views/UserLikeNovelPage.vue";
 import NovelSearchPage from "@/views/NovelSearchPage";
 import WriterPage from "@/views/WriterPage.vue";
 import AdminPage from "@/views/AdminPage.vue";
+import MyPage from "@/views/MyPage.vue";
+import MyReview from "@/views/MyReview.vue";
+import MyLikeNovel from "@/views/MyLikeNovel.vue";
 
 Vue.use(Router);
 
@@ -85,6 +88,21 @@ export default new Router({
       path: "/admin",
       name: "admin",
       component: AdminPage,
+    },
+    {
+      path: "/mypage",
+      name: "MyPage",
+      component: MyPage,
+    },
+    {
+      path: "/myReview",
+      name: "MyReview",
+      component: MyReview,
+    },
+    {
+      path: "/myLikeNovel",
+      name: "MyLikeNovel",
+      component: MyLikeNovel,
     },
   ],
 });
