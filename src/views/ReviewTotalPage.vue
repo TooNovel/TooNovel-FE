@@ -33,15 +33,9 @@
       </div>
       <br />
       <hr />
-      <ul id="pagenation">
-        <li v-for="n in reviews.totalPages" :key="n">
-          <a
-            :href="`/reviews?page=${n - 1}`"
-            @click.prevent="reviewPaging(n - 1)"
-            class="paging-btn"
-          >
-            {{ n }}
-          </a>
+      <ul id="pagenation" v-for="n in reviews.totalPages" :key="n">
+        <li @click.prevent="reviewPaging(n - 1)" class="paging-btn">
+          {{ n }}
         </li>
       </ul>
     </section>
