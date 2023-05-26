@@ -22,6 +22,7 @@ export default {
       token: null,
       nickname: "",
       imageUrl: "",
+      novelId: "",
     };
   },
   methods: {
@@ -51,13 +52,12 @@ export default {
             Authorization: "Bearer " + this.$store.getters.getAccessToken,
           },
         };
-        const novelId = ""; //추후 novelId 작품 클릭시 해당 novelId 넘어갈 예정
         const genderRes = await axios.get(
-          `/api/v1/statistics/${novelId}/gender`,
+          `/api/v1/statistics/${this.novelId}/gender`,
           option
         );
         const ageRes = await axios.get(
-          `/api/v1/statistics/${novelId}/age`,
+          `/api/v1/statistics/${this.novelId}/age`,
           option
         );
         this.$router.push({
