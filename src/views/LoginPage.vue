@@ -15,8 +15,14 @@ export default {
   name: "loginPage",
   data() {
     return {
-      GoogleLogin: process.env.VUE_APP_API_URL + `/oauth2/authorize/google`,
-      KaKaoLogin: process.env.VUE_APP_API_URL + `/oauth2/authorize/kakao`,
+      GoogleLogin:
+        process.env.VUE_APP_API_URL +
+        `/oauth2/authorize/google` +
+        process.env.VUE_APP_REDIRECT_URL,
+      KaKaoLogin:
+        process.env.VUE_APP_API_URL +
+        `/oauth2/authorize/kakao` +
+        process.env.VUE_APP_REDIRECT_URL,
     };
   },
 };
