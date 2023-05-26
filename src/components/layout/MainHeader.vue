@@ -38,7 +38,7 @@
         <b-nav-form class="mt-1">
           <b-button
             size="sm"
-            @click="goToLoginPage()"
+            @click="mypage()"
             id="loginBtn"
             style="margin-right: 20px"
             variant="primary"
@@ -106,6 +106,26 @@ export default {
         });
       } catch (err) {
         console.log(err);
+      }
+    },
+    async mypage() {
+      try {
+        const option = {
+          headers: {
+            Authorization: "Bearer " + this.$store.getters.getAccessToken,
+          },
+        };
+        const res = await axios.get("/api/v1/user/me", option);
+        this.$router.push({
+          name: "MyPage",
+          params: { data: res.data },
+        });
+      } catch (err) {
+        if (err.code == "U001") {
+          alert(err.message);
+        } else if (this.accessToken == null || this.accessToken === "") {
+          alert("로그인 후 좋아요 눌러주세요!");
+        }
       }
     },
     goToLoginPage() {

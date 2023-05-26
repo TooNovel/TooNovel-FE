@@ -1,9 +1,10 @@
 <template>
   <div id="ReviewTotalPage">
+    <MyPageHeader></MyPageHeader>
     <br />
     <section>
       <div>
-        <h1 class="title">최신리뷰</h1>
+        <h1 class="title">나의 리뷰</h1>
         <hr />
         <div id="reviewBox">
           <div v-for="review in reviews.content" v-bind:key="review.id">
@@ -33,9 +34,15 @@
       </div>
       <br />
       <hr />
-      <ul id="pagenation" v-for="n in reviews.totalPages" :key="n">
-        <li @click.prevent="reviewPaging(n - 1)" class="paging-btn">
-          {{ n }}
+      <ul id="pagenation">
+        <li v-for="n in reviews.totalPages" :key="n">
+          <a
+            :href="`/reviews?page=${n - 1}`"
+            @click.prevent="reviewPaging(n - 1)"
+            class="paging-btn"
+          >
+            {{ n }}
+          </a>
         </li>
       </ul>
     </section>
@@ -43,6 +50,7 @@
 </template>
 
 <script>
+import MyPageHeader from "@/components/MyPageHeader.vue";
 import axios from "axios";
 
 export default {
@@ -57,19 +65,21 @@ export default {
   methods: {
     async reviewPaging(n) {
       try {
-        const res = await axios.get(`/api/v1/review?page=${n}`);
+        const res = await axios.get(`/api/v1/review/myReview?page=${n}`);
         this.reviews = res.data;
       } catch (err) {
         console.log(err);
       }
     },
   },
+  components: { MyPageHeader },
 };
 </script>
 <style scoped>
 #community {
   margin: 3%;
 }
+
 header {
   background-color: white;
   font-family: Hanna;
@@ -105,9 +115,11 @@ header {
 .review-img {
   width: auto;
 }
+
 .review-img > img {
   border-radius: 6px;
 }
+
 .novel-info {
   padding: 10px;
   width: 500px;
@@ -124,6 +136,7 @@ li {
   padding: 0;
   list-style: none;
 }
+
 #pagenation {
   display: flex;
   margin: auto;
@@ -131,9 +144,11 @@ li {
   align-items: center;
   width: 0px;
 }
+
 .title {
   margin-left: 34px;
 }
+
 .paging-btn {
   padding: 3px;
   margin: 3px;
