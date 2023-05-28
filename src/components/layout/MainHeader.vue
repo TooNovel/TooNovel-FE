@@ -26,9 +26,9 @@
     <b-navbar-nav class="right">
       <b-nav-form class="mt-1" style="margin-right: 10px" id="searchForm">
         <input
-          placeholder="작품을 검색하세요!"
+          placeholder="작품 제목을 검색하세요!"
           type="text"
-          v-model="searchKeyword"
+          v-model="searchTitle"
         />
         <b-button size="sm" class="my-2 my-sm-0" @click="toSearch()"
           >검색</b-button
@@ -82,7 +82,7 @@ export default {
     return {
       message: "MainHeader",
       accessToken: this.$store.getters.getAccessToken,
-      searchKeyword: "",
+      searchTitle: "",
     };
   },
   methods: {
@@ -144,7 +144,7 @@ export default {
     },
     toSearch() {
       location.href =
-        "/search?novelId=null&genre=&author=&title=" + this.searchKeyword;
+        "/search?novelId=null&genre=&author=&title=" + this.searchTitle;
     },
   },
   mounted() {
