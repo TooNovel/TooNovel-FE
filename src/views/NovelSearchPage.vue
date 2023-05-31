@@ -20,30 +20,35 @@
         </b-input-group>
       </b-form-group>
     </div>
-    <div class="novel-list-box">
-      <b-row id="work" style="margin-top: 20px">
-        <b-col
-          v-for="(novel, index) in novels"
-          :key="index"
-          class="mb-3"
-          cols="12"
-          sm="6"
-          md="4"
-          lg="3"
-        >
-          <b-card @click="detailNovelList(novel.novelId)">
-            <b-card-img :src="novel.image" class="card-image"></b-card-img>
-            <b-card-title>{{ novel.title }}</b-card-title>
-            <b-card-text>{{ novel.author }}</b-card-text>
-            <b-card-text>{{ novel.genre }}</b-card-text>
-          </b-card>
-        </b-col>
-      </b-row>
+    <div v-if="isEmpty">
+      <h1>검색된 결과가 없습니다.</h1>
     </div>
-    <infinite-loading
-      @infinite="infiniteHandler"
-      spinner="waveDots"
-    ></infinite-loading>
+    <div v-else>
+      <div class="novel-list-box">
+        <b-row id="work" style="margin-top: 20px">
+          <b-col
+            v-for="(novel, index) in novels"
+            :key="index"
+            class="mb-3"
+            cols="12"
+            sm="6"
+            md="4"
+            lg="3"
+          >
+            <b-card @click="detailNovelList(novel.novelId)">
+              <b-card-img :src="novel.image" class="card-image"></b-card-img>
+              <b-card-title>{{ novel.title }}</b-card-title>
+              <b-card-text>{{ novel.author }}</b-card-text>
+              <b-card-text>{{ novel.genre }}</b-card-text>
+            </b-card>
+          </b-col>
+        </b-row>
+      </div>
+      <infinite-loading
+        @infinite="infiniteHandler"
+        spinner="waveDots"
+      ></infinite-loading>
+    </div>
   </div>
 </template>
 
@@ -55,6 +60,7 @@ export default {
   name: "WorkSearchPage",
   data() {
     return {
+      isEmpty: false,
       title: "",
       novels: [],
       novelId: 0,
@@ -62,8 +68,7 @@ export default {
       author: "",
       selected: "",
       selectedOption: "title",
-      searchKeyword: "",
-      keyword: "",
+      searchTitle: "",
       text: "",
       options: [
         { text: "전체", value: "" },
@@ -78,33 +83,44 @@ export default {
       ],
     };
   },
-  async created() {
+  async mounted() {
     try {
-      this.keyword = this.$route.query.title;
-      const res = await axios.get(
-        `/api/v1/novel?novelId=&title=${this.keyword}`
-      );
+      this.searchTitle = this.$route.query.title || "";
+      const res = await axios.get(`/api/v1/novel?title=${this.searchTitle}`);
       this.novels = res.data;
-      this.novelId = this.novels[this.novels.length - 1].novelId;
-      console.log(this.novelId);
+      if (!this.novels.length) {
+        this.isEmpty = true;
+      } else {
+        this.novelId = this.novels[this.novels.length - 1].novelId;
+      }
     } catch (err) {
       console.log(err);
     }
   },
   methods: {
     async infiniteHandler($state) {
+      if (!this.novels.length) {
+        // 데이터가 없는 경우 초기 데이터를 가져옵니다.
+        try {
+          const res = await axios.get(
+            `/api/v1/novel?title=${this.searchTitle}`
+          );
+          this.novels = res.data;
+          this.novelId = this.novels[this.novels.length - 1].novelId;
+          $state.loaded();
+        } catch (err) {
+          console.log(err);
+        }
+        return;
+      }
       try {
         const res = await axios.get(
-          `/api/v1/novel?novelId=${this.novelId}&title=${this.title}&author=${this.author}&genre=${this.selected}`
+          `/api/v1/novel?novelId=${this.novelId}&title=${this.searchTitle}&author=${this.author}&genre=${this.selected}`
         );
-        console.log("length :" + res.data.length);
-
         if (res.data.length) {
           this.novels = this.novels.concat(res.data);
           this.novelId = this.novels[this.novels.length - 1].novelId;
           $state.loaded(); //데이터 로딩
-          console.log("스크롤 후 :" + this.novelId);
-          console.log("스크롤 후 :" + res.data.length);
           if (this.novelId / res.data.length == 0) {
             $state.complete(); //데이터가 없으면 로딩 끝
           }
@@ -120,11 +136,10 @@ export default {
     async search() {
       try {
         const res = await axios.get(
-          `/api/v1/novel/?novelId=&title=${this.title}&author=${this.author}&genre=${this.selected}`
+          `/api/v1/novel/?novelId=&title=${this.searchTitle}&author=${this.author}&genre=${this.selected}`
         );
         this.novels = [];
         this.novels = res.data;
-        console.log(res.data);
       } catch (err) {
         console.log(err);
       }
