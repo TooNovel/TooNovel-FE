@@ -62,14 +62,11 @@ export default {
       }
     },
     detailNovelList(novelId) {
-      location.href = "/novel/detailView/" + novelId;
+      location.href = "/novel/" + novelId;
     },
     handleImageError(event) {
       event.target.src =
         "https://via.placeholder.com/600x600.png?text=No+Image";
-    },
-    detailNovel(item) {
-      location.href = "/novel/detailView/" + item.novelId;
     },
   },
   mounted() {
