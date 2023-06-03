@@ -125,10 +125,6 @@ export default {
   },
   async created() {
     try {
-      // const [novelRes, reviewRes] = await Promise.all([
-      //   axios.get("/api/v1/novel/" + id),
-      //   axios.get("/api/v1/review/" + id + "/novel"),
-      // ]);
       const id = this.$route.params.novel_id;
 
       const novelRes = await axios.get("/api/v1/novel/" + id);
@@ -136,9 +132,6 @@ export default {
 
       const reviewRes = await axios.get("/api/v1/review/" + id + "/novel");
       this.reviews = reviewRes.data.content;
-
-      // const [year, month, day] = this.reviews.content[0].createdDate;
-      // this.createdDate = `${year}/${month}/${day}`;
 
       this.reviews.forEach((review) => {
         review.createdDate = `${review.createdDate[0]} / ${review.createdDate[1]} / ${review.createdDate[2]}`;
