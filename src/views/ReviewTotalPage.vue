@@ -59,11 +59,18 @@ export default {
       sort: "",
       genre: "",
       limit: "",
+      page: "",
     };
   },
-  created() {
-    this.reviews = this.$route.params.data;
-    console.log(this.reviews);
+  async created() {
+    try {
+      const res = await axios.get(
+        `/api/v1/review?page=${this.page}&sort=${this.sort}&genre=${this.genre}&limit=${this.limit}`
+      );
+      this.reviews = res.data;
+    } catch (err) {
+      console.log(err);
+    }
   },
   methods: {
     async reviewPaging(n) {
