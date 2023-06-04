@@ -63,8 +63,18 @@ export default {
       page: "",
     };
   },
-  created() {
-    this.reviews = this.$route.params.data;
+  async created() {
+    try {
+      const option = {
+        headers: {
+          Authorization: "Bearer " + this.$store.getters.getAccessToken,
+        },
+      };
+      const res = await axios.get(`/api/v1/review/myReview`, option);
+      this.reviews = res.data;
+    } catch (err) {
+      console.log(err);
+    }
   },
   methods: {
     async reviewPaging(n) {
