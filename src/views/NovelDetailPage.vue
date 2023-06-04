@@ -74,7 +74,21 @@
                   <p><b>작성자ㅤ</b>{{ review.nickname }}</p>
                 </div>
                 <div class="col">
-                  <p><b>작성일자ㅤ</b>{{ review.createdDate }}</p>
+                  <div class="row">
+                    <div class="col">
+                      <p><b>작성일자ㅤ</b>{{ review.createdDate }}</p>
+                    </div>
+                    <div v-if="userId === review.userId" class="col-1">
+                      <button
+                        @click="deleteReview(review.reviewId)"
+                        type="button"
+                        aria-label="Close"
+                        class="close"
+                      >
+                        ×
+                      </button>
+                    </div>
+                  </div>
                 </div>
               </div>
               <div class="row">
@@ -121,10 +135,20 @@ export default {
       selectedGrade: "--",
       novelLiked: false,
       accessToken: this.$store.getters.getAccessToken,
+      userId: "",
     };
   },
   async created() {
     try {
+      if (this.accessToken != null) {
+        const option = {
+          headers: {
+            Authorization: "Bearer " + this.$store.getters.getAccessToken,
+          },
+        };
+        const user = await axios.get("/api/v1/user/me", option);
+        this.userId = user.data.userId;
+      }
       const id = this.$route.params.novel_id;
 
       const novelRes = await axios.get("/api/v1/novel/" + id);
@@ -136,7 +160,6 @@ export default {
       this.reviews.forEach((review) => {
         review.createdDate = `${review.createdDate[0]} / ${review.createdDate[1]} / ${review.createdDate[2]}`;
       });
-      console.log(this.reviews);
     } catch (err) {
       console.log(err);
     }
@@ -188,6 +211,25 @@ export default {
         res.reviewLike = clickReview.reviewLike;
       } catch (err) {
         const errStatus = err.response.data;
+        if (errStatus.code == "R004") {
+          alert(errStatus.message);
+        } else if (this.accessToken == null || this.accessToken === "") {
+          alert("로그인 후 좋아요 눌러주세요!");
+        }
+      }
+    },
+    async deleteReview(reviewId) {
+      try {
+        const option = {
+          headers: {
+            Authorization: "Bearer " + this.$store.getters.getAccessToken,
+          },
+        };
+        await axios.delete("/api/v1/review/" + reviewId, option);
+        this.$router.go(0);
+      } catch (err) {
+        const errStatus = err.response.data;
+        console.log(err);
         if (errStatus.code == "R004") {
           alert(errStatus.message);
         } else if (this.accessToken == null || this.accessToken === "") {
