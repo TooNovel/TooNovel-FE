@@ -102,6 +102,7 @@ export default {
     async getAllNovel() {
       try {
         const res = await axios.get("/api/v1/novel");
+        localStorage.setItem("novelList", JSON.stringify(res.data));
         this.$router.push({
           name: "novels",
           params: { data: res.data },
