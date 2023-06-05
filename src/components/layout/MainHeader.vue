@@ -17,10 +17,12 @@
       <b-nav-item style="font-size: 27px" @click="getAllNovel()">
         웹소설
       </b-nav-item>
-      <b-nav-item style="font-size: 27px" @click="toCommunity()"
+      <b-nav-item style="font-size: 27px" @click="getAllPost()"
         >커뮤니티</b-nav-item
       >
-      <b-nav-item style="font-size: 27px">팬클럽</b-nav-item>
+      <b-nav-item style="font-size: 27px" @click="toFanclub()"
+        >팬클럽</b-nav-item
+      >
     </b-navbar-nav>
 
     <b-navbar-nav class="right">
@@ -108,6 +110,17 @@ export default {
         console.log(err);
       }
     },
+    async getAllPost() {
+      try {
+        const res = await axios.get("/api/v1/post");
+        this.$router.push({
+          name: "Community",
+          params: { data: res.data },
+        });
+      } catch (err) {
+        console.log(err);
+      }
+    },
     async mypage() {
       try {
         const option = {
@@ -145,6 +158,9 @@ export default {
     toSearch() {
       location.href =
         "/search?novelId=null&genre=&author=&title=" + this.searchTitle;
+    },
+    toFanclub() {
+      this.$router.push("/fanclub");
     },
   },
   mounted() {

@@ -6,7 +6,7 @@
           <h1>커뮤니티</h1>
         </div>
         <div class="col-auto">
-          <b-button size="lg" href="/community/write">글쓰기</b-button>
+          <b-button size="lg" @click="postWrite()">글쓰기</b-button>
         </div>
       </div>
     </header>
@@ -14,23 +14,46 @@
     <section>
       <div>
         <b-nav tabs align="center">
-          <b-nav-item>자유</b-nav-item>
-          <b-nav-item>장르</b-nav-item>
-          <b-nav-item>질문</b-nav-item>
-          <b-nav-item>이벤트</b-nav-item>
+          <b-nav-item @click="fetchPosts('FREE')">자유</b-nav-item>
+          <b-nav-item @click="fetchPosts('NOVEL')">소설</b-nav-item>
+          <b-nav-item @click="fetchPosts('ASK')">질문</b-nav-item>
+          <b-nav-item @click="fetchPosts('SUGGEST')">건의</b-nav-item>
+          <b-nav-item @click="fetchPosts('PROMOTE')">홍보</b-nav-item>
         </b-nav>
       </div>
       <br />
-      <b-table hover :fields="fields"> </b-table>
+      <b-table
+        @row-clicked="goDetail"
+        striped
+        hover
+        :items="posts"
+        :fields="fields"
+      >
+      </b-table>
+      <br />
+      <hr />
+      <ul id="pagenation">
+        <li v-for="n in pages.totalPages" :key="n">
+          <a
+            :href="`/community?page=${n - 1}`"
+            @click.prevent="postPaging(n - 1)"
+            class="paging-btn"
+          >
+            {{ n }}
+          </a>
+        </li>
+      </ul>
     </section>
   </div>
 </template>
 
 <script>
+import axios from "axios";
+
 export default {
   data() {
     return {
-      posts: [],
+      posts: {},
       fields: [
         {
           key: "category",
@@ -41,7 +64,7 @@ export default {
           label: "제목",
         },
         {
-          key: "author",
+          key: "nickname",
           label: "작성자",
         },
         {
@@ -49,10 +72,172 @@ export default {
           label: "작성일자",
         },
       ],
+      pages: {},
     };
   },
   created() {
-    this.posts = this.$route.params.data;
+    this.pages = this.$route.params.data;
+    const content = this.$route.params.data.content;
+    this.posts = content.map((item) => {
+      const createdDate = item.createdDate;
+      const year = createdDate[0];
+      const month = createdDate[1];
+      const day = createdDate[2];
+      const hour = createdDate[3];
+      const minute = createdDate[4];
+      const formattedDate = `${year}-${month}-${day} ${hour}:${minute}`;
+
+      let categoryText;
+      switch (item.category) {
+        case "SUGGEST":
+          categoryText = "건의";
+          break;
+        case "FREE":
+          categoryText = "자유";
+          break;
+        case "NOVEL":
+          categoryText = "소설";
+          break;
+        case "ASK":
+          categoryText = "질문";
+          break;
+        case "PROMOTE":
+          categoryText = "홍보";
+          break;
+        default:
+          categoryText = item.category;
+      }
+
+      return {
+        id: item.postId,
+        category: categoryText,
+        title: item.title,
+        nickname: item.nickname,
+        createdDate: formattedDate,
+      };
+    });
+    console.log(this.posts);
+  },
+  methods: {
+    async postPaging(n) {
+      try {
+        const res = await axios.get(`/api/v1/post?page=${n}`);
+        this.pages = res.data;
+        const content = res.data.content;
+        this.posts = content.map((item) => {
+          const createdDate = item.createdDate;
+          const year = createdDate[0];
+          const month = createdDate[1];
+          const day = createdDate[2];
+          const hour = createdDate[3];
+          const minute = createdDate[4];
+          const formattedDate = `${year}-${month}-${day} ${hour}:${minute}`;
+
+          let categoryText;
+          switch (item.category) {
+            case "SUGGEST":
+              categoryText = "건의";
+              break;
+            case "FREE":
+              categoryText = "자유";
+              break;
+            case "NOVEL":
+              categoryText = "소설";
+              break;
+            case "ASK":
+              categoryText = "질문";
+              break;
+            case "PROMOTE":
+              categoryText = "홍보";
+              break;
+            default:
+              categoryText = item.category;
+          }
+
+          return {
+            id: item.postId,
+            category: categoryText,
+            title: item.title,
+            nickname: item.nickname,
+            createdDate: formattedDate,
+          };
+        });
+      } catch (err) {
+        console.log(err);
+      }
+    },
+    async fetchPosts(category) {
+      try {
+        const res = await axios.get(`/api/v1/post?category=${category}`);
+        this.pages = res.data;
+        const content = res.data.content;
+        this.posts = content.map((item) => {
+          const createdDate = item.createdDate;
+          const year = createdDate[0];
+          const month = createdDate[1];
+          const day = createdDate[2];
+          const hour = createdDate[3];
+          const minute = createdDate[4];
+          const formattedDate = `${year}-${month}-${day} ${hour}:${minute}`;
+
+          let categoryText;
+          switch (item.category) {
+            case "SUGGEST":
+              categoryText = "건의";
+              break;
+            case "FREE":
+              categoryText = "자유";
+              break;
+            case "NOVEL":
+              categoryText = "소설";
+              break;
+            case "ASK":
+              categoryText = "질문";
+              break;
+            case "PROMOTE":
+              categoryText = "홍보";
+              break;
+            default:
+              categoryText = item.category;
+          }
+
+          return {
+            id: item.postId,
+            category: categoryText,
+            title: item.title,
+            nickname: item.nickname,
+            createdDate: formattedDate,
+          };
+        });
+      } catch (err) {
+        console.log(err);
+      }
+    },
+    async postWrite() {
+      try {
+        const option = {
+          headers: {
+            Authorization: "Bearer " + this.$store.getters.getAccessToken,
+          },
+        };
+        await axios.get("/api/v1/user/me", option);
+        this.$router.push({ path: "/community/write" });
+      } catch (err) {
+        if (this.accessToken == null || this.accessToken === "") {
+          alert("로그인 후 게시글 작성할 수 있습니다!");
+        }
+        console.log(err);
+      }
+    },
+    goDetail(item) {
+      console.log(item.id);
+      this.$router.push({
+        name: "PostDetailPage",
+        params: {
+          postId: item.id,
+        },
+      });
+    },
   },
 };
 </script>
@@ -68,5 +253,27 @@ header {
 
 section {
   background-color: white;
+}
+
+li {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+#pagenation {
+  display: flex;
+  margin: auto;
+  justify-self: center;
+  align-items: center;
+  width: 0px;
+}
+
+.paging-btn {
+  padding: 3px;
+  margin: 3px;
+  font-size: 20px;
+  font-weight: 600;
+  text-decoration: none;
+  color: dimgray;
 }
 </style>

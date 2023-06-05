@@ -17,6 +17,8 @@ import AdminPage from "@/views/AdminPage.vue";
 import MyPage from "@/views/MyPage.vue";
 import MyReview from "@/views/MyReview.vue";
 import MyLikeNovel from "@/views/MyLikeNovel.vue";
+import FanclubPage from "@/views/FanclubPage";
+import PostDetailPage from "@/views/PostDetailPage";
 
 Vue.use(Router);
 
@@ -103,6 +105,16 @@ export default new Router({
       path: "/myLikeNovel",
       name: "MyLikeNovel",
       component: MyLikeNovel,
+    },
+    {
+      path: "/fanclub",
+      name: "fanclub",
+      component: FanclubPage,
+    },
+    {
+      path: "/community/:postId",
+      name: "PostDetailPage",
+      component: PostDetailPage,
     },
   ],
 });
