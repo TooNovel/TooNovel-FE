@@ -82,7 +82,8 @@ export default {
     },
   },
   mounted() {
-    const novelList = this.$route.params.data;
+    const novels = localStorage.getItem("MyLikeNovel");
+    const novelList = JSON.parse(novels);
     this.novels = novelList;
     this.novelId = this.novels[this.novels.length - 1].likeNovelId;
   },
