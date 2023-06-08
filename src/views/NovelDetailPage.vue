@@ -128,7 +128,6 @@ export default {
       reviewGrade: 0,
       selectedGrade: "--",
       novelLiked: false,
-      accessToken: this.$store.getters.getAccessToken,
       userId: "",
       isLoading: true,
     };
@@ -172,7 +171,7 @@ export default {
         };
         const option = {
           headers: {
-            Authorization: "Bearer " + this.$store.getters.getAccessToken,
+            Authorization: "Bearer " + this.$getAccessToken(),
           },
         };
         const res = await axios.post("/api/v1/review", obj, option);
@@ -180,7 +179,7 @@ export default {
         this.reviews.push(newReview);
         this.$router.go(0);
       } catch (err) {
-        if (this.accessToken == null || this.accessToken === "") {
+        if (this.$getAccessToken() == null || this.$getAccessToken() === "") {
           alert("로그인 후 리뷰 작성할 수 있습니다!");
         }
         console.log(err);
@@ -190,7 +189,7 @@ export default {
       try {
         const option = {
           headers: {
-            Authorization: "Bearer " + this.$store.getters.getAccessToken,
+            Authorization: "Bearer " + this.$getAccessToken(),
           },
         };
         await axios.post(
@@ -210,7 +209,10 @@ export default {
         const errStatus = err.response.data;
         if (errStatus.code == "R004") {
           alert(errStatus.message);
-        } else if (this.accessToken == null || this.accessToken === "") {
+        } else if (
+          this.$getAccessToken() == null ||
+          this.$getAccessToken() === ""
+        ) {
           alert("로그인 후 좋아요 눌러주세요!");
         }
       }
