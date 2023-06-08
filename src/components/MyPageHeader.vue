@@ -5,8 +5,13 @@
         <li><b-button @click="mypage()">프로필</b-button></li>
         <li><b-button @click="getLikeNovel()">좋아요 누른 작품</b-button></li>
         <li><b-button @click="getMyReview()">내가 쓴 리뷰</b-button></li>
-        <!-- 추후 v-if 사용해 작가이면 뜨게 하도록 구현 -->
-        <li><b-button @click="getStatistic()">통계(작가만)</b-button></li>
+        <div v-if="role == 'USER'">
+          <li><b-button @click="enrollAuthor()">작가신청</b-button></li>
+        </div>
+        <div v-if="role == 'AUTHOR'">
+          <li><b-button @click="getNovelByAuthor()">내작품보기</b-button></li>
+          <li><b-button @click="getStatistic()">통계(작가만)</b-button></li>
+        </div>
       </ul>
     </div>
     <hr />
@@ -23,6 +28,7 @@ export default {
       nickname: "",
       imageUrl: "",
       novelId: "",
+      role: null,
     };
   },
   methods: {
@@ -30,7 +36,7 @@ export default {
       try {
         const option = {
           headers: {
-            Authorization: "Bearer " + this.$store.getters.getAccessToken,
+            Authorization: "Bearer " + this.$getAccessToken(),
           },
         };
 
@@ -44,37 +50,11 @@ export default {
         console.log(err);
       }
     },
-    async getStatistic() {
-      try {
-        const option = {
-          headers: {
-            Authorization: "Bearer " + this.$store.getters.getAccessToken,
-          },
-        };
-        const genderRes = await axios.get(
-          `/api/v1/statistics/${this.novelId}/gender`,
-          option
-        );
-        const ageRes = await axios.get(
-          `/api/v1/statistics/${this.novelId}/age`,
-          option
-        );
-        this.$router.push({
-          name: "writer",
-          params: {
-            gender: genderRes.data,
-            age: ageRes.data,
-          },
-        });
-      } catch (err) {
-        console.log(err);
-      }
-    },
     async getMyReview() {
       try {
         const option = {
           headers: {
-            Authorization: "Bearer " + this.$store.getters.getAccessToken,
+            Authorization: "Bearer " + this.$getAccessToken(),
           },
         };
         const res = await axios.get("/api/v1/review/myReview", option);
@@ -92,7 +72,7 @@ export default {
       try {
         const option = {
           headers: {
-            Authorization: "Bearer " + this.$store.getters.getAccessToken,
+            Authorization: "Bearer " + this.$getAccessToken(),
           },
         };
         const res = await axios.get("/api/v1/user/me", option);
@@ -103,11 +83,57 @@ export default {
       } catch (err) {
         if (err.code == "U001") {
           alert(err.message);
-        } else if (this.accessToken == null || this.accessToken === "") {
+        } else if (
+          this.$getAccessToken() == null ||
+          this.$getAccessToken() === ""
+        ) {
           alert("로그인 후 좋아요 눌러주세요!");
         }
       }
     },
+    async getNovelByAuthor() {
+      try {
+        const option = {
+          headers: {
+            Authorization: "Bearer " + this.$getAccessToken(),
+          },
+        };
+        const res = await axios.get("/api/v1/novel/author", option);
+        this.$router.push({
+          name: "AuthorNovelPage",
+          params: { data: res.data },
+        });
+      } catch (err) {
+        if (err.code == "U001") {
+          alert(err.message);
+        } else if (
+          this.$getAccessToken() == null ||
+          this.$getAccessToken() === ""
+        ) {
+          alert("로그인 후 좋아요 눌러주세요!");
+        }
+      }
+    },
+    enrollAuthor() {
+      this.$router.push("Enroll");
+    },
+  },
+  mounted() {
+    const accessToken = this.$getAccessToken();
+    console.log(this.$getTokenInfo(accessToken));
+    switch (this.$getTokenInfo(this.$getAccessToken()).role) {
+      case "AUTHOR":
+        this.role = "AUTHOR";
+        break;
+      case "USER":
+        this.role = "USER";
+        break;
+      case "ADMIN":
+        this.role = "ADMIN";
+        break;
+      default:
+        this.role = null;
+    }
   },
 };
 </script>

@@ -19,6 +19,9 @@ import MyReview from "@/views/MyReview.vue";
 import MyLikeNovel from "@/views/MyLikeNovel.vue";
 import FanclubPage from "@/views/FanclubPage";
 import PostDetailPage from "@/views/PostDetailPage";
+import AuthorNovelPage from "@/views/AuthorNovelPage.vue";
+import EnrollAuthorPage from "@/views/EnrollAuthorPage.vue";
+import NovelStatisticsPage from "@/views/NovelStatisticsPage.vue";
 
 Vue.use(Router);
 
@@ -115,6 +118,21 @@ export default new Router({
       path: "/community/:postId",
       name: "PostDetailPage",
       component: PostDetailPage,
+    },
+    {
+      path: "/author",
+      name: "AuthorNovelPage",
+      component: AuthorNovelPage,
+    },
+    {
+      path: "/enroll",
+      name: "EnrollAuthorPage",
+      component: EnrollAuthorPage,
+    },
+    {
+      path: "/statistics",
+      name: "NovelStatisticsPage",
+      component: NovelStatisticsPage,
     },
   ],
 });
