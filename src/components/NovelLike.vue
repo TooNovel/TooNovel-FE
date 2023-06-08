@@ -23,7 +23,6 @@ export default {
   data() {
     return {
       novelLiked: false,
-      accessToken: this.$store.getters.getAccessToken,
     };
   },
   props: ["novel"],
@@ -32,7 +31,7 @@ export default {
       const novelId = this.$route.params.novel_id;
       const option = {
         headers: {
-          Authorization: "Bearer " + this.accessToken,
+          Authorization: "Bearer " + this.$getAccessToken(),
         },
       };
       const result = await axios.get(
@@ -46,7 +45,7 @@ export default {
   },
   methods: {
     async novelLike(res) {
-      if (this.accessToken == null || this.accessToken == "") {
+      if (this.$getAccessToken() == null || this.$getAccessToken() == "") {
         alert("로그인 후 이용 가능 합니다!");
         return;
       }
@@ -54,7 +53,7 @@ export default {
         const novelId = res.novelId;
         const option = {
           headers: {
-            Authorization: "Bearer " + this.accessToken,
+            Authorization: "Bearer " + this.$getAccessToken(),
           },
         };
         await axios.put("/api/v1/novel/" + novelId + "/like", null, option);

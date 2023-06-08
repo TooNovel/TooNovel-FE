@@ -77,13 +77,12 @@
 </template>
 <script>
 import axios from "axios";
-import Cookies from "js-cookie";
 
 export default {
   data() {
     return {
       message: "MainHeader",
-      accessToken: this.$store.getters.getAccessToken,
+      accessToken: null,
       searchTitle: "",
     };
   },
@@ -121,7 +120,7 @@ export default {
       try {
         const option = {
           headers: {
-            Authorization: "Bearer " + this.$store.getters.getAccessToken,
+            Authorization: "Bearer " + this.accessToken,
           },
         };
         const res = await axios.get("/api/v1/user/me", option);
@@ -160,10 +159,8 @@ export default {
     },
   },
   mounted() {
-    const token = Cookies.get("accessTokenCookie");
-    this.$store.commit("setAccessToken", token);
-    this.accessToken = this.$store.getters.getAccessToken;
-    console.log("header - accesstoken : " + this.$store.getters.getAccessToken);
+    this.accessToken =
+      this.$getAccessToken() == null ? null : this.$getAccessToken();
   },
 };
 </script>
