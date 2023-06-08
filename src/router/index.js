@@ -21,6 +21,8 @@ import PostDetailPage from "@/views/PostDetailPage";
 import AuthorNovelPage from "@/views/AuthorNovelPage.vue";
 import EnrollAuthorPage from "@/views/EnrollAuthorPage.vue";
 import NovelStatisticsPage from "@/views/NovelStatisticsPage.vue";
+import AdminUserPage from "@/views/AdminUserPage";
+import AdminAuthorPage from "@/views/AdminAuthorPage";
 
 Vue.use(Router);
 
@@ -127,6 +129,16 @@ export default new Router({
       path: "/statistics",
       name: "NovelStatisticsPage",
       component: NovelStatisticsPage,
+    },
+    {
+      path: "/admin/user",
+      name: "AdminUserPage",
+      component: AdminUserPage,
+    },
+    {
+      path: "/admin/author",
+      name: "AdminAuthorPage",
+      component: AdminAuthorPage,
     },
   ],
 });
