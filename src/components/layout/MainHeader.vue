@@ -90,10 +90,8 @@ export default {
   methods: {
     async getAllReview() {
       try {
-        const res = await axios.get("/api/v1/review");
         this.$router.push({
           name: "reviews",
-          params: { data: res.data },
         });
       } catch (err) {
         console.log(err);
@@ -101,11 +99,8 @@ export default {
     },
     async getAllNovel() {
       try {
-        const res = await axios.get("/api/v1/novel");
-        localStorage.setItem("novelList", JSON.stringify(res.data));
         this.$router.push({
           name: "novels",
-          params: { data: res.data },
         });
       } catch (err) {
         console.log(err);
