@@ -57,15 +57,37 @@ export default {
   data() {
     return {
       reviews: {},
+      sort: "",
+      genre: "",
+      limit: "",
+      page: "",
     };
   },
-  created() {
-    this.reviews = this.$route.params.data;
+  async created() {
+    try {
+      const option = {
+        headers: {
+          Authorization: "Bearer " + this.$store.getters.getAccessToken,
+        },
+      };
+      const res = await axios.get(`/api/v1/review/myReview`, option);
+      this.reviews = res.data;
+    } catch (err) {
+      console.log(err);
+    }
   },
   methods: {
     async reviewPaging(n) {
       try {
-        const res = await axios.get(`/api/v1/review/myReview?page=${n}`);
+        const option = {
+          headers: {
+            Authorization: "Bearer " + this.$store.getters.getAccessToken,
+          },
+        };
+        const res = await axios.get(
+          `/api/v1/review/myReview?page=${n}&sort=${this.sort}&genre=${this.genre}&limit=${this.limit}`,
+          option
+        );
         this.reviews = res.data;
       } catch (err) {
         console.log(err);

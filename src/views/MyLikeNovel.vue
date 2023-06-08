@@ -78,11 +78,12 @@ export default {
         "https://via.placeholder.com/600x600.png?text=No+Image";
     },
     detailNovelList(novelId) {
-      location.href = "/novel/detailView/" + novelId;
+      location.href = "/novel/" + novelId;
     },
   },
   mounted() {
-    const novelList = this.$route.params.data;
+    const novels = localStorage.getItem("MyLikeNovel");
+    const novelList = JSON.parse(novels);
     this.novels = novelList;
     this.novelId = this.novels[this.novels.length - 1].likeNovelId;
   },

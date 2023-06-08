@@ -135,7 +135,7 @@ export default {
       this.$refs.carousel.goToSlide(index);
     },
     detailNovelList(item) {
-      location.href = "/novel/detailView/" + item.novelId;
+      location.href = "/novel/" + item.novelId;
     },
     shuffle(arr) {
       arr.sort(() => Math.random() - 0.5);

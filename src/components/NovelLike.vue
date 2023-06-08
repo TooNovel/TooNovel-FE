@@ -39,7 +39,6 @@ export default {
         "/api/v1/novel/" + novelId + "/like",
         option
       );
-      console.log(result);
       this.novelLiked = result.data.like;
     } catch (err) {
       console.log(err);

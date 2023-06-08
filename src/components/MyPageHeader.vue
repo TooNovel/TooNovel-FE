@@ -35,8 +35,7 @@ export default {
         };
 
         const res = await axios.get(`/api/v1/user/novel?novelId=${0}`, option);
-        console.log(res.data);
-
+        localStorage.setItem("MyLikeNovel", JSON.stringify(res.data));
         this.$router.push({
           name: "MyLikeNovel",
           params: { data: res.data },

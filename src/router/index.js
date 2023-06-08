@@ -51,7 +51,7 @@ export default new Router({
       component: PostWritePage,
     },
     {
-      path: "/novel/detailView/:novel_id",
+      path: "/novel/:novel_id",
       name: "NovelDetailPage",
       component: NovelDetailPage,
     },

@@ -18,6 +18,7 @@
 
 <script>
 import MyPageHeader from "@/components/MyPageHeader.vue";
+import axios from "axios";
 
 export default {
   data() {
@@ -27,9 +28,19 @@ export default {
       imageUrl: "",
     };
   },
-  mounted() {
-    this.nickname = this.$route.params.data.nickname;
-    this.imageUrl = this.$route.params.data.imageUrl;
+  async created() {
+    try {
+      const option = {
+        headers: {
+          Authorization: "Bearer " + this.$store.getters.getAccessToken,
+        },
+      };
+      const res = await axios.get(`/api/v1/user/me`, option);
+      console.log(res);
+      this.nickname = res.data.nickname;
+    } catch (err) {
+      console.log(err);
+    }
   },
   components: { MyPageHeader },
 };

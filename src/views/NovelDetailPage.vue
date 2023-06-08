@@ -1,14 +1,8 @@
 <template>
   <div>
-    <b-nav tabs style="background-color: white">
-      <b-nav-item>전체</b-nav-item>
-      <b-nav-item>로맨스</b-nav-item>
-      <b-nav-item>무협</b-nav-item>
-      <b-nav-item>판타지</b-nav-item>
-      <b-nav-item>미스터리</b-nav-item>
-      <b-nav-item>대체역사</b-nav-item>
-      <b-nav-item>라이트노벨</b-nav-item>
-    </b-nav>
+    <div id="loading" v-if="isLoading" style="height: 600px">
+      <div class="loader">Loading...</div>
+    </div>
     <main style="margin-top: 3%">
       <article>
         <b-container class="bv-example-row">
@@ -74,7 +68,21 @@
                   <p><b>작성자ㅤ</b>{{ review.nickname }}</p>
                 </div>
                 <div class="col">
-                  <p><b>작성일자ㅤ</b>{{ review.createdDate }}</p>
+                  <div class="row">
+                    <div class="col">
+                      <p><b>작성일자ㅤ</b>{{ review.createdDate }}</p>
+                    </div>
+                    <div v-if="userId === review.userId" class="col-1">
+                      <button
+                        @click="deleteReview(review.reviewId)"
+                        type="button"
+                        aria-label="Close"
+                        class="close"
+                      >
+                        ×
+                      </button>
+                    </div>
+                  </div>
                 </div>
               </div>
               <div class="row">
@@ -121,14 +129,22 @@ export default {
       selectedGrade: "--",
       novelLiked: false,
       accessToken: this.$store.getters.getAccessToken,
+      userId: "",
+      isLoading: true,
     };
   },
   async created() {
+    await this.sleep(1500);
     try {
-      // const [novelRes, reviewRes] = await Promise.all([
-      //   axios.get("/api/v1/novel/" + id),
-      //   axios.get("/api/v1/review/" + id + "/novel"),
-      // ]);
+      if (this.accessToken != null) {
+        const option = {
+          headers: {
+            Authorization: "Bearer " + this.$store.getters.getAccessToken,
+          },
+        };
+        const user = await axios.get("/api/v1/user/me", option);
+        this.userId = user.data.userId;
+      }
       const id = this.$route.params.novel_id;
 
       const novelRes = await axios.get("/api/v1/novel/" + id);
@@ -137,13 +153,10 @@ export default {
       const reviewRes = await axios.get("/api/v1/review/" + id + "/novel");
       this.reviews = reviewRes.data.content;
 
-      // const [year, month, day] = this.reviews.content[0].createdDate;
-      // this.createdDate = `${year}/${month}/${day}`;
-
       this.reviews.forEach((review) => {
         review.createdDate = `${review.createdDate[0]} / ${review.createdDate[1]} / ${review.createdDate[2]}`;
       });
-      console.log(this.reviews);
+      this.isLoading = false;
     } catch (err) {
       console.log(err);
     }
@@ -202,6 +215,28 @@ export default {
         }
       }
     },
+    async deleteReview(reviewId) {
+      try {
+        const option = {
+          headers: {
+            Authorization: "Bearer " + this.$store.getters.getAccessToken,
+          },
+        };
+        await axios.delete("/api/v1/review/" + reviewId, option);
+        this.$router.go(0);
+      } catch (err) {
+        const errStatus = err.response.data;
+        console.log(err);
+        if (errStatus.code == "R004") {
+          alert(errStatus.message);
+        } else if (this.accessToken == null || this.accessToken === "") {
+          alert("로그인 후 좋아요 눌러주세요!");
+        }
+      }
+    },
+    async sleep(sec) {
+      return new Promise((resolve) => setTimeout(resolve, sec));
+    },
   },
   components: {
     "novel-like": NovelLike,
@@ -210,4 +245,11 @@ export default {
 </script>
 <style scoped>
 @import "@/style/novel-detail.css";
+@import "@/style/loader.css";
+#loading {
+  height: 600px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 </style>
