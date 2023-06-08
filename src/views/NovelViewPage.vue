@@ -1,6 +1,9 @@
 <template>
   <div class="container">
     <h3 class="title"><b>전체 작품 리스트</b></h3>
+    <div id="loading" v-if="isLoading" style="height: 600px">
+      <div class="loader">Loading...</div>
+    </div>
     <div class="novel-list-box" ref="allProductList">
       <b-row>
         <b-col
@@ -36,13 +39,18 @@ export default {
   data() {
     return {
       novels: [],
-      novelId: 0,
+      novelId: null,
+      isLoading: true,
     };
+  },
+  async created() {
+    await this.sleep(1500);
+    this.isLoading = false;
   },
   methods: {
     async infiniteHandler($state) {
       try {
-        const res = await axios.get(`/api/v1/novel?novelId=${this.novelId}`);
+        const res = await axios.get(`/api/v1/novel?novelId=` + this.novelId);
         console.log("length :" + res.data.length);
 
         if (res.data.length) {
@@ -68,11 +76,13 @@ export default {
       event.target.src =
         "https://via.placeholder.com/600x600.png?text=No+Image";
     },
+    async sleep(sec) {
+      return new Promise((resolve) => setTimeout(resolve, sec));
+    },
   },
-  mounted() {
-    const novels = localStorage.getItem("novelList");
-    const novelList = JSON.parse(novels);
-    this.novels = novelList;
+  async mounted() {
+    const novelList = await axios.get("/api/v1/novel");
+    this.novels = novelList.data;
     this.novelId = this.novels[this.novels.length - 1].novelId;
   },
   components: {
@@ -94,6 +104,6 @@ export default {
   margin-right: 5%;
 }
 .card-image {
-  height: 350px;
+  height: 300px;
 }
 </style>
