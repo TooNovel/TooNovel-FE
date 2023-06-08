@@ -7,6 +7,9 @@
     </b-nav>
     <br />
     <section>
+      <div id="loading" v-if="isLoading" style="height: 600px">
+        <div class="loader">Loading...</div>
+      </div>
       <div>
         <div>
           <div id="reviewBox">
@@ -60,14 +63,17 @@ export default {
       genre: "",
       limit: "",
       page: "",
+      isLoading: true,
     };
   },
   async created() {
+    await this.sleep(1500);
     try {
       const res = await axios.get(
         `/api/v1/review?page=${this.page}&sort=${this.sort}&genre=${this.genre}&limit=${this.limit}`
       );
       this.reviews = res.data;
+      this.isLoading = false;
     } catch (err) {
       console.log(err);
     }
@@ -103,10 +109,20 @@ export default {
     async likeSort() {
       await this.fetchReviews("REVIEW_LIKE_DESC");
     },
+    async sleep(sec) {
+      return new Promise((resolve) => setTimeout(resolve, sec));
+    },
   },
 };
 </script>
 <style scoped>
+@import "@/style/loader.css";
+#loading {
+  height: 600px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 header {
   font-family: Hanna;
   display: flex;
