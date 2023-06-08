@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <h3 class="title"><b>전체 작품 리스트</b></h3>
-    <div id="loading" v-if="isLoading" style="height: 600px">
+    <div id="loading" v-if="isLoading" style="height: 800px">
       <div class="loader">Loading...</div>
     </div>
     <div class="novel-list-box" ref="allProductList">
@@ -49,10 +49,21 @@ export default {
   },
   methods: {
     async infiniteHandler($state) {
+      if (!this.novels.length) {
+        // 데이터가 없는 경우 초기 데이터를 가져옵니다.
+        try {
+          const res = await axios.get(`/api/v1/novel`);
+          this.novels = res.data;
+          this.novelId = this.novels[this.novels.length - 1].novelId;
+          $state.loaded();
+        } catch (err) {
+          console.log(err);
+        }
+        return;
+      }
       try {
         const res = await axios.get(`/api/v1/novel?novelId=` + this.novelId);
         console.log("length :" + res.data.length);
-
         if (res.data.length) {
           this.novels = this.novels.concat(res.data);
           this.novelId = this.novels[this.novels.length - 1].novelId;

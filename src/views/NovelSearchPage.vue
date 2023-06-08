@@ -144,6 +144,9 @@ export default {
         console.log(err);
       }
     },
+    detailNovelList(novelId) {
+      location.href = "/novel/" + novelId;
+    },
   },
   components: {
     InfiniteLoading,
