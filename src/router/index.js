@@ -12,7 +12,6 @@ import RecommendPage from "@/views/RecommendPage.vue";
 import NovelViewPage from "@/views/NovelViewPage.vue";
 import UserLikeNovelPage from "@/views/UserLikeNovelPage.vue";
 import NovelSearchPage from "@/views/NovelSearchPage";
-import WriterPage from "@/views/WriterPage.vue";
 import AdminPage from "@/views/AdminPage.vue";
 import MyPage from "@/views/MyPage.vue";
 import MyReview from "@/views/MyReview.vue";
@@ -83,11 +82,6 @@ export default new Router({
       path: "/search",
       name: "search",
       component: NovelSearchPage,
-    },
-    {
-      path: "/writer",
-      name: "writer",
-      component: WriterPage,
     },
     {
       path: "/admin",

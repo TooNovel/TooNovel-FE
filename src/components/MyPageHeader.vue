@@ -10,7 +10,6 @@
         </div>
         <div v-if="role == 'AUTHOR'">
           <li><b-button @click="getNovelByAuthor()">내작품보기</b-button></li>
-          <li><b-button @click="getStatistic()">통계(작가만)</b-button></li>
         </div>
       </ul>
     </div>
