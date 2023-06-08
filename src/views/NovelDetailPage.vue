@@ -1,14 +1,8 @@
 <template>
   <div>
-    <b-nav tabs style="background-color: white">
-      <b-nav-item>전체</b-nav-item>
-      <b-nav-item>로맨스</b-nav-item>
-      <b-nav-item>무협</b-nav-item>
-      <b-nav-item>판타지</b-nav-item>
-      <b-nav-item>미스터리</b-nav-item>
-      <b-nav-item>대체역사</b-nav-item>
-      <b-nav-item>라이트노벨</b-nav-item>
-    </b-nav>
+    <div id="loading" v-if="isLoading" style="height: 600px">
+      <div class="loader">Loading...</div>
+    </div>
     <main style="margin-top: 3%">
       <article>
         <b-container class="bv-example-row">
@@ -136,9 +130,11 @@ export default {
       novelLiked: false,
       accessToken: this.$store.getters.getAccessToken,
       userId: "",
+      isLoading: true,
     };
   },
   async created() {
+    await this.sleep(1500);
     try {
       if (this.accessToken != null) {
         const option = {
@@ -160,6 +156,7 @@ export default {
       this.reviews.forEach((review) => {
         review.createdDate = `${review.createdDate[0]} / ${review.createdDate[1]} / ${review.createdDate[2]}`;
       });
+      this.isLoading = false;
     } catch (err) {
       console.log(err);
     }
@@ -237,6 +234,9 @@ export default {
         }
       }
     },
+    async sleep(sec) {
+      return new Promise((resolve) => setTimeout(resolve, sec));
+    },
   },
   components: {
     "novel-like": NovelLike,
@@ -245,4 +245,11 @@ export default {
 </script>
 <style scoped>
 @import "@/style/novel-detail.css";
+@import "@/style/loader.css";
+#loading {
+  height: 600px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 </style>
