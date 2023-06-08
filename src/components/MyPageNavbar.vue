@@ -120,6 +120,7 @@ export default {
       }
     },
     async adminUser() {
+      // 회원 관리 페이지 이동 및 데이터 전달 추가 예정
       try {
         const option = {
           headers: {

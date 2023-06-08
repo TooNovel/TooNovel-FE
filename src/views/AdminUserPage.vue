@@ -79,6 +79,7 @@ export default {
     };
   },
   created() {
+    // 전체 회원 데이터 생성 추가 예정
     this.pages = this.$route.params.data;
     const content = this.$route.params.data.content;
     this.users = content.map((item) => {
@@ -102,6 +103,7 @@ export default {
   methods: {
     async userPaging(n) {
       try {
+        // 전체 회원 조회 페이징 메소드 추가 예정
         const res = await axios.get(`/api/v1/user?page=${n}`);
         this.pages = res.data;
         const content = res.data.content;
@@ -129,6 +131,7 @@ export default {
       }
     },
     async deleteUser(userId) {
+      // 특정 회원 삭제 메소드 구현 예정
       try {
         const option = {
           headers: {
