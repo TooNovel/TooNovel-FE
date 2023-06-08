@@ -86,9 +86,7 @@ export default {
       const year = createdDate[0];
       const month = createdDate[1];
       const day = createdDate[2];
-      const hour = createdDate[3];
-      const minute = createdDate[4];
-      const formattedDate = `${year}-${month}-${day} ${hour}:${minute}`;
+      const formattedDate = `${year}/${month}/${day}`;
 
       return {
         userId: item.userId,
