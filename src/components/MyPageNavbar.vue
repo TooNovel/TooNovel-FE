@@ -11,6 +11,12 @@
         <div v-if="role == 'AUTHOR'">
           <li><b-button @click="getNovelByAuthor()">내작품보기</b-button></li>
         </div>
+        <div v-if="role == 'ADMIN'">
+          <li><b-button @click="adminUser()">회원 관리</b-button></li>
+        </div>
+        <div v-if="role == 'ADMIN'">
+          <li><b-button @click="adminAuthor()">작가 신청 관리</b-button></li>
+        </div>
       </ul>
     </div>
     <hr />
@@ -111,6 +117,38 @@ export default {
         ) {
           alert("로그인 후 좋아요 눌러주세요!");
         }
+      }
+    },
+    async adminUser() {
+      try {
+        const option = {
+          headers: {
+            Authorization: "Bearer " + this.$getAccessToken(),
+          },
+        };
+        const res = await axios.get(`/api/v1/user?page=${0}`, option);
+        this.$router.push({
+          name: "AdminUserPage",
+          params: { data: res.data },
+        });
+      } catch (err) {
+        console.log(err);
+      }
+    },
+    async adminAuthor() {
+      try {
+        const option = {
+          headers: {
+            Authorization: "Bearer " + this.$getAccessToken(),
+          },
+        };
+        const res = await axios.get(`/api/v1/admin?page=${0}`, option);
+        this.$router.push({
+          name: "AdminAuthorPage",
+          params: { data: res.data },
+        });
+      } catch (err) {
+        console.log(err);
       }
     },
     enrollAuthor() {
