@@ -1,6 +1,6 @@
 <template>
   <div id="myPage">
-    <MyPageHeader></MyPageHeader>
+    <MyPageNavbar></MyPageNavbar>
     <hr />
     <div>
       <label>이미지</label>
@@ -17,7 +17,7 @@
 </template>
 
 <script>
-import MyPageHeader from "@/components/MyPageHeader.vue";
+import MyPageNavbar from "@/components/MyPageNavbar.vue";
 import axios from "axios";
 
 export default {
@@ -32,7 +32,7 @@ export default {
     try {
       const option = {
         headers: {
-          Authorization: "Bearer " + this.$store.getters.getAccessToken,
+          Authorization: "Bearer " + this.$getAccessToken(),
         },
       };
       const res = await axios.get(`/api/v1/user/me`, option);
@@ -42,6 +42,6 @@ export default {
       console.log(err);
     }
   },
-  components: { MyPageHeader },
+  components: { MyPageNavbar },
 };
 </script>

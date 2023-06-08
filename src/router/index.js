@@ -12,13 +12,15 @@ import RecommendPage from "@/views/RecommendPage.vue";
 import NovelViewPage from "@/views/NovelViewPage.vue";
 import UserLikeNovelPage from "@/views/UserLikeNovelPage.vue";
 import NovelSearchPage from "@/views/NovelSearchPage";
-import WriterPage from "@/views/WriterPage.vue";
 import AdminPage from "@/views/AdminPage.vue";
 import MyPage from "@/views/MyPage.vue";
 import MyReview from "@/views/MyReview.vue";
 import MyLikeNovel from "@/views/MyLikeNovel.vue";
 import FanclubPage from "@/views/FanclubPage";
 import PostDetailPage from "@/views/PostDetailPage";
+import AuthorNovelPage from "@/views/AuthorNovelPage.vue";
+import EnrollAuthorPage from "@/views/EnrollAuthorPage.vue";
+import NovelStatisticsPage from "@/views/NovelStatisticsPage.vue";
 
 Vue.use(Router);
 
@@ -82,11 +84,6 @@ export default new Router({
       component: NovelSearchPage,
     },
     {
-      path: "/writer",
-      name: "writer",
-      component: WriterPage,
-    },
-    {
       path: "/admin",
       name: "admin",
       component: AdminPage,
@@ -115,6 +112,21 @@ export default new Router({
       path: "/community/:postId",
       name: "PostDetailPage",
       component: PostDetailPage,
+    },
+    {
+      path: "/author",
+      name: "AuthorNovelPage",
+      component: AuthorNovelPage,
+    },
+    {
+      path: "/enroll",
+      name: "EnrollAuthorPage",
+      component: EnrollAuthorPage,
+    },
+    {
+      path: "/statistics",
+      name: "NovelStatisticsPage",
+      component: NovelStatisticsPage,
     },
   ],
 });

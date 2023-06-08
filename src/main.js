@@ -1,5 +1,7 @@
 import Vue from "vue";
 import App from "./App.vue";
+import jwtDecode from "jwt-decode";
+import Cookies from "js-cookie";
 
 // router
 import router from "./router";
@@ -19,6 +21,23 @@ Vue.use(IconsPlugin);
 Vue.use(Carousel3d, Slide);
 Vue.use(infiniteScroll);
 Vue.config.productionTip = false;
+
+Vue.prototype.$getTokenInfo = function (accessToken) {
+  if (!(accessToken == null)) {
+    const { userId, role } = jwtDecode(accessToken);
+    const tokenInfo = {
+      userId: userId,
+      role: role,
+    };
+    return tokenInfo;
+  }
+};
+
+Vue.prototype.$getAccessToken = function () {
+  const accessToken = Cookies.get("accessTokenCookie");
+  console.log(accessToken);
+  return accessToken;
+};
 
 new Vue({
   render: (h) => h(App),

@@ -1,9 +1,9 @@
 <template>
   <div class="container">
     <MyPageNavbar></MyPageNavbar>
-    <h3 class="title"><b>좋아요 한 작품 리스트</b></h3>
+    <h3 class="title"><b>내가 연재한 작품</b></h3>
     <div v-if="novels.length == 0">
-      <h1>좋아요를 누른 작품이 없습니다.</h1>
+      <h1>아직 연재중인 작품이 없습니다.</h1>
     </div>
     <div v-else>
       <div class="novel-list-box">
@@ -17,7 +17,7 @@
             md="4"
             lg="3"
           >
-            <b-card @click="detailNovelList(novel.novelId)">
+            <b-card @click="getStatistic(novel.novelId)">
               <b-card-img :src="novel.image" class="card-image"></b-card-img>
               <b-card-title>{{ novel.title }}</b-card-title>
               <b-card-text>{{ novel.author }}</b-card-text>
@@ -49,7 +49,7 @@ export default {
       try {
         const option = {
           headers: {
-            Authorization: "Bearer " + this.$store.getters.getAccessToken,
+            Authorization: "Bearer " + this.$getAccessToken(),
           },
         };
         const res = await axios.get(
@@ -59,7 +59,7 @@ export default {
 
         if (res.data.length) {
           this.novels = this.novels.concat(res.data);
-          this.novelId = this.novels[this.novels.length - 1].likeNovelId;
+          this.novelId = this.novels[this.novels.length - 1].novelId;
           $state.loaded(); //데이터 로딩
           if (Number(Object.keys(this.novels).length) / 10 == 0) {
             $state.complete(); //데이터가 없으면 로딩 끝
@@ -72,20 +72,53 @@ export default {
         alert(err);
       }
     },
-
     handleImageError(event) {
       event.target.src =
         "https://via.placeholder.com/600x600.png?text=No+Image";
     },
     detailNovelList(novelId) {
-      location.href = "/novel/" + novelId;
+      location.href = "/novel/detailView/" + novelId;
+    },
+    async getStatistic(novelId) {
+      alert(novelId);
+      try {
+        const option = {
+          headers: {
+            Authorization: "Bearer " + this.$getAccessToken(),
+          },
+        };
+        const genderRes = await axios.get(
+          `/api/v1/statistics/${novelId}/gender`,
+          option
+        );
+        const ageRes = await axios.get(
+          `/api/v1/statistics/${novelId}/age`,
+          option
+        );
+        const novelRes = await axios.get("/api/v1/novel/" + novelId);
+
+        const reviewRes = await axios.get(
+          "/api/v1/review/" + novelId + "/novel"
+        );
+        console.log(reviewRes.data);
+        this.$router.push({
+          name: "NovelStatisticsPage",
+          params: {
+            gender: genderRes.data,
+            age: ageRes.data,
+            novel: novelRes.data,
+            review: reviewRes.data,
+          },
+        });
+      } catch (err) {
+        console.log(err);
+      }
     },
   },
   mounted() {
-    const novels = localStorage.getItem("MyLikeNovel");
-    const novelList = JSON.parse(novels);
+    const novelList = this.$route.params.data;
     this.novels = novelList;
-    this.novelId = this.novels[this.novels.length - 1].likeNovelId;
+    this.novelId = this.novels[this.novels.length - 1].novelId;
   },
   components: {
     InfiniteLoading,
