@@ -5,12 +5,12 @@
       <div id="writerStatistics">
         <div v-if="reviews.length == 0">아직 통계가 없습니다.</div>
         <div v-else>
-          <div>
-            연령별 통계
+          <div id="statistics1">
+            연령대별 통계
             <canvas ref="genderChart" width="400" height="400"></canvas>
           </div>
-          <div>
-            나이별 통계
+          <div id="statistics1">
+            성별 통계
             <canvas ref="ageChart" width="400" height="400"></canvas>
           </div>
         </div>
@@ -113,40 +113,42 @@ export default {
       genderStatistics: [],
       ageStatistics: [],
       idxValue: ["0~10", "10~20", "20~30", "30~40", "40~50", "50~"],
-      idxCount: [0, 0, 0, 0, 0, 0],
+      ageCount: [0, 0, 0, 0, 0, 0],
+      genderCount: [0, 0],
     };
   },
-  async created() {
+  async mounted() {
+    //통계
     try {
-      this.novel = this.$route.params.novel;
-      this.reviews = this.$route.params.review.content;
-
-      // this.reviews.forEach((review) => {
-      //   review.createdDate = `${review.createdDate[0]} / ${review.createdDate[1]} / ${review.createdDate[2]}`;
-      // });
-      console.log(this.reviews);
-
-      //통계
       this.genderStatistics = this.$route.params.gender;
       this.ageStatistics = this.$route.params.age;
-      console.log(this.genderStatistics);
-      console.log(this.ageStatistics);
+
       this.ageStatistics.forEach((i) => {
         switch (i.age) {
           case "0~10":
-            this.idxCount[0] = i.count;
+            this.ageCount[0] = i.count;
             break;
           case "10~20":
-            this.idxCount[1] = i.count;
+            this.ageCount[1] = i.count;
             break;
           case "20~30":
-            this.idxCount[2] = i.count;
+            this.ageCount[2] = i.count;
             break;
           case "30~40":
-            this.idxCount[3] = i.count;
+            this.ageCount[3] = i.count;
             break;
           case "50~":
-            this.idxCount[4] = i.count;
+            this.ageCount[4] = i.count;
+            break;
+        }
+      });
+      this.genderStatistics.forEach((i) => {
+        switch (i.gender) {
+          case "man":
+            this.genderCount[0] = i.count;
+            break;
+          case "woman":
+            this.genderCount[1] = i.count;
             break;
         }
       });
@@ -159,7 +161,7 @@ export default {
           datasets: [
             {
               label: "데이터 개수",
-              data: this.idxCount,
+              data: this.ageCount,
               backgroundColor: [
                 "rgba(255, 99, 132, 0.2)",
                 "rgba(54, 162, 235, 0.2)",
@@ -203,15 +205,12 @@ export default {
           datasets: [
             {
               label: "데이터 개수",
-              data: [
-                this.genderStatistics[0].count,
-                this.genderStatistics[1].count,
-              ],
+              data: this.genderCount,
               backgroundColor: [
-                "rgba(255, 99, 132, 0.2)",
                 "rgba(54, 162, 235, 0.2)",
+                "rgba(255, 99, 132, 0.2)",
               ],
-              borderColor: ["rgba(255, 99, 132, 1)", "rgba(54, 162, 235, 1)"],
+              borderColor: ["rgba(54, 162, 235, 1)", "rgba(255, 99, 132, 1)"],
               borderWidth: 2,
             },
           ],
@@ -231,6 +230,18 @@ export default {
             },
           },
         },
+      });
+    } catch (err) {
+      console.log(err);
+    }
+  },
+  async created() {
+    try {
+      this.novel = this.$route.params.novel;
+      this.reviews = this.$route.params.review.content;
+
+      this.reviews.forEach((review) => {
+        review.createdDate = `${review.createdDate[0]} / ${review.createdDate[1]} / ${review.createdDate[2]}`;
       });
     } catch (err) {
       console.log(err);
@@ -278,4 +289,15 @@ export default {
 </script>
 <style scoped>
 @import "@/style/novel-detail.css";
+
+#writerStatistics {
+  width: 800px;
+  display: inline;
+}
+#statistics1 {
+  width: 400px;
+}
+#statistics2 {
+  width: 400px;
+}
 </style>
