@@ -1,6 +1,6 @@
 <template>
   <div id="ReviewTotalPage">
-    <MyPageHeader></MyPageHeader>
+    <MyPageNavbar></MyPageNavbar>
     <br />
     <section>
       <div>
@@ -50,7 +50,7 @@
 </template>
 
 <script>
-import MyPageHeader from "@/components/MyPageHeader.vue";
+import MyPageNavbar from "@/components/MyPageNavbar.vue";
 import axios from "axios";
 
 export default {
@@ -94,7 +94,7 @@ export default {
       }
     },
   },
-  components: { MyPageHeader },
+  components: { MyPageNavbar },
 };
 </script>
 <style scoped>

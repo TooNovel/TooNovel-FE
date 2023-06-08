@@ -1,6 +1,6 @@
 <template>
   <div id="enrollAuthorPage">
-    <MyPageHeader></MyPageHeader>
+    <MyPageNavbar></MyPageNavbar>
     <hr />
     <div>
       <label>닉네임</label>
@@ -11,7 +11,7 @@
 </template>
 
 <script>
-import MyPageHeader from "@/components/MyPageHeader.vue";
+import MyPageNavbar from "@/components/MyPageNavbar.vue";
 import axios from "axios";
 
 export default {
@@ -61,6 +61,6 @@ export default {
       }
     },
   },
-  components: { MyPageHeader },
+  components: { MyPageNavbar },
 };
 </script>

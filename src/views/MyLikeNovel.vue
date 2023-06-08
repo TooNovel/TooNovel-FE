@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <MyPageHeader></MyPageHeader>
+    <MyPageNavbar></MyPageNavbar>
     <h3 class="title"><b>좋아요 한 작품 리스트</b></h3>
     <div v-if="novels.length == 0">
       <h1>좋아요를 누른 작품이 없습니다.</h1>
@@ -33,7 +33,7 @@
 </template>
 
 <script>
-import MyPageHeader from "@/components/MyPageHeader.vue";
+import MyPageNavbar from "@/components/MyPageNavbar.vue";
 import axios from "axios";
 import InfiniteLoading from "vue-infinite-loading";
 
@@ -89,7 +89,7 @@ export default {
   },
   components: {
     InfiniteLoading,
-    MyPageHeader,
+    MyPageNavbar,
   },
 };
 </script>

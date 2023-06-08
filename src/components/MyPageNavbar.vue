@@ -119,20 +119,7 @@ export default {
   },
   mounted() {
     const accessToken = this.$getAccessToken();
-    console.log(this.$getTokenInfo(accessToken));
-    switch (this.$getTokenInfo(this.$getAccessToken()).role) {
-      case "AUTHOR":
-        this.role = "AUTHOR";
-        break;
-      case "USER":
-        this.role = "USER";
-        break;
-      case "ADMIN":
-        this.role = "ADMIN";
-        break;
-      default:
-        this.role = null;
-    }
+    this.role = this.$getTokenInfo(accessToken).role;
   },
 };
 </script>

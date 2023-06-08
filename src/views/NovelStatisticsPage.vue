@@ -1,7 +1,7 @@
 <template>
   <div>
     <main style="margin-top: 3%">
-      <MyPageHeader></MyPageHeader>
+      <MyPageNavbar></MyPageNavbar>
       <div id="writerStatistics">
         <div v-if="reviews.length == 0">아직 통계가 없습니다.</div>
         <div v-else>
@@ -87,7 +87,7 @@
 <script scoped>
 import axios from "axios";
 import NovelLike from "@/components/NovelLike.vue";
-import MyPageHeader from "@/components/MyPageHeader.vue";
+import MyPageNavbar from "@/components/MyPageNavbar.vue";
 import {
   Chart,
   BarController,
@@ -283,7 +283,7 @@ export default {
   },
   components: {
     "novel-like": NovelLike,
-    MyPageHeader,
+    MyPageNavbar,
   },
 };
 </script>

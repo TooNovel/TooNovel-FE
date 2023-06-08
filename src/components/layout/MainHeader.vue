@@ -143,8 +143,6 @@ export default {
     logout() {
       document.cookie = "accessTokenCookie=; path=/;";
       document.cookie = "refreshTokenCookie=; path=/;";
-      this.$store.commit("setAccessToken", null);
-      this.$store.commit("setRefreshToken", null);
       location.href = "/";
     },
     toCommunity() {
