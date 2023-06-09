@@ -105,7 +105,6 @@ export default {
       commentContent: "",
       postLiked: false,
       postId: 0,
-      accessToken: this.$store.getters.getAccessToken,
     };
   },
   async created() {
@@ -140,7 +139,7 @@ export default {
         };
         const option = {
           headers: {
-            Authorization: "Bearer " + this.$store.getters.getAccessToken,
+            Authorization: "Bearer " + this.$getAccessToken(),
           },
         };
         const res = await axios.post("/api/v1/comment", obj, option);
@@ -148,7 +147,7 @@ export default {
         this.comments.push(newComment);
         this.$router.go(0);
       } catch (err) {
-        if (this.accessToken == null || this.accessToken === "") {
+        if (this.$getAccessToken() == null || this.$getAccessToken() === "") {
           alert("로그인 후 댓글 작성할 수 있습니다!");
         }
         console.log(err);
@@ -158,7 +157,7 @@ export default {
       try {
         const option = {
           headers: {
-            Authorization: "Bearer " + this.$store.getters.getAccessToken,
+            Authorization: "Bearer " + this.$getAccessToken(),
           },
         };
         await axios.post(
@@ -178,7 +177,10 @@ export default {
         const errStatus = err.response.data;
         if (errStatus.code == "M003") {
           alert(errStatus.message);
-        } else if (this.accessToken == null || this.accessToken === "") {
+        } else if (
+          this.$getAccessToken() == null ||
+          this.$getAccessToken() === ""
+        ) {
           alert("로그인 후 좋아요 눌러주세요!");
         }
       }

@@ -77,7 +77,7 @@ export default {
           };
           const option = {
             headers: {
-              Authorization: "Bearer " + this.$store.getters.getAccessToken,
+              Authorization: "Bearer " + this.$getAccessToken(),
             },
           };
 

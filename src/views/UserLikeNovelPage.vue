@@ -51,7 +51,7 @@ export default {
       try {
         const option = {
           headers: {
-            Authorization: "Bearer " + this.$store.getters.getAccessToken,
+            Authorization: "Bearer " + this.$getAccessToken(),
           },
         };
         const res = await axios.get(

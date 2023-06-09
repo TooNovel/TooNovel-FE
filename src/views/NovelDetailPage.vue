@@ -135,10 +135,10 @@ export default {
   async created() {
     await this.sleep(1500);
     try {
-      if (this.accessToken != null) {
+      if (this.$getAccessToken() != null) {
         const option = {
           headers: {
-            Authorization: "Bearer " + this.$store.getters.getAccessToken,
+            Authorization: "Bearer " + this.$getAccessToken(),
           },
         };
         const user = await axios.get("/api/v1/user/me", option);
@@ -221,7 +221,7 @@ export default {
       try {
         const option = {
           headers: {
-            Authorization: "Bearer " + this.$store.getters.getAccessToken,
+            Authorization: "Bearer " + this.$getAccessToken(),
           },
         };
         await axios.delete("/api/v1/review/" + reviewId, option);
@@ -231,7 +231,10 @@ export default {
         console.log(err);
         if (errStatus.code == "R004") {
           alert(errStatus.message);
-        } else if (this.accessToken == null || this.accessToken === "") {
+        } else if (
+          this.$getAccessToken() == null ||
+          this.$getAccessToken() === ""
+        ) {
           alert("로그인 후 좋아요 눌러주세요!");
         }
       }

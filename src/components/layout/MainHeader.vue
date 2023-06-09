@@ -120,7 +120,7 @@ export default {
       try {
         const option = {
           headers: {
-            Authorization: "Bearer " + this.accessToken,
+            Authorization: "Bearer " + this.$getAccessToken(),
           },
         };
         const res = await axios.get("/api/v1/user/me", option);
@@ -131,7 +131,10 @@ export default {
       } catch (err) {
         if (err.code == "U001") {
           alert(err.message);
-        } else if (this.accessToken == null || this.accessToken === "") {
+        } else if (
+          this.$getAccessToken() == null ||
+          this.$getAccessToken() === ""
+        ) {
           alert("로그인 후 좋아요 눌러주세요!");
         }
       }

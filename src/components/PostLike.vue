@@ -23,7 +23,6 @@ export default {
   data() {
     return {
       postLiked: false,
-      accessToken: this.$store.getters.getAccessToken,
     };
   },
   props: ["post"],
@@ -32,7 +31,7 @@ export default {
       const postId = this.$route.params.postId;
       const option = {
         headers: {
-          Authorization: "Bearer " + this.accessToken,
+          Authorization: "Bearer " + this.$getAccessToken(),
         },
       };
       const result = await axios.get(
@@ -47,7 +46,7 @@ export default {
   },
   methods: {
     async postLike(res) {
-      if (this.accessToken == null || this.accessToken == "") {
+      if (this.$getAccessToken() == null || this.$getAccessToken() == "") {
         alert("로그인 후 이용 가능 합니다!");
         return;
       }
@@ -55,7 +54,7 @@ export default {
         const postId = res.postId;
         const option = {
           headers: {
-            Authorization: "Bearer " + this.accessToken,
+            Authorization: "Bearer " + this.$getAccessToken(),
           },
         };
         await axios.put("/api/v1/post/" + postId + "/like", null, option);
@@ -66,7 +65,10 @@ export default {
         const errStatus = err.response.data;
         if (errStatus.code == "P003") {
           alert(errStatus.message);
-        } else if (this.accessToken == null || this.accessToken === "") {
+        } else if (
+          this.$getAccessToken() == null ||
+          this.$getAccessToken() === ""
+        ) {
           alert("로그인 후 좋아요 눌러주세요!");
         }
       }
