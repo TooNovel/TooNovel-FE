@@ -144,7 +144,6 @@ export default {
     // 테스트가 덜 된 코드
     logout() {
       document.cookie = "accessTokenCookie=; path=/;";
-      document.cookie = "refreshTokenCookie=; path=/;";
       this.isLogined = false;
       location.href = "/";
     },
