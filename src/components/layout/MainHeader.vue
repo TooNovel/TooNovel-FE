@@ -36,7 +36,7 @@
           >검색</b-button
         >
       </b-nav-form>
-      <div v-if="accessToken">
+      <div v-if="isLogined">
         <b-nav-form class="mt-1">
           <b-button
             size="sm"
@@ -45,7 +45,6 @@
             style="margin-right: 20px"
             variant="primary"
           >
-            <!-- 마이페이지 추후 구현 예정 -->
             마이페이지
           </b-button>
           <b-button
@@ -82,7 +81,7 @@ export default {
   data() {
     return {
       message: "MainHeader",
-      accessToken: null,
+      isLogined: false,
       searchTitle: "",
     };
   },
@@ -146,6 +145,7 @@ export default {
     logout() {
       document.cookie = "accessTokenCookie=; path=/;";
       document.cookie = "refreshTokenCookie=; path=/;";
+      this.isLogined = false;
       location.href = "/";
     },
     toCommunity() {
@@ -160,8 +160,8 @@ export default {
     },
   },
   mounted() {
-    this.accessToken =
-      this.$getAccessToken() == null ? null : this.$getAccessToken();
+    this.isLogined =
+      this.$getAccessToken() != "" && this.$getAccessToken() != null;
   },
 };
 </script>
