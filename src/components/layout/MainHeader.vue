@@ -36,7 +36,7 @@
           >검색</b-button
         >
       </b-nav-form>
-      <div v-if="accessToken">
+      <div v-if="isLogined">
         <b-nav-form class="mt-1">
           <b-button
             size="sm"
@@ -45,7 +45,6 @@
             style="margin-right: 20px"
             variant="primary"
           >
-            <!-- 마이페이지 추후 구현 예정 -->
             마이페이지
           </b-button>
           <b-button
@@ -82,7 +81,7 @@ export default {
   data() {
     return {
       message: "MainHeader",
-      accessToken: null,
+      isLogined: false,
       searchTitle: "",
     };
   },
@@ -120,7 +119,7 @@ export default {
       try {
         const option = {
           headers: {
-            Authorization: "Bearer " + this.accessToken,
+            Authorization: "Bearer " + this.$getAccessToken(),
           },
         };
         const res = await axios.get("/api/v1/user/me", option);
@@ -131,7 +130,10 @@ export default {
       } catch (err) {
         if (err.code == "U001") {
           alert(err.message);
-        } else if (this.accessToken == null || this.accessToken === "") {
+        } else if (
+          this.$getAccessToken() == null ||
+          this.$getAccessToken() === ""
+        ) {
           alert("로그인 후 좋아요 눌러주세요!");
         }
       }
@@ -142,7 +144,7 @@ export default {
     // 테스트가 덜 된 코드
     logout() {
       document.cookie = "accessTokenCookie=; path=/;";
-      document.cookie = "refreshTokenCookie=; path=/;";
+      this.isLogined = false;
       location.href = "/";
     },
     toCommunity() {
@@ -157,8 +159,8 @@ export default {
     },
   },
   mounted() {
-    this.accessToken =
-      this.$getAccessToken() == null ? null : this.$getAccessToken();
+    this.isLogined =
+      this.$getAccessToken() != "" && this.$getAccessToken() != null;
   },
 };
 </script>

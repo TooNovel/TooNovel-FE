@@ -217,13 +217,13 @@ export default {
       try {
         const option = {
           headers: {
-            Authorization: "Bearer " + this.$store.getters.getAccessToken,
+            Authorization: "Bearer " + this.$getAccessToken(),
           },
         };
         await axios.get("/api/v1/user/me", option);
         this.$router.push({ path: "/community/write" });
       } catch (err) {
-        if (this.accessToken == null || this.accessToken === "") {
+        if (this.$getAccessToken() == null || this.$getAccessToken() === "") {
           alert("로그인 후 게시글 작성할 수 있습니다!");
         }
         console.log(err);
