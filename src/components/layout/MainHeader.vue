@@ -13,7 +13,7 @@
       <b-nav-item style="font-size: 27px" @click="getAllReview()"
         >리뷰</b-nav-item
       >
-      <b-nav-item style="font-size: 27px" to="/recommend">추천</b-nav-item>
+      <b-nav-item style="font-size: 27px" @click="recommend()">추천</b-nav-item>
       <b-nav-item style="font-size: 27px" @click="getAllNovel()">
         웹소설
       </b-nav-item>
@@ -136,6 +136,24 @@ export default {
         ) {
           alert("로그인 후 좋아요 눌러주세요!");
         }
+      }
+    },
+    async recommend() {
+      try {
+        const option = {
+          headers: {
+            Authorization: "Bearer " + this.$getAccessToken(),
+          },
+        };
+        const res = await axios.get("/api/v1/user/me", option);
+        this.$router.push({
+          name: "RecommendPage",
+          params: { data: res.data },
+        });
+      } catch (err) {
+        this.$router.push({
+          name: "RecommendPage",
+        });
       }
     },
     goToLoginPage() {
