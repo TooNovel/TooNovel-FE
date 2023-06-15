@@ -23,6 +23,7 @@ import EnrollAuthorPage from "@/views/EnrollAuthorPage.vue";
 import NovelStatisticsPage from "@/views/NovelStatisticsPage.vue";
 import AdminUserPage from "@/views/AdminUserPage";
 import AdminAuthorPage from "@/views/AdminAuthorPage";
+import NovelRequestPage from "@/views/NovelRequestPage";
 
 Vue.use(Router);
 
@@ -139,6 +140,11 @@ export default new Router({
       path: "/admin/author",
       name: "AdminAuthorPage",
       component: AdminAuthorPage,
+    },
+    {
+      path: "/post/request",
+      name: "NovelRequestPage",
+      component: NovelRequestPage,
     },
   ],
 });
