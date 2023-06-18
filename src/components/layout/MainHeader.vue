@@ -9,7 +9,9 @@
       <b-navbar-brand href="/"
         >&nbsp;&nbsp;<img src="/TooNovel-logo.png" width="125" height="50"
       /></b-navbar-brand>
-      <b-nav-item style="font-size: 27px">랭킹</b-nav-item>
+      <b-nav-item style="font-size: 27px" @click="getRanking()"
+        >랭킹</b-nav-item
+      >
       <b-nav-item style="font-size: 27px" @click="getAllReview()"
         >리뷰</b-nav-item
       >
@@ -174,6 +176,15 @@ export default {
     },
     toFanclub() {
       this.$router.push("/fanclub");
+    },
+    getRanking() {
+      try {
+        this.$router.push({
+          name: "ranking",
+        });
+      } catch (err) {
+        console.log(err);
+      }
     },
   },
   mounted() {

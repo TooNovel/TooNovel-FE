@@ -24,6 +24,7 @@ import NovelStatisticsPage from "@/views/NovelStatisticsPage.vue";
 import AdminUserPage from "@/views/AdminUserPage";
 import AdminAuthorPage from "@/views/AdminAuthorPage";
 import NovelRequestPage from "@/views/NovelRequestPage";
+import RankingPage from "@/views/RankingPage.vue";
 
 Vue.use(Router);
 
@@ -145,6 +146,11 @@ export default new Router({
       path: "/post/request",
       name: "NovelRequestPage",
       component: NovelRequestPage,
+    },
+    {
+      path: "/ranking",
+      name: "ranking",
+      component: RankingPage,
     },
   ],
 });
