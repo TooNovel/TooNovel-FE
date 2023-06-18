@@ -50,7 +50,7 @@
               <img :src="author.imageUrl" height="200px" />
               {{ author.nickname }}
               <br />
-              <b-button variant="primary" @click="joinRoom(author.rid)">
+              <b-button variant="primary" @click="joinRoom(author.userId)">
                 채팅방 참여
               </b-button>
             </slide>
@@ -77,7 +77,7 @@
               <img :src="room.imageUrl" height="200px" />
               {{ room.nickname }}
               <br />
-              <b-button variant="primary" @click="joinRoom(room.rid)">
+              <b-button variant="primary" @click="joinRoom(room.userId)">
                 채팅방 참여
               </b-button>
             </slide>
@@ -163,15 +163,14 @@ export default {
     }
   },
   methods: {
-    // rid를 받아오는 값이 없어 아직 미 구현
-    async joinRoom(rid) {
+    async joinRoom(uid) {
       try {
         const option = {
           headers: {
             Authorization: "Bearer " + this.$getAccessToken(),
           },
         };
-        await axios.post("/api/v1/chat/" + rid, option);
+        await axios.post(`/api/v1/chat/${uid}`, {}, option);
       } catch (err) {
         console.log(err);
       }
