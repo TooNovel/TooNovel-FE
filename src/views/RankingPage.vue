@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <RankingNavbar></RankingNavbar>
+    <RankingNavbar @setNovels="setNovels"></RankingNavbar>
     <h3 class="title"><b>전체 작품 리스트</b></h3>
     <div id="loading" v-if="isLoading" style="height: 800px">
       <div class="loader">Loading...</div>
@@ -25,81 +25,36 @@
         </b-col>
       </b-row>
     </div>
-    <infinite-loading
-      @infinite="infiniteHandler"
-      spinner="waveDots"
-    ></infinite-loading>
   </div>
 </template>
 
 <script>
-import axios from "axios";
-import InfiniteLoading from "vue-infinite-loading";
 import RankingNavbar from "@/components/RankingNavbar.vue";
 
 export default {
   data() {
     return {
       novels: [],
-      novelId: null,
       isLoading: true,
     };
   },
   async created() {
-    await this.sleep(1500);
+    console.log("page");
     this.isLoading = false;
   },
   methods: {
-    async infiniteHandler($state) {
-      if (!this.novels.length) {
-        // 데이터가 없는 경우 초기 데이터를 가져옵니다.
-        try {
-          const res = await axios.get(`/api/v1/novel`);
-          this.novels = res.data;
-          this.novelId = this.novels[this.novels.length - 1].novelId;
-          $state.loaded();
-        } catch (err) {
-          console.log(err);
-        }
-        return;
-      }
-      try {
-        const res = await axios.get(`/api/v1/novel?novelId=` + this.novelId);
-        console.log("length :" + res.data.length);
-        if (res.data.length) {
-          this.novels = this.novels.concat(res.data);
-          this.novelId = this.novels[this.novels.length - 1].novelId;
-          $state.loaded(); //데이터 로딩
-          if (this.novelId / res.data.length == 0) {
-            $state.complete(); //데이터가 없으면 로딩 끝
-          }
-        } else {
-          $state.complete();
-        }
-      } catch (err) {
-        console.log(err);
-        alert("에러");
-        location.href = "/";
-      }
+    setNovels(novels) {
+      this.novels = novels;
+      console.log("데이터가 잘 전달이 되었습니다.");
     },
     detailNovelList(novelId) {
       location.href = "/novel/" + novelId;
-    },
-    handleImageError(event) {
-      event.target.src =
-        "https://via.placeholder.com/600x600.png?text=No+Image";
     },
     async sleep(sec) {
       return new Promise((resolve) => setTimeout(resolve, sec));
     },
   },
-  async mounted() {
-    const novelList = await axios.get("/api/v1/novel");
-    this.novels = novelList.data;
-    this.novelId = this.novels[this.novels.length - 1].novelId;
-  },
   components: {
-    InfiniteLoading,
     RankingNavbar,
   },
 };

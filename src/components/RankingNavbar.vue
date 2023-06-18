@@ -6,16 +6,58 @@
     </div>
     <div>
       <ul id="list-box">
-        <!-- 추후 밑의 모든 메서드가 다 변경될 예정 아직 일부 구현 -->
-        <li><b-button @click="mypage()">top30</b-button></li>
-        <li><b-button @click="getLikeNovel()">판타지</b-button></li>
-        <li><b-button @click="getMyReview()">로맨스판타지</b-button></li>
-        <li><b-button @click="getMyReview()">로맨스</b-button></li>
-        <li><b-button @click="getMyReview()">현대판타지</b-button></li>
-        <li><b-button @click="getMyReview()">무협</b-button></li>
-        <li><b-button @click="getMyReview()">미스터리</b-button></li>
-        <li><b-button @click="getMyReview()">라이트노벨</b-button></li>
-        <li><b-button @click="getMyReview()">BL</b-button></li>
+        <h3>장르</h3>
+        <li><b-button @click="getRanking()">top30</b-button></li>
+        <li>
+          <b-button @click="getGenreRanking('FANTASY')">판타지</b-button>
+        </li>
+        <li>
+          <b-button @click="getGenreRanking('ROMANCE_FANTASY')">
+            로맨스판타지
+          </b-button>
+        </li>
+        <li>
+          <b-button @click="getGenreRanking('ROMANCE')">로맨스</b-button>
+        </li>
+        <li>
+          <b-button @click="getGenreRanking('MODERN_FANTASY')">
+            현대판타지
+          </b-button>
+        </li>
+        <li>
+          <b-button @click="getGenreRanking('WUXIA')">무협</b-button>
+        </li>
+        <li>
+          <b-button @click="getGenreRanking('MYSTERY')">미스터리</b-button>
+        </li>
+        <li>
+          <b-button @click="getGenreRanking('LIGHT_NOVEL')">
+            라이트노벨
+          </b-button>
+        </li>
+        <li>
+          <b-button @click="getGenreRanking('BL')">BL</b-button>
+        </li>
+      </ul>
+    </div>
+    <div>
+      <h3>정렬 기준</h3>
+      <ul id="list-box">
+        <li>
+          <b-button @click="getSortRanking('NOVEL_LIKE_DESC')">
+            좋아요 순
+          </b-button>
+        </li>
+        <li>
+          <b-button @click="getSortRanking('NOVEL_GRADE_DESC')">
+            평점 순
+          </b-button>
+        </li>
+        <li>
+          <b-button @click="getSortRanking('NOVEL_REVIEW_DESC')">
+            리뷰개수 순
+          </b-button>
+        </li>
       </ul>
     </div>
     <hr />
@@ -28,136 +70,56 @@ import axios from "axios";
 export default {
   data() {
     return {
-      token: null,
-      nickname: "",
-      imageUrl: "",
-      novelId: "",
-      role: null,
+      genre: "",
+      sort: "",
+      novels: [],
     };
   },
-  methods: {
-    async getLikeNovel() {
+  async created() {
+    console.log(this.novels.length);
+    if (this.novels.length === 0) {
       try {
-        const option = {
-          headers: {
-            Authorization: "Bearer " + this.$getAccessToken(),
-          },
-        };
-
-        const res = await axios.get(`/api/v1/user/novel?novelId=${0}`, option);
-        localStorage.setItem("MyLikeNovel", JSON.stringify(res.data));
-        this.$router.push({
-          name: "MyLikeNovel",
-          params: { data: res.data },
-        });
+        const res = await axios.get("/api/v1/novel");
+        this.novels = this.$emit("setNovels", res.data);
       } catch (err) {
         console.log(err);
       }
-    },
-    async getMyReview() {
-      try {
-        const option = {
-          headers: {
-            Authorization: "Bearer " + this.$getAccessToken(),
-          },
-        };
-        const res = await axios.get("/api/v1/review/myReview", option);
-        this.$router.push({
-          name: "MyReview",
-          params: {
-            data: res.data,
-          },
-        });
-      } catch (err) {
-        console.log(err);
-      }
-    },
-    async mypage() {
-      try {
-        const option = {
-          headers: {
-            Authorization: "Bearer " + this.$getAccessToken(),
-          },
-        };
-        const res = await axios.get("/api/v1/user/me", option);
-        this.$router.push({
-          name: "MyPage",
-          params: { data: res.data },
-        });
-      } catch (err) {
-        if (err.code == "U001") {
-          alert(err.message);
-        } else if (
-          this.$getAccessToken() == null ||
-          this.$getAccessToken() === ""
-        ) {
-          alert("로그인 후 좋아요 눌러주세요!");
-        }
-      }
-    },
-    async getNovelByAuthor() {
-      try {
-        const option = {
-          headers: {
-            Authorization: "Bearer " + this.$getAccessToken(),
-          },
-        };
-        const res = await axios.get("/api/v1/novel/author", option);
-        this.$router.push({
-          name: "AuthorNovelPage",
-          params: { data: res.data },
-        });
-      } catch (err) {
-        if (err.code == "U001") {
-          alert(err.message);
-        } else if (
-          this.$getAccessToken() == null ||
-          this.$getAccessToken() === ""
-        ) {
-          alert("로그인 후 좋아요 눌러주세요!");
-        }
-      }
-    },
-    async adminUser() {
-      // 회원 관리 페이지 이동 및 데이터 전달 추가 예정
-      try {
-        const option = {
-          headers: {
-            Authorization: "Bearer " + this.$getAccessToken(),
-          },
-        };
-        const res = await axios.get(`/api/v1/user?page=${0}`, option);
-        this.$router.push({
-          name: "AdminUserPage",
-          params: { data: res.data },
-        });
-      } catch (err) {
-        console.log(err);
-      }
-    },
-    async adminAuthor() {
-      try {
-        const option = {
-          headers: {
-            Authorization: "Bearer " + this.$getAccessToken(),
-          },
-        };
-        const res = await axios.get(`/api/v1/admin?page=${0}`, option);
-        this.$router.push({
-          name: "AdminAuthorPage",
-          params: { data: res.data },
-        });
-      } catch (err) {
-        console.log(err);
-      }
-    },
-    enrollAuthor() {
-      this.$router.push("Enroll");
-    },
+    }
   },
-  mounted() {
-    const accessToken = this.$getAccessToken();
-    this.role = this.$getTokenInfo(accessToken).role;
+  methods: {
+    async getRanking() {
+      try {
+        const res = await axios.get(`/api/v1/novel`);
+        this.novels = this.$emit("setNovels", res.data);
+        console.log(this.novels);
+      } catch (err) {
+        console.log(err);
+      }
+    },
+    async getGenreRanking(genre) {
+      console.log(genre);
+      this.genre = genre;
+      try {
+        const res = await axios.get(
+          `/api/v1/novel?genre=${this.genre}&sort=${this.sort}`
+        );
+        this.novels = this.$emit("setNovels", res.data);
+        console.log(this.novels);
+      } catch (err) {
+        console.log(err);
+      }
+    },
+    async getSortRanking(sort) {
+      this.sort = sort;
+      try {
+        const res = await axios.get(
+          `/api/v1/novel?genre=${this.genre}&sort=${this.sort}`
+        );
+        this.novels = this.$emit("setNovels", res.data);
+      } catch (err) {
+        console.log(err);
+      }
+    },
   },
 };
 </script>
