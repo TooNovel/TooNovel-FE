@@ -111,6 +111,13 @@
           </div>
         </b-container>
       </article>
+      <div class="template-container">
+        <div id="suggest">
+          <b>찾으시는 웹소설이 없으신가요?</b>
+          <p>작품 신청을 통해 빠진 작품을 알려주세요!</p>
+          <b-button variant="info" @click="novelRequest()">신청하기</b-button>
+        </div>
+      </div>
     </main>
   </div>
 </template>
@@ -242,6 +249,9 @@ export default {
     async sleep(sec) {
       return new Promise((resolve) => setTimeout(resolve, sec));
     },
+    novelRequest() {
+      this.$router.push("/post/request");
+    },
   },
   components: {
     "novel-like": NovelLike,
@@ -256,5 +266,17 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+#suggest {
+  font-size: 12px;
+  position: fixed;
+  top: 43%;
+  right: 1%;
+  transform: translateY(-50%);
+  background-color: white;
+  border-radius: 10px;
+  padding: 1%;
+  display: grid;
+  place-items: center;
 }
 </style>
