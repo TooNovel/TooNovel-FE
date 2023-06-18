@@ -1,7 +1,7 @@
 <template>
   <div id="products">
     <div v-if="products.length > 0">
-      <h3>주간 인기 작품</h3>
+      <h3>최신 작품</h3>
       <carousel-3d
         :pagination="true"
         :controls-visible="true"
@@ -125,7 +125,9 @@ export default {
   name: "MainPage",
   async created() {
     try {
-      const productsRes = await axios.get("/api/v1/novel");
+      const productsRes = await axios.get(
+        "/api/v1/novel?sort=CREATED_DATE_DESC"
+      );
       const temp = productsRes.data;
       this.shuffle(temp);
       this.products = temp;
