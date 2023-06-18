@@ -81,7 +81,7 @@ export default {
             },
           };
 
-          const res = await axios.patch("/api/v1/user/me", obj, option);
+          const res = await axios.patch("/api/v1/user/join", obj, option);
           console.log(res.data);
           router.push({ path: "/" });
         } catch (err) {
