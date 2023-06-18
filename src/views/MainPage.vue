@@ -130,7 +130,7 @@ export default {
       this.shuffle(temp);
       this.products = temp;
 
-      const novelsRes = await axios.get("/api/v1/novel?novelId=3994");
+      const novelsRes = await axios.get("/api/v1/novel?sort=NOVEL_LIKE_DESC");
       this.novelList = novelsRes.data;
 
       const authorRes = await axios.get("/api/v1/user/author");
