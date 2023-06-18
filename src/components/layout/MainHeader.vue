@@ -21,7 +21,7 @@
         >커뮤니티</b-nav-item
       >
       <b-nav-item style="font-size: 27px" @click="toFanclub()"
-        >팬클럽</b-nav-item
+        >메신저</b-nav-item
       >
     </b-navbar-nav>
 
