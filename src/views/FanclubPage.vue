@@ -3,7 +3,7 @@
     <header>
       <div class="row justify-content-end">
         <div class="col">
-          <h1>팬클럽</h1>
+          <h1>메신저</h1>
         </div>
         <div class="col-auto">
           <b-form-input placeholder="작가명" type="text" v-model="author" />
@@ -29,80 +29,204 @@
         </div>
       </div>
     </header>
-    <div>
-      <carousel-3d
-        :disable3d="true"
-        :space="365"
-        :clickable="false"
-        :controls-visible="true"
-        class="carousel-container"
-      >
-        <slide :index="0">
-          <img src="/favicon.ico" width="100px" height="200px" />
-          <br />
-          작가 1
-          <br />
-          <b-button variant="primary">팔로우</b-button>
-        </slide>
-        <slide :index="1">
-          <img src="/favicon.ico" width="100px" height="200px" />
-          <br />
-          작가 2
-          <br />
-          <b-button variant="primary">팔로우</b-button>
-        </slide>
-        <slide :index="2">
-          <img src="/favicon.ico" width="100px" height="200px" />
-          <br />
-          작가 3
-          <br />
-          <b-button variant="primary">팔로우</b-button>
-        </slide>
-        <slide :index="3">
-          <img src="/favicon.ico" width="100px" height="200px" />
-          <br />
-          작가 4
-          <br />
-          <b-button variant="primary">팔로우</b-button>
-        </slide>
-        <slide :index="4">
-          <img src="/favicon.ico" width="100px" height="200px" />
-          <br />
-          작가 5
-          <br />
-          <b-button variant="primary">팔로우</b-button>
-        </slide>
-      </carousel-3d>
+    <br />
+    <div v-if="!searchedAuthor">
+      <div>
+        <div v-if="authorList.length > 0">
+          <h3>최신 작가</h3>
+          <carousel-3d
+            :disable3d="true"
+            :space="365"
+            :clickable="false"
+            :controls-visible="true"
+            class="carousel-container"
+          >
+            <slide
+              v-for="(author, index) in authorList"
+              :key="index"
+              :index="index"
+              style="width: 250px; height: 300px"
+            >
+              <img :src="author.imageUrl" height="200px" />
+              {{ author.nickname }}
+              <br />
+              <b-button variant="primary" @click="joinRoom(author.userId)">
+                채팅방 참여
+              </b-button>
+            </slide>
+          </carousel-3d>
+        </div>
+      </div>
+      <br />
+      <div>
+        <div v-if="roomList.length > 0">
+          <h3>인기 채팅방</h3>
+          <carousel-3d
+            :disable3d="true"
+            :space="365"
+            :clickable="false"
+            :controls-visible="true"
+            class="carousel-container"
+          >
+            <slide
+              v-for="(room, index) in roomList"
+              :key="index"
+              :index="index"
+              style="width: 250px; height: 300px"
+            >
+              <img :src="room.imageUrl" height="200px" />
+              {{ room.nickname }}
+              <br />
+              <b-button variant="primary" @click="joinRoom(room.userId)">
+                채팅방 참여
+              </b-button>
+            </slide>
+          </carousel-3d>
+        </div>
+      </div>
     </div>
-    <div class="author-list-box">
-      <b-row>
-        <b-col class="mb-3" cols="12" sm="6" md="4" lg="3">
-          <b-card class="b-card" align="center">
-            <b-card-img src="/favicon.ico" class="card-image"></b-card-img>
-            <b-card-title class="card-title">작가 1</b-card-title>
-            <b-button variant="primary" class="card-btn">팔로우</b-button>
-          </b-card>
-        </b-col>
-      </b-row>
+    <div v-if="searchedAuthor">
+      <div class="author-list-box" ref="allAuthorList">
+        <b-row>
+          <b-col
+            v-for="(author, index) in authors"
+            :key="index"
+            class="mb-3"
+            cols="12"
+            sm="6"
+            md="4"
+            lg="3"
+          >
+            <b-card @click="detailNovelList(author.userId)">
+              <b-card-img :src="author.imageUrl" class="card-image">
+              </b-card-img>
+              <b-card-title>{{ author.nickname }}</b-card-title>
+              <b-card-text>
+                <b-button variant="primary" @click="joinRoom(author.rid)">
+                  채팅방 참여
+                </b-button>
+              </b-card-text>
+              <b-card-text>{{ author.userId }}</b-card-text>
+            </b-card>
+          </b-col>
+        </b-row>
+      </div>
+      <infinite-loading
+        @infinite="infiniteHandler"
+        spinner="waveDots"
+      ></infinite-loading>
     </div>
   </div>
 </template>
 
 <script>
+import axios from "axios";
 import { Carousel3d, Slide } from "vue-carousel-3d";
+import InfiniteLoading from "vue-infinite-loading";
 
 export default {
   data() {
     return {
+      author: "",
+      authorList: [],
+      roomList: [],
       authors: [],
+      userId: 0,
+      searchedAuthor: false,
     };
   },
-  created() {
-    this.authors = this.$route.params.data;
+  async created() {
+    try {
+      const authorRes = await axios.get("/api/v1/user/author");
+      this.authorList = authorRes.data;
+
+      const roomRes = await axios.get("/api/v1/user/chatroom");
+      this.roomList = roomRes.data;
+    } catch (err) {
+      console.log(err);
+    }
   },
   components: {
     Carousel3d,
     Slide,
+    InfiniteLoading,
+  },
+  async mounted() {
+    try {
+      const res = await axios.get(
+        `/api/v1/user/author?nickname=${this.author}`
+      );
+      this.authors = res.data;
+      this.userId = this.authors[this.authors.length - 1].userId;
+    } catch (err) {
+      console.log(err);
+    }
+  },
+  methods: {
+    async joinRoom(uid) {
+      try {
+        const option = {
+          headers: {
+            Authorization: "Bearer " + this.$getAccessToken(),
+          },
+        };
+        await axios.post(`/api/v1/chat/${uid}`, {}, option);
+      } catch (err) {
+        console.log(err);
+      }
+    },
+    async infiniteHandler($state) {
+      if (!this.authors.length) {
+        // 데이터가 없는 경우 초기 데이터를 가져옵니다.
+        try {
+          const res = await axios.get(
+            `/api/v1/user/author?nickname=${this.author}`
+          );
+          this.authors = res.data;
+          this.userId = this.authors[this.authors.length - 1].userId;
+          $state.loaded();
+        } catch (err) {
+          console.log(err);
+        }
+        return;
+      }
+      try {
+        console.log(this.userId);
+        const res = await axios.get(
+          `/api/v1/user/author?enrollId=` +
+            this.userId +
+            `&nickname=` +
+            this.author
+        );
+        console.log("length :" + res.data.length);
+        if (res.data.length) {
+          this.authors = this.authors.concat(res.data);
+          this.userId = this.authors[this.authors.length - 1].userId;
+          $state.loaded(); //데이터 로딩
+          if (this.userId / res.data.length == 0) {
+            $state.complete(); //데이터가 없으면 로딩 끝
+          }
+        } else {
+          $state.complete();
+        }
+      } catch (err) {
+        console.log(err);
+        alert("에러");
+        location.href = "/";
+      }
+    },
+    async search() {
+      try {
+        const res = await axios.get(
+          `/api/v1/user/author?nickname=${this.author}`
+        );
+        this.authors = [];
+        this.authors = res.data;
+        this.searchedAuthor = true;
+      } catch (err) {
+        console.log(err);
+      }
+    },
   },
 };
 </script>
@@ -119,7 +243,6 @@ export default {
 }
 
 img {
-  margin-top: 20px;
   border-radius: 50%;
   width: 150px;
   height: 150px;
@@ -130,5 +253,9 @@ img {
   margin-top: 2%;
   margin-left: 5%;
   margin-right: 5%;
+}
+
+#allProductList {
+  height: 400px; /* 스크롤이 표시될 최대 높이값 */
 }
 </style>

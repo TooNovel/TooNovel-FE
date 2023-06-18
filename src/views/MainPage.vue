@@ -1,7 +1,7 @@
 <template>
   <div id="products">
     <div v-if="products.length > 0">
-      <h3>주간 인기 작품</h3>
+      <h3>최신 작품</h3>
       <carousel-3d
         :pagination="true"
         :controls-visible="true"
@@ -50,35 +50,67 @@
       </carousel-3d>
     </div>
     <br />
-    <div>
-      <h3>신인 작가</h3>
+    <div v-if="authorList.length > 0">
+      <h3>최신 작가</h3>
       <carousel-3d
         :disable3d="true"
         :space="365"
         :clickable="false"
         :controls-visible="true"
+        class="carousel-container"
       >
-        <slide :index="0"> Slide 1 Content </slide>
-        <slide :index="1"> Slide 1 Content </slide>
-        <slide :index="2"> Slide 1 Content </slide>
-        <slide :index="3"> Slide 1 Content </slide>
-        <slide :index="4"> Slide 1 Content </slide>
+        <slide
+          v-for="(author, index) in authorList"
+          :key="index"
+          :index="index"
+          style="width: 250px; height: 350px"
+        >
+          <img :src="author.imageUrl" height="200px" class="userimg" />
+          {{ author.nickname }}
+          <br />
+          <b-button variant="primary" @click="joinRoom(author.userId)">
+            채팅방 참여
+          </b-button>
+        </slide>
       </carousel-3d>
     </div>
     <br />
-    <div>
-      <h3>주간 인기 리뷰</h3>
+    <div v-if="reviewList.length > 0">
+      <h3>인기 리뷰</h3>
       <carousel-3d
         :disable3d="true"
         :space="365"
         :clickable="false"
         :controls-visible="true"
+        class="carousel-container"
       >
-        <slide :index="0"> Slide 1 Content </slide>
-        <slide :index="1"> Slide 1 Content </slide>
-        <slide :index="2"> Slide 1 Content </slide>
-        <slide :index="3"> Slide 1 Content </slide>
-        <slide :index="4"> Slide 1 Content </slide>
+        <slide
+          v-for="(review, index) in reviewList"
+          :key="index"
+          :index="index"
+          style="width: 250px; height: 300px"
+        >
+          <img
+            :src="review.imageUrl"
+            height="200px"
+            @click="detailNovelList(review)"
+            class="userimg"
+          />
+          <!-- review를 받아오는 데이터에서 novelId 값이 없어 아직 미 구현 -->
+          <span @click="detailNovelList(review)" style="text-align: center">
+            {{ review.nickname }}
+            <br />
+            {{ review.reviewGrade }}
+            <br />
+            {{
+              review.reviewContent.length > 45
+                ? review.reviewContent.substring(0, 44) + "..."
+                : review.reviewContent
+            }}
+            <br />
+            {{ review.title + ", " + review.author }}
+          </span>
+        </slide>
       </carousel-3d>
     </div>
     <br />
@@ -93,13 +125,21 @@ export default {
   name: "MainPage",
   async created() {
     try {
-      const productsRes = await axios.get("/api/v1/novel");
+      const productsRes = await axios.get(
+        "/api/v1/novel?sort=CREATED_DATE_DESC"
+      );
       const temp = productsRes.data;
       this.shuffle(temp);
       this.products = temp;
 
-      const novelsRes = await axios.get("/api/v1/novel?novelId=3994");
+      const novelsRes = await axios.get("/api/v1/novel?sort=NOVEL_LIKE_DESC");
       this.novelList = novelsRes.data;
+
+      const authorRes = await axios.get("/api/v1/user/author");
+      this.authorList = authorRes.data;
+
+      const reviewRes = await axios.get("/api/v1/review?sort=REVIEW_LIKE_DESC");
+      this.reviewList = reviewRes.data.content;
     } catch (err) {
       console.log(err);
     }
@@ -108,6 +148,8 @@ export default {
     return {
       novelList: [],
       products: [],
+      authorList: [],
+      reviewList: [],
       paginationCustom: {
         style: {
           backgroundColor: "#fff",
@@ -140,6 +182,18 @@ export default {
     shuffle(arr) {
       arr.sort(() => Math.random() - 0.5);
     },
+    async joinRoom(uid) {
+      try {
+        const option = {
+          headers: {
+            Authorization: "Bearer " + this.$getAccessToken(),
+          },
+        };
+        await axios.post(`/api/v1/chat/${uid}`, {}, option);
+      } catch (err) {
+        console.log(err);
+      }
+    },
   },
 };
 </script>
@@ -149,5 +203,20 @@ export default {
 }
 h3 {
   font-family: "Hanna";
+}
+
+.carousel-container .carousel-3d-slide .userimg {
+  margin-top: 10px;
+  border-radius: 50%;
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+}
+
+.carousel-container .carousel-3d-slide {
+  background-color: white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 </style>

@@ -12,7 +12,7 @@
           buttons
         ></b-form-radio-group>
         <b-input-group prepend="제목" style="margin-top: 20px">
-          <b-form-input type="text" v-model="title" />
+          <b-form-input type="text" v-model="searchTitle" />
         </b-input-group>
         <b-input-group prepend="작가" style="margin-top: 20px">
           <b-form-input type="text" v-model="author" />
@@ -20,6 +20,14 @@
         </b-input-group>
       </b-form-group>
     </div>
+    <br />
+    <b-col md="6" offset-md="3">
+      <div class="descrption">
+        <b>찾으시는 웹소설이 없으신가요?</b>
+        <p>작품 신청을 통해 빠진 작품을 알려주세요!</p>
+        <b-button variant="info" @click="novelRequest()">신청하기</b-button>
+      </div>
+    </b-col>
     <div v-if="isEmpty">
       <h1>검색된 결과가 없습니다.</h1>
     </div>
@@ -114,6 +122,7 @@ export default {
         return;
       }
       try {
+        console.log(this.novelId);
         const res = await axios.get(
           `/api/v1/novel?novelId=${this.novelId}&title=${this.searchTitle}&author=${this.author}&genre=${this.selected}`
         );
@@ -147,6 +156,9 @@ export default {
     detailNovelList(novelId) {
       location.href = "/novel/" + novelId;
     },
+    novelRequest() {
+      this.$router.push("/post/request");
+    },
   },
   components: {
     InfiniteLoading,
@@ -159,6 +171,8 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
+  display: flex;
+  flex-direction: row;
 }
 .title {
   margin: 20px;
@@ -180,5 +194,10 @@ export default {
   margin-top: 2%;
   margin-left: 5%;
   margin-right: 5%;
+}
+
+.descrption {
+  display: grid;
+  place-items: center;
 }
 </style>
