@@ -167,11 +167,16 @@ export default {
     goToLoginPage() {
       this.$router.push("/login");
     },
-    // 테스트가 덜 된 코드
     logout() {
-      document.cookie = "accessTokenCookie=; path=/;";
-      this.isLogined = false;
-      location.href = "/";
+      try {
+        axios.delete(`${process.env.VUE_APP_API_URL}/token`);
+        document.cookie =
+          "accessTokenCookie=; path=/; domain=.toonovel.link; SameSite=None; Secure; Max-Age=0;";
+        this.isLogined = false;
+        location.href = "/";
+      } catch (err) {
+        console.log(err);
+      }
     },
     toCommunity() {
       this.$router.push("/community");
