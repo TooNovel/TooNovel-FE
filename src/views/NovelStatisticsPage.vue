@@ -256,12 +256,14 @@ export default {
           },
         };
         await axios.post(
-          "/api/v1/review/" + res.reviewId + "/like",
+          `${process.env.VUE_APP_API_URL}/review/` + res.reviewId + "/like",
           null,
           option
         );
         const result = await axios.get(
-          "/api/v1/review/" + this.novel.novelId + "/novel",
+          `${process.env.VUE_APP_API_URL}/review/` +
+            this.novel.novelId +
+            "/novel",
           option
         );
         const clickReview = result.data.content.find(

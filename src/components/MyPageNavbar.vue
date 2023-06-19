@@ -45,7 +45,10 @@ export default {
           },
         };
 
-        const res = await axios.get(`/api/v1/user/novel?novelId=${0}`, option);
+        const res = await axios.get(
+          `${process.env.VUE_APP_API_URL}/user/novel?novelId=${0}`,
+          option
+        );
         localStorage.setItem("MyLikeNovel", JSON.stringify(res.data));
         this.$router.push({
           name: "MyLikeNovel",
@@ -62,7 +65,10 @@ export default {
             Authorization: "Bearer " + this.$getAccessToken(),
           },
         };
-        const res = await axios.get("/api/v1/review/myReview", option);
+        const res = await axios.get(
+          `${process.env.VUE_APP_API_URL}/review/myReview`,
+          option
+        );
         this.$router.push({
           name: "MyReview",
           params: {
@@ -80,7 +86,10 @@ export default {
             Authorization: "Bearer " + this.$getAccessToken(),
           },
         };
-        const res = await axios.get("/api/v1/user/me", option);
+        const res = await axios.get(
+          `${process.env.VUE_APP_API_URL}/user/me`,
+          option
+        );
         this.$router.push({
           name: "MyPage",
           params: { data: res.data },
@@ -103,7 +112,10 @@ export default {
             Authorization: "Bearer " + this.$getAccessToken(),
           },
         };
-        const res = await axios.get("/api/v1/novel/author", option);
+        const res = await axios.get(
+          `${process.env.VUE_APP_API_URL}/novel/author`,
+          option
+        );
         this.$router.push({
           name: "AuthorNovelPage",
           params: { data: res.data },
@@ -127,7 +139,10 @@ export default {
             Authorization: "Bearer " + this.$getAccessToken(),
           },
         };
-        const res = await axios.get(`/api/v1/user?page=${0}`, option);
+        const res = await axios.get(
+          `${process.env.VUE_APP_API_URL}/user?page=${0}`,
+          option
+        );
         this.$router.push({
           name: "AdminUserPage",
           params: { data: res.data },
@@ -143,7 +158,10 @@ export default {
             Authorization: "Bearer " + this.$getAccessToken(),
           },
         };
-        const res = await axios.get(`/api/v1/admin?page=${0}`, option);
+        const res = await axios.get(
+          `${process.env.VUE_APP_API_URL}/admin?page=${0}`,
+          option
+        );
         this.$router.push({
           name: "AdminAuthorPage",
           params: { data: res.data },

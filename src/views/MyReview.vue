@@ -70,7 +70,10 @@ export default {
           Authorization: "Bearer " + this.$getAccessToken(),
         },
       };
-      const res = await axios.get(`/api/v1/review/myReview`, option);
+      const res = await axios.get(
+        `${process.env.VUE_APP_API_URL}/review/myReview`,
+        option
+      );
       this.reviews = res.data;
     } catch (err) {
       console.log(err);
@@ -85,7 +88,7 @@ export default {
           },
         };
         const res = await axios.get(
-          `/api/v1/review/myReview?page=${n}&sort=${this.sort}&genre=${this.genre}&limit=${this.limit}`,
+          `${process.env.VUE_APP_API_URL}/review/myReview?page=${n}&sort=${this.sort}&genre=${this.genre}&limit=${this.limit}`,
           option
         );
         this.reviews = res.data;

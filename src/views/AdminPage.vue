@@ -26,7 +26,9 @@ export default {
   },
   async mounted() {
     try {
-      const res = await axios.get("/api/v1/admin/review");
+      const res = await axios.get(
+        `${process.env.VUE_APP_API_URL}/admin/review`
+      );
       this.statistics = res.data;
       this.idxValue = this.statistics.map((i) => i.createdDate);
       this.idxCount = this.statistics.map((i) => i.count);

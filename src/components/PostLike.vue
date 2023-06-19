@@ -35,7 +35,7 @@ export default {
         },
       };
       const result = await axios.get(
-        "/api/v1/post/" + postId + "/like",
+        `${process.env.VUE_APP_API_URL}/post/` + postId + "/like",
         option
       );
       console.log(result);
@@ -57,8 +57,15 @@ export default {
             Authorization: "Bearer " + this.$getAccessToken(),
           },
         };
-        await axios.put("/api/v1/post/" + postId + "/like", null, option);
-        const result = await axios.get("/api/v1/post/" + postId, option);
+        await axios.put(
+          `${process.env.VUE_APP_API_URL}/post/` + postId + "/like",
+          null,
+          option
+        );
+        const result = await axios.get(
+          `${process.env.VUE_APP_API_URL}/post/` + postId,
+          option
+        );
         this.postLiked = !this.postLiked;
         res.like = result.data.like;
       } catch (err) {

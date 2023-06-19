@@ -53,7 +53,7 @@ export default {
           },
         };
         const res = await axios.get(
-          `/api/v1/user/novel?novelId=${this.novelId}`,
+          `${process.env.VUE_APP_API_URL}/user/novel?novelId=${this.novelId}`,
           option
         );
 

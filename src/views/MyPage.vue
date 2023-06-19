@@ -46,7 +46,7 @@ export default {
     },
     async uploadImage() {
       try {
-        const res = await axios.get("/api/v1/aws/s3");
+        const res = await axios.get(`${process.env.VUE_APP_API_URL}/aws/s3`);
         const preSignedUrl = res.data.preSignedUrl;
         const encodedFileName = res.data.encodedFileName;
         try {
@@ -64,7 +64,7 @@ export default {
           },
         };
         await axios.patch(
-          "/api/v1/user/me",
+          `${process.env.VUE_APP_API_URL}/user/me`,
           {
             nickname: this.nickname,
             imageUrl: this.imageUrl,
@@ -83,7 +83,10 @@ export default {
           Authorization: "Bearer " + this.$getAccessToken(),
         },
       };
-      const res = await axios.get(`/api/v1/user/me`, option);
+      const res = await axios.get(
+        `${process.env.VUE_APP_API_URL}/user/me`,
+        option
+      );
       console.log(res);
       this.nickname = res.data.nickname;
       this.gender = res.data.gender;

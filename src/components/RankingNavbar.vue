@@ -79,7 +79,7 @@ export default {
     console.log(this.novels.length);
     if (this.novels.length === 0) {
       try {
-        const res = await axios.get("/api/v1/novel");
+        const res = await axios.get(`${process.env.VUE_APP_API_URL}/novel`);
         this.novels = this.$emit("setNovels", res.data);
       } catch (err) {
         console.log(err);
@@ -89,7 +89,7 @@ export default {
   methods: {
     async getRanking() {
       try {
-        const res = await axios.get(`/api/v1/novel`);
+        const res = await axios.get(`${process.env.VUE_APP_API_URL}/novel`);
         this.novels = this.$emit("setNovels", res.data);
         console.log(this.novels);
       } catch (err) {
@@ -101,7 +101,7 @@ export default {
       this.genre = genre;
       try {
         const res = await axios.get(
-          `/api/v1/novel?genre=${this.genre}&sort=${this.sort}`
+          `${process.env.VUE_APP_API_URL}/novel?genre=${this.genre}&sort=${this.sort}`
         );
         this.novels = this.$emit("setNovels", res.data);
         console.log(this.novels);
@@ -113,7 +113,7 @@ export default {
       this.sort = sort;
       try {
         const res = await axios.get(
-          `/api/v1/novel?genre=${this.genre}&sort=${this.sort}`
+          `${process.env.VUE_APP_API_URL}/novel?genre=${this.genre}&sort=${this.sort}`
         );
         this.novels = this.$emit("setNovels", res.data);
       } catch (err) {

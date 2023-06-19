@@ -148,15 +148,22 @@ export default {
             Authorization: "Bearer " + this.$getAccessToken(),
           },
         };
-        const user = await axios.get("/api/v1/user/me", option);
+        const user = await axios.get(
+          `${process.env.VUE_APP_API_URL}/user/me`,
+          option
+        );
         this.userId = user.data.userId;
       }
       const id = this.$route.params.novel_id;
 
-      const novelRes = await axios.get("/api/v1/novel/" + id);
+      const novelRes = await axios.get(
+        `${process.env.VUE_APP_API_URL}/novel/` + id
+      );
       this.novel = novelRes.data;
 
-      const reviewRes = await axios.get("/api/v1/review/" + id + "/novel");
+      const reviewRes = await axios.get(
+        `${process.env.VUE_APP_API_URL}/review/` + id + "/novel"
+      );
       this.reviews = reviewRes.data.content;
 
       this.reviews.forEach((review) => {
@@ -181,7 +188,11 @@ export default {
             Authorization: "Bearer " + this.$getAccessToken(),
           },
         };
-        const res = await axios.post("/api/v1/review", obj, option);
+        const res = await axios.post(
+          `${process.env.VUE_APP_API_URL}/review`,
+          obj,
+          option
+        );
         const newReview = res.data;
         this.reviews.push(newReview);
         this.$router.go(0);
@@ -200,12 +211,14 @@ export default {
           },
         };
         await axios.post(
-          "/api/v1/review/" + res.reviewId + "/like",
+          `${process.env.VUE_APP_API_URL}/review/` + res.reviewId + "/like",
           null,
           option
         );
         const result = await axios.get(
-          "/api/v1/review/" + this.novel.novelId + "/novel",
+          `${process.env.VUE_APP_API_URL}/review/` +
+            this.novel.novelId +
+            "/novel",
           option
         );
         const clickReview = result.data.content.find(
@@ -231,7 +244,10 @@ export default {
             Authorization: "Bearer " + this.$getAccessToken(),
           },
         };
-        await axios.delete("/api/v1/review/" + reviewId, option);
+        await axios.delete(
+          `${process.env.VUE_APP_API_URL}/review/` + reviewId,
+          option
+        );
         this.$router.go(0);
       } catch (err) {
         const errStatus = err.response.data;

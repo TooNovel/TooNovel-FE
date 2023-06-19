@@ -126,19 +126,25 @@ export default {
   async created() {
     try {
       const productsRes = await axios.get(
-        "/api/v1/novel?sort=CREATED_DATE_DESC"
+        `${process.env.VUE_APP_API_URL}/novel?sort=CREATED_DATE_DESC`
       );
       const temp = productsRes.data;
       this.shuffle(temp);
       this.products = temp;
 
-      const novelsRes = await axios.get("/api/v1/novel?sort=NOVEL_LIKE_DESC");
+      const novelsRes = await axios.get(
+        `${process.env.VUE_APP_API_URL}/novel?sort=NOVEL_LIKE_DESC`
+      );
       this.novelList = novelsRes.data;
 
-      const authorRes = await axios.get("/api/v1/user/author");
+      const authorRes = await axios.get(
+        `${process.env.VUE_APP_API_URL}/user/author`
+      );
       this.authorList = authorRes.data;
 
-      const reviewRes = await axios.get("/api/v1/review?sort=REVIEW_LIKE_DESC");
+      const reviewRes = await axios.get(
+        `${process.env.VUE_APP_API_URL}/review?sort=REVIEW_LIKE_DESC`
+      );
       this.reviewList = reviewRes.data.content;
     } catch (err) {
       console.log(err);
@@ -189,7 +195,11 @@ export default {
             Authorization: "Bearer " + this.$getAccessToken(),
           },
         };
-        await axios.post(`/api/v1/chat/${uid}`, {}, option);
+        await axios.post(
+          `${process.env.VUE_APP_API_URL}/chat/${uid}`,
+          {},
+          option
+        );
       } catch (err) {
         console.log(err);
       }

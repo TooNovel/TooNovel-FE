@@ -38,7 +38,7 @@ export default {
             },
           };
           const res = await axios.post(
-            "/api/v1/user/author",
+            `${process.env.VUE_APP_API_URL}/user/author`,
             {
               nickname: nickname,
             },

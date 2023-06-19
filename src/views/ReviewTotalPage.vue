@@ -70,7 +70,7 @@ export default {
     await this.sleep(1500);
     try {
       const res = await axios.get(
-        `/api/v1/review?page=${this.page}&sort=${this.sort}&genre=${this.genre}&limit=${this.limit}`
+        `${process.env.VUE_APP_API_URL}/review?page=${this.page}&sort=${this.sort}&genre=${this.genre}&limit=${this.limit}`
       );
       this.reviews = res.data;
       this.isLoading = false;
@@ -82,7 +82,7 @@ export default {
     async reviewPaging(n) {
       try {
         const res = await axios.get(
-          `/api/v1/review?page=${n}&sort=${this.sort}&genre=${this.genre}&limit=${this.limit}`
+          `${process.env.VUE_APP_API_URL}/review?page=${n}&sort=${this.sort}&genre=${this.genre}&limit=${this.limit}`
         );
         this.reviews = res.data;
       } catch (err) {
@@ -92,7 +92,7 @@ export default {
     async fetchReviews(sort) {
       try {
         const res = await axios.get(
-          `/api/v1/review?sort=${sort}&genre=${this.genre}&limit=${this.limit}`
+          `${process.env.VUE_APP_API_URL}/review?sort=${sort}&genre=${this.genre}&limit=${this.limit}`
         );
         this.reviews = res.data;
         this.sort = sort;

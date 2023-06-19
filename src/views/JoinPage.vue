@@ -81,7 +81,11 @@ export default {
             },
           };
 
-          const res = await axios.patch("/api/v1/user/join", obj, option);
+          const res = await axios.patch(
+            `${process.env.VUE_APP_API_URL}/user/join`,
+            obj,
+            option
+          );
           console.log(res.data);
           router.push({ path: "/" });
         } catch (err) {
