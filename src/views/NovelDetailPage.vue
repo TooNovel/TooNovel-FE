@@ -157,7 +157,7 @@ export default {
       const id = this.$route.params.novel_id;
 
       const novelRes = await axios.get(
-        `${process.env.VUE_APP_API_URL}/api/v1/novel/` + id
+        `${process.env.VUE_APP_API_URL}/novel/` + id
       );
       this.novel = novelRes.data;
 
