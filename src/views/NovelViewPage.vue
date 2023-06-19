@@ -52,9 +52,7 @@ export default {
       if (!this.novels.length) {
         // 데이터가 없는 경우 초기 데이터를 가져옵니다.
         try {
-          const res = await axios.get(
-            `${process.env.VUE_APP_API_URL}/novel`
-          );
+          const res = await axios.get(`${process.env.VUE_APP_API_URL}/novel`);
           this.novels = res.data;
           this.novelId = this.novels[this.novels.length - 1].novelId;
           $state.loaded();
