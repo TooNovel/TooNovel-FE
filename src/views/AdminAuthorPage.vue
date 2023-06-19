@@ -107,7 +107,9 @@ export default {
   methods: {
     async authorPaging(n) {
       try {
-        const res = await axios.get(`/api/v1/admin?page=${n}`);
+        const res = await axios.get(
+          `${process.env.VUE_APP_API_URL}/admin?page=${n}`
+        );
         this.pages = res.data;
         const content = res.data.content;
         this.authors = content.map((item) => {
@@ -149,7 +151,11 @@ export default {
             Authorization: "Bearer " + this.$getAccessToken(),
           },
         };
-        await axios.patch("/api/v1/admin", author, option);
+        await axios.patch(
+          `${process.env.VUE_APP_API_URL}/admin`,
+          author,
+          option
+        );
         alert("승인 완료!");
       } catch (err) {
         console.log(err);

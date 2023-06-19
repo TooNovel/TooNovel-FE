@@ -35,7 +35,7 @@ export default {
         },
       };
       const result = await axios.get(
-        "/api/v1/novel/" + novelId + "/like",
+        `${process.env.VUE_APP_API_URL}/novel/` + novelId + "/like",
         option
       );
       this.novelLiked = result.data.like;
@@ -56,8 +56,15 @@ export default {
             Authorization: "Bearer " + this.$getAccessToken(),
           },
         };
-        await axios.put("/api/v1/novel/" + novelId + "/like", null, option);
-        const result = await axios.get("/api/v1/novel/" + novelId, option);
+        await axios.put(
+          `${process.env.VUE_APP_API_URL}/novel/` + novelId + "/like",
+          null,
+          option
+        );
+        const result = await axios.get(
+          `${process.env.VUE_APP_API_URL}/novel/` + novelId,
+          option
+        );
         this.novelLiked = !this.novelLiked;
         res.likeCount = result.data.likeCount;
       } catch (err) {

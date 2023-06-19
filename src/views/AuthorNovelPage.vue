@@ -53,7 +53,7 @@ export default {
           },
         };
         const res = await axios.get(
-          `/api/v1/novel/author?novelId=${this.novelId}`,
+          `${process.env.VUE_APP_API_URL}/novel/author?novelId=${this.novelId}`,
           option
         );
 
@@ -88,17 +88,19 @@ export default {
           },
         };
         const genderRes = await axios.get(
-          `/api/v1/statistics/${novelId}/gender`,
+          `${process.env.VUE_APP_API_URL}/statistics/${novelId}/gender`,
           option
         );
         const ageRes = await axios.get(
-          `/api/v1/statistics/${novelId}/age`,
+          `${process.env.VUE_APP_API_URL}/statistics/${novelId}/age`,
           option
         );
-        const novelRes = await axios.get("/api/v1/novel/" + novelId);
+        const novelRes = await axios.get(
+          `${process.env.VUE_APP_API_URL}/novel/` + novelId
+        );
 
         const reviewRes = await axios.get(
-          "/api/v1/review/" + novelId + "/novel"
+          `${process.env.VUE_APP_API_URL}/review/` + novelId + "/novel"
         );
         console.log(reviewRes.data);
         this.$router.push({

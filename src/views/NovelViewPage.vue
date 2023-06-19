@@ -52,7 +52,9 @@ export default {
       if (!this.novels.length) {
         // 데이터가 없는 경우 초기 데이터를 가져옵니다.
         try {
-          const res = await axios.get(`/api/v1/novel`);
+          const res = await axios.get(
+            `${process.env.VUE_APP_API_URL}/api/v1/novel`
+          );
           this.novels = res.data;
           this.novelId = this.novels[this.novels.length - 1].novelId;
           $state.loaded();
@@ -62,7 +64,9 @@ export default {
         return;
       }
       try {
-        const res = await axios.get(`/api/v1/novel?novelId=` + this.novelId);
+        const res = await axios.get(
+          `${process.env.VUE_APP_API_URL}/novel?novelId=` + this.novelId
+        );
         console.log("length :" + res.data.length);
         if (res.data.length) {
           this.novels = this.novels.concat(res.data);
@@ -92,7 +96,7 @@ export default {
     },
   },
   async mounted() {
-    const novelList = await axios.get("/api/v1/novel");
+    const novelList = await axios.get(`${process.env.VUE_APP_API_URL}/novel`);
     this.novels = novelList.data;
     this.novelId = this.novels[this.novels.length - 1].novelId;
   },

@@ -55,7 +55,7 @@ export default {
           },
         };
         const res = await axios.get(
-          `/api/v1/user/novel?novelId=${this.novelId}`,
+          `${process.env.VUE_APP_API_URL}/user/novel?novelId=${this.novelId}`,
           option
         );
 
@@ -81,7 +81,7 @@ export default {
     },
     async getAllNovel() {
       try {
-        const res = await axios.get("/api/v1/novel");
+        const res = await axios.get(`${process.env.VUE_APP_API_URL}/novel`);
         this.$router.push({
           name: "novels",
           params: { data: res.data },

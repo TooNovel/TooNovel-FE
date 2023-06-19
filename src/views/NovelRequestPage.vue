@@ -65,9 +65,11 @@ export default {
         if (!novel.title || !novel.content) {
           alert("제목, 내용을 모두 입력해주세요.");
         } else {
-          axios.post("/api/v1/post", novel, option).then(() => {
-            router.push({ path: "/" });
-          });
+          axios
+            .post(`${process.env.VUE_APP_API_URL}/post`, novel, option)
+            .then(() => {
+              router.push({ path: "/" });
+            });
         }
       } catch (err) {
         console.log(err);

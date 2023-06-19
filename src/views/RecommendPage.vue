@@ -106,14 +106,19 @@ export default {
   },
   async created() {
     try {
-      const res = await axios.get(`/api/v1/novel?sort=NOVEL_GRADE_DESC`);
+      const res = await axios.get(
+        `${process.env.VUE_APP_API_URL}/novel?sort=NOVEL_GRADE_DESC`
+      );
       this.novelList = res.data;
       const option = {
         headers: {
           Authorization: "Bearer " + this.$getAccessToken(),
         },
       };
-      const res2 = await axios.get(`/api/v1/review/myReview`, option);
+      const res2 = await axios.get(
+        `${process.env.VUE_APP_API_URL}/review/myReview`,
+        option
+      );
       this.reviewCount = res2.data.totalElements;
       if (this.reviewCount >= 20) {
         this.isRecommend = false;
@@ -139,7 +144,10 @@ export default {
           },
         };
 
-        const res = await axios.get("/api/v1/recommend", option);
+        const res = await axios.get(
+          `${process.env.VUE_APP_API_URL}/recommend`,
+          option
+        );
 
         await this.sleep(2500);
         this.novelList = res.data;
@@ -157,7 +165,7 @@ export default {
       this.isLoading = true;
 
       try {
-        await axios.put("/api/v1/recommend");
+        await axios.put(`${process.env.VUE_APP_API_URL}/recommend`);
 
         this.isLoading = false;
         this.generateRecommend();

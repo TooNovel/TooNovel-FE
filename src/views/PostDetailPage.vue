@@ -112,10 +112,14 @@ export default {
       const id = this.$route.params.postId;
       console.log(id);
 
-      const postRes = await axios.get("/api/v1/post/" + id);
+      const postRes = await axios.get(
+        `${process.env.VUE_APP_API_URL}/post/` + id
+      );
       this.post = postRes.data;
 
-      const commentRes = await axios.get("/api/v1/comment/" + id);
+      const commentRes = await axios.get(
+        `${process.env.VUE_APP_API_URL}/comment/` + id
+      );
       this.comments = commentRes.data.content;
 
       // const [year, month, day] = this.reviews.content[0].createdDate;
@@ -142,7 +146,11 @@ export default {
             Authorization: "Bearer " + this.$getAccessToken(),
           },
         };
-        const res = await axios.post("/api/v1/comment", obj, option);
+        const res = await axios.post(
+          `${process.env.VUE_APP_API_URL}/comment`,
+          obj,
+          option
+        );
         const newComment = res.data;
         this.comments.push(newComment);
         this.$router.go(0);
@@ -161,12 +169,12 @@ export default {
           },
         };
         await axios.post(
-          "/api/v1/comment/" + res.commentId + "/like",
+          `${process.env.VUE_APP_API_URL}/comment/` + res.commentId + "/like",
           null,
           option
         );
         const result = await axios.get(
-          "/api/v1/comment/" + this.post.postId,
+          `${process.env.VUE_APP_API_URL}/comment/` + this.post.postId,
           option
         );
         const clickComment = result.data.content.find(

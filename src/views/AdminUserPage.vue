@@ -104,7 +104,9 @@ export default {
     async userPaging(n) {
       try {
         // 전체 회원 조회 페이징 메소드 추가 예정
-        const res = await axios.get(`/api/v1/user?page=${n}`);
+        const res = await axios.get(
+          `${process.env.VUE_APP_API_URL}/user?page=${n}`
+        );
         this.pages = res.data;
         const content = res.data.content;
         this.users = content.map((item) => {
@@ -138,7 +140,10 @@ export default {
             Authorization: "Bearer " + this.$getAccessToken(),
           },
         };
-        await axios.delete("/api/v1/user" + userId, option);
+        await axios.delete(
+          `${process.env.VUE_APP_API_URL}/user` + userId,
+          option
+        );
         alert("탈퇴");
       } catch (err) {
         console.log(err);

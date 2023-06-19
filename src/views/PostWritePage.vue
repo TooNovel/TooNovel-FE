@@ -73,9 +73,11 @@ export default {
         if (!post.title || !post.content || !post.category) {
           alert("제목, 내용, 카테고리를 모두 입력해주세요.");
         } else {
-          axios.post("/api/v1/post", post, option).then(() => {
-            router.push({ path: "/" });
-          });
+          axios
+            .post(`${process.env.VUE_APP_API_URL}/post`, post, option)
+            .then(() => {
+              router.push({ path: "/" });
+            });
         }
       } catch (err) {
         console.log(err);

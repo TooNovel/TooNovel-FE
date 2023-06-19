@@ -121,7 +121,9 @@ export default {
   methods: {
     async postPaging(n) {
       try {
-        const res = await axios.get(`/api/v1/post?page=${n}`);
+        const res = await axios.get(
+          `${process.env.VUE_APP_API_URL}/post?page=${n}`
+        );
         this.pages = res.data;
         const content = res.data.content;
         this.posts = content.map((item) => {
@@ -168,7 +170,9 @@ export default {
     },
     async fetchPosts(category) {
       try {
-        const res = await axios.get(`/api/v1/post?category=${category}`);
+        const res = await axios.get(
+          `${process.env.VUE_APP_API_URL}/post?category=${category}`
+        );
         this.pages = res.data;
         const content = res.data.content;
         this.posts = content.map((item) => {
@@ -220,7 +224,7 @@ export default {
             Authorization: "Bearer " + this.$getAccessToken(),
           },
         };
-        await axios.get("/api/v1/user/me", option);
+        await axios.get(`${process.env.VUE_APP_API_URL}/user/me`, option);
         this.$router.push({ path: "/community/write" });
       } catch (err) {
         if (this.$getAccessToken() == null || this.$getAccessToken() === "") {

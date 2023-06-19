@@ -108,7 +108,7 @@ export default {
     },
     async getAllPost() {
       try {
-        const res = await axios.get("/api/v1/post");
+        const res = await axios.get(`${process.env.VUE_APP_API_URL}/post`);
         this.$router.push({
           name: "Community",
           params: { data: res.data },
@@ -124,7 +124,10 @@ export default {
             Authorization: "Bearer " + this.$getAccessToken(),
           },
         };
-        const res = await axios.get("/api/v1/user/me", option);
+        const res = await axios.get(
+          `${process.env.VUE_APP_API_URL}/user/me`,
+          option
+        );
         this.$router.push({
           name: "MyPage",
           params: { data: res.data },
@@ -147,7 +150,10 @@ export default {
             Authorization: "Bearer " + this.$getAccessToken(),
           },
         };
-        const res = await axios.get("/api/v1/user/me", option);
+        const res = await axios.get(
+          `${process.env.VUE_APP_API_URL}/user/me`,
+          option
+        );
         this.$router.push({
           name: "RecommendPage",
           params: { data: res.data },

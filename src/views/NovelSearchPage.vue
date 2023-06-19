@@ -94,7 +94,9 @@ export default {
   async mounted() {
     try {
       this.searchTitle = this.$route.query.title || "";
-      const res = await axios.get(`/api/v1/novel?title=${this.searchTitle}`);
+      const res = await axios.get(
+        `${process.env.VUE_APP_API_URL}/novel?title=${this.searchTitle}`
+      );
       this.novels = res.data;
       if (!this.novels.length) {
         this.isEmpty = true;
@@ -111,7 +113,7 @@ export default {
         // 데이터가 없는 경우 초기 데이터를 가져옵니다.
         try {
           const res = await axios.get(
-            `/api/v1/novel?title=${this.searchTitle}`
+            `${process.env.VUE_APP_API_URL}/novel?title=${this.searchTitle}`
           );
           this.novels = res.data;
           this.novelId = this.novels[this.novels.length - 1].novelId;
@@ -124,7 +126,7 @@ export default {
       try {
         console.log(this.novelId);
         const res = await axios.get(
-          `/api/v1/novel?novelId=${this.novelId}&title=${this.searchTitle}&author=${this.author}&genre=${this.selected}`
+          `${process.env.VUE_APP_API_URL}/novel?novelId=${this.novelId}&title=${this.searchTitle}&author=${this.author}&genre=${this.selected}`
         );
         if (res.data.length) {
           this.novels = this.novels.concat(res.data);
@@ -145,7 +147,7 @@ export default {
     async search() {
       try {
         const res = await axios.get(
-          `/api/v1/novel/?novelId=&title=${this.searchTitle}&author=${this.author}&genre=${this.selected}`
+          `${process.env.VUE_APP_API_URL}/novel/?novelId=&title=${this.searchTitle}&author=${this.author}&genre=${this.selected}`
         );
         this.novels = [];
         this.novels = res.data;
