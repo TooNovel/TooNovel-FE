@@ -25,6 +25,7 @@ import AdminUserPage from "@/views/AdminUserPage";
 import AdminAuthorPage from "@/views/AdminAuthorPage";
 import NovelRequestPage from "@/views/NovelRequestPage";
 import RankingPage from "@/views/RankingPage.vue";
+import AdminModelUpdatePage from "@/views/AdminModelUpdatePage.vue";
 
 Vue.use(Router);
 
@@ -151,6 +152,11 @@ export default new Router({
       path: "/ranking",
       name: "ranking",
       component: RankingPage,
+    },
+    {
+      path: "/model",
+      name: "model",
+      component: AdminModelUpdatePage,
     },
   ],
 });

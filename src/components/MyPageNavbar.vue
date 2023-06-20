@@ -2,20 +2,24 @@
   <div id="myPage">
     <div>
       <ul>
-        <li><b-button @click="mypage()">프로필</b-button></li>
-        <li><b-button @click="getLikeNovel()">좋아요 누른 작품</b-button></li>
-        <li><b-button @click="getMyReview()">내가 쓴 리뷰</b-button></li>
         <div v-if="role == 'USER'">
+          <li><b-button @click="mypage()">프로필</b-button></li>
+          <li><b-button @click="getLikeNovel()">좋아요 누른 작품</b-button></li>
+          <li><b-button @click="getMyReview()">내가 쓴 리뷰</b-button></li>
           <li><b-button @click="enrollAuthor()">작가신청</b-button></li>
         </div>
         <div v-if="role == 'AUTHOR'">
+          <li><b-button @click="mypage()">프로필</b-button></li>
+          <li><b-button @click="getLikeNovel()">좋아요 누른 작품</b-button></li>
+          <li><b-button @click="getMyReview()">내가 쓴 리뷰</b-button></li>
           <li><b-button @click="getNovelByAuthor()">내작품보기</b-button></li>
         </div>
         <div v-if="role == 'ADMIN'">
-          <li><b-button @click="adminUser()">회원 관리</b-button></li>
-        </div>
-        <div v-if="role == 'ADMIN'">
           <li><b-button @click="adminAuthor()">작가 신청 관리</b-button></li>
+          <li><b-button @click="adminStastistic()">통계 조회</b-button></li>
+          <li>
+            <b-button @click="adminModelUpdate()">모델 업데이트</b-button>
+          </li>
         </div>
       </ul>
     </div>
@@ -173,10 +177,17 @@ export default {
     enrollAuthor() {
       this.$router.push("Enroll");
     },
+    adminStastistic() {
+      this.$router.push("/admin");
+    },
+    adminModelUpdate() {
+      this.$router.push("/model");
+    },
   },
   mounted() {
     const accessToken = this.$getAccessToken();
     this.role = this.$getTokenInfo(accessToken).role;
+    console.log(this.role);
   },
 };
 </script>
