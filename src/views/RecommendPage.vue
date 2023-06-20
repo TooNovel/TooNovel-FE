@@ -165,7 +165,9 @@ export default {
         console.log(res.data);
         this.isLoading = false;
       } catch (err) {
-        alert("모델은 매일 새벽 4시에 갱신됩니다. 조금만 기다려주세요.");
+        alert(
+          "모델은 매일 새벽 4시에 갱신됩니다. 조금만 기다려주세요. \n모델이 반영되기 까지는 1일이 걸립니다."
+        );
         console.log(err);
       }
     },
