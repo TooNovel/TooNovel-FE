@@ -113,7 +113,8 @@
       </article>
       <div class="template-container">
         <div id="suggest">
-          <b>찾으시는 웹소설이 없으신가요?</b>
+          <b id="memo">웹소설 신청💡</b>
+          <p>찾으시는 웹소설이 없으신가요?</p>
           <p>작품 신청을 통해 빠진 작품을 알려주세요!</p>
           <b-button variant="info" @click="novelRequest()">신청하기</b-button>
         </div>
@@ -175,6 +176,14 @@ export default {
     }
   },
   methods: {
+    changebgcolor() {
+      this.mystyle.backgroundColor = "green";
+      this.mystyle.width = "200px";
+    },
+    originalcolor() {
+      this.mystyle.backgroundColor = "red";
+      this.mystyle.width = "50px";
+    },
     async reviewWrite() {
       try {
         const obj = {
@@ -283,16 +292,42 @@ export default {
   justify-content: center;
   align-items: center;
 }
+
 #suggest {
   font-size: 12px;
   position: fixed;
   top: 43%;
-  right: 1%;
+  right: -17em;
   transform: translateY(-50%);
   background-color: white;
   border-radius: 10px;
   padding: 1%;
   display: grid;
   place-items: center;
+}
+
+#suggest #memo {
+  writing-mode: vertical-lr;
+  width: 9rem;
+  height: 6rem;
+  position: fixed;
+  right: 8em;
+  display: grid;
+}
+
+.template-container:hover #suggest {
+  right: 0;
+}
+
+.template-container #suggest p {
+  color: white;
+}
+
+.template-container:hover #suggest p {
+  color: black;
+}
+
+.template-container:hover #suggest b {
+  visibility: hidden;
 }
 </style>
