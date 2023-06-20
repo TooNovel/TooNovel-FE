@@ -43,6 +43,9 @@
                       alt="문피아"
                       class="platform-image"
                     />
+                    <span class="platform-name">{{
+                      platform.platformName
+                    }}</span>
                   </button>
                 </a>
               </div>
