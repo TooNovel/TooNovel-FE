@@ -73,7 +73,9 @@ export default {
   async created() {
     if (this.novels.length === 0) {
       try {
-        const res = await axios.get(`${process.env.VUE_APP_API_URL}/novel`);
+        const res = await axios.get(
+          `${process.env.VUE_APP_API_URL}/novel?sort=NOVEL_GRADE_DESC`
+        );
         this.novels = this.$emit("setNovels", res.data);
       } catch (err) {
         console.log(err);
