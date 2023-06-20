@@ -6,149 +6,38 @@
     </div>
     <h3>원하는 기준에 맞춰 검색해 보세요</h3>
     <div class="genre-box">
-      <br />
       <ul id="list-box">
-        <div class="button">
-          <li>
-            <P class="btnText">top30</P>
-            <div class="btnTwo">
-              <b-button @click="getRanking()" class="btnText2">go!</b-button>
-            </div>
-          </li>
-        </div>
-        <div class="button">
-          <li>
-            <P class="btnText">판타지</P>
-            <div class="btnTwo">
-              <b-button @click="getGenreRanking('FANTASY')" class="btnText2">
-                go!
-              </b-button>
-            </div>
-          </li>
-        </div>
-        <div class="button">
-          <li>
-            <P class="btnText">로맨스판타지</P>
-            <div class="btnTwo">
-              <b-button
-                @click="getGenreRanking('ROMANCE_FANTASY')"
-                class="btnText2"
-              >
-                go!
-              </b-button>
-            </div>
-          </li>
-        </div>
-        <div class="button">
-          <li>
-            <P class="btnText">로맨스</P>
-            <div class="btnTwo">
-              <b-button @click="getGenreRanking('ROMANCE')" class="btnText2">
-                go!
-              </b-button>
-            </div>
-          </li>
-        </div>
-        <div class="button">
-          <li>
-            <P class="btnText">현대판타지</P>
-            <div class="btnTwo">
-              <b-button
-                @click="getGenreRanking('MODERN_FANTASY')"
-                class="btnText2"
-              >
-                go!
-              </b-button>
-            </div>
-          </li>
-        </div>
-        <div class="button">
-          <li>
-            <P class="btnText">무협</P>
-            <div class="btnTwo">
-              <b-button @click="getGenreRanking('WUXIA')" class="btnText2">
-                go!
-              </b-button>
-            </div>
-          </li>
-        </div>
-        <div class="button">
-          <li>
-            <P class="btnText">미스터리</P>
-            <div class="btnTwo">
-              <b-button @click="getGenreRanking('MYSTERY')" class="btnText2">
-                go!
-              </b-button>
-            </div>
-          </li>
-        </div>
-        <div class="button">
-          <li>
-            <P class="btnText">라이트노벨</P>
-            <div class="btnTwo">
-              <b-button
-                @click="getGenreRanking('LIGHT_NOVEL')"
-                class="btnText2"
-              >
-                go!
-              </b-button>
-            </div>
-          </li>
-        </div>
-        <div class="button">
-          <li>
-            <P class="btnText">BL</P>
-            <div class="btnTwo">
-              <b-button @click="getGenreRanking('BL')" class="btnText2">
-                go!
-              </b-button>
-            </div>
-          </li>
+        <div v-for="v in genres" v-bind:key="v">
+          <div class="button">
+            <li>
+              <P class="btnText">{{ v.value }}</P>
+              <div class="btnTwo">
+                <b-button @click="getGenreRanking(v.key)" class="btnText2">
+                  go!
+                </b-button>
+              </div>
+            </li>
+          </div>
         </div>
       </ul>
+      <br />
     </div>
     <div class="sort-box">
       <ul id="list-box">
-        <div class="sort-button">
-          <li>
-            <P class="btnText">좋아요 순</P>
-            <div class="btnTwo">
-              <b-button
-                @click="getSortRanking('NOVEL_LIKE_DESC')"
-                class="btnText2"
-              >
-                go!
-              </b-button>
-            </div>
-          </li>
-        </div>
-        <div class="sort-button">
-          <li>
-            <P class="btnText">평점 순</P>
-            <div class="btnTwo">
-              <b-button
-                @click="getSortRanking('NOVEL_GRADE_DESC')"
-                class="btnText2"
-              >
-                go!
-              </b-button>
-            </div>
-          </li>
-        </div>
-        <div class="sort-button">
-          <li>
-            <P class="btnText">리뷰개수 순</P>
-            <div class="btnTwo">
-              <b-button
-                @click="getSortRanking('NOVEL_REVIEW_DESC')"
-                class="btnText2"
-              >
-                go!
-              </b-button>
-            </div>
-          </li>
+        <div v-for="v in sorts" v-bind:key="v" class="sort-box">
+          <div class="sort-button">
+            <li>
+              <P class="btnText">{{ v.value }}</P>
+              <div class="btnTwo">
+                <b-button @click="getSortRanking(v.key)" class="btnText2">
+                  go!
+                </b-button>
+              </div>
+            </li>
+          </div>
         </div>
       </ul>
+      <br />
     </div>
     <hr />
   </div>
@@ -163,10 +52,25 @@ export default {
       genre: "",
       sort: "",
       novels: [],
+      genres: [
+        { key: "top30", value: "top30" },
+        { key: "FANTASY", value: "판타지" },
+        { key: "ROMANCE", value: "로맨스" },
+        { key: "ROMANCE_FANTASY", value: "로맨스판타지" },
+        { key: "MODERN_FANTASY", value: "현대판타지" },
+        { key: "WUXIA", value: "무협" },
+        { key: "MYSTERY", value: "미스테리" },
+        { key: "LIGHT_NOVEL", value: "라이트노벨" },
+        { key: "BL", value: "BL" },
+      ],
+      sorts: [
+        { key: "NOVEL_LIKE_DESC", value: "좋아요 순" },
+        { key: "NOVEL_GRADE_DESC", value: "평점 순" },
+        { key: "NOVEL_REVIEW_DESC", value: "리뷰개수 순" },
+      ],
     };
   },
   async created() {
-    console.log(this.novels.length);
     if (this.novels.length === 0) {
       try {
         const res = await axios.get(`${process.env.VUE_APP_API_URL}/novel`);
@@ -177,24 +81,16 @@ export default {
     }
   },
   methods: {
-    async getRanking() {
-      try {
-        const res = await axios.get(`${process.env.VUE_APP_API_URL}/novel`);
-        this.novels = this.$emit("setNovels", res.data);
-        console.log(this.novels);
-      } catch (err) {
-        console.log(err);
-      }
-    },
     async getGenreRanking(genre) {
-      console.log(genre);
+      if (genre === "top30") {
+        genre = "";
+      }
       this.genre = genre;
       try {
         const res = await axios.get(
           `${process.env.VUE_APP_API_URL}/novel?genre=${this.genre}&sort=${this.sort}`
         );
         this.novels = this.$emit("setNovels", res.data);
-        console.log(this.novels);
       } catch (err) {
         console.log(err);
       }
@@ -299,6 +195,7 @@ ul {
 .button:active {
   /*Clicked and held*/
   box-shadow: 0px 5px 6px rgba(0, 0, 0, 0.3);
+  background-color: wheat;
 }
 
 .sort-button:hover .btnTwo {
@@ -312,5 +209,6 @@ ul {
 .sort-button:active {
   /*Clicked and held*/
   box-shadow: 0px 5px 6px rgba(0, 0, 0, 0.3);
+  background-color: wheat;
 }
 </style>
