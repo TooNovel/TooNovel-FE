@@ -176,14 +176,6 @@ export default {
     }
   },
   methods: {
-    changebgcolor() {
-      this.mystyle.backgroundColor = "green";
-      this.mystyle.width = "200px";
-    },
-    originalcolor() {
-      this.mystyle.backgroundColor = "red";
-      this.mystyle.width = "50px";
-    },
     async reviewWrite() {
       try {
         const obj = {
