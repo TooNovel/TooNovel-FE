@@ -170,6 +170,7 @@ export default {
       novelLiked: false,
       userId: "",
       isLoading: true,
+      accessToken: this.$getAccessToken(),
     };
   },
   async created() {

@@ -35,7 +35,6 @@ Vue.prototype.$getTokenInfo = function (accessToken) {
 
 Vue.prototype.$getAccessToken = function () {
   const accessToken = Cookies.get("accessTokenCookie");
-  console.log(accessToken);
   return accessToken;
 };
 

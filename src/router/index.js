@@ -26,6 +26,8 @@ import AdminAuthorPage from "@/views/AdminAuthorPage";
 import NovelRequestPage from "@/views/NovelRequestPage";
 import RankingPage from "@/views/RankingPage.vue";
 import AdminModelUpdatePage from "@/views/AdminModelUpdatePage.vue";
+import ChatRoom from "@/views/ChatRoom";
+import ChatWindow from "@/views/ChatWindow";
 
 Vue.use(Router);
 
@@ -157,6 +159,18 @@ export default new Router({
       path: "/model",
       name: "model",
       component: AdminModelUpdatePage,
+    },
+    {
+      path: "/chatRoom",
+      component: ChatRoom,
+      name: "ChatRoom",
+      meta: { hideHeaderFooter: true },
+    },
+    {
+      path: "/chatWindow/:roomId",
+      component: ChatWindow,
+      name: "ChatWindow",
+      meta: { hideHeaderFooter: true },
     },
   ],
 });

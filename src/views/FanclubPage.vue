@@ -12,7 +12,7 @@
           <b-button variant="primary" @click="search()">검색</b-button>
         </div>
         <div class="col-auto">
-          <b-button variant="warning" @click="chatroom()">
+          <b-button variant="warning" @click="ToChatRoom()">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="16"
@@ -122,6 +122,7 @@
 import axios from "axios";
 import { Carousel3d, Slide } from "vue-carousel-3d";
 import InfiniteLoading from "vue-infinite-loading";
+//import axios from "axios";
 
 export default {
   data() {
@@ -148,6 +149,11 @@ export default {
     } catch (err) {
       console.log(err);
     }
+  },
+  methods: {
+    async ToChatRoom() {
+      this.$router.push({ name: "ChatRoom" });
+    },
   },
   components: {
     Carousel3d,
