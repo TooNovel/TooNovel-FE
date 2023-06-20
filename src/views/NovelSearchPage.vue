@@ -48,6 +48,12 @@
               <b-card-title>{{ novel.title }}</b-card-title>
               <b-card-text>{{ novel.author }}</b-card-text>
               <b-card-text>{{ novel.genre }}</b-card-text>
+              <b-card-text>좋아요 {{ novel.likeCount }}</b-card-text>
+              <b-card-text
+                >{{ novel.grade ? novel.grade : 0 }} ({{
+                  novel.reviewCount
+                }})</b-card-text
+              >
             </b-card>
           </b-col>
         </b-row>

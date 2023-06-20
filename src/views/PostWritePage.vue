@@ -9,11 +9,9 @@
           <label>종류를 선택해주세요</label>
           <p>
             <b-form-select v-model="category">
-              <option value="--">-------</option>
               <option value="FREE">자유</option>
               <option value="NOVEL">소설</option>
               <option value="ASK">질문</option>
-              <option value="SUGGEST">건의</option>
               <option value="PROMOTE">홍보</option>
             </b-form-select>
           </p>

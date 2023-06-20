@@ -7,16 +7,18 @@
           <div class="card-body">
             <div class="col">
               <div v-if="isRecommend">
-                <h2>리뷰가 아직 부족합니다!</h2>
+                <h2>나만의 웹소설 추천</h2>
                 <br />
-                남은 리뷰
-                <h3>{{ 20 - reviewCount }}</h3>
+                리뷰를 1개만 남겨주시면 취향에 맞게 웹소설을 추천 받을 수
+                있습니다.
                 <br />
-                리뷰를 더 작성 하신 후 추천 서비스를 이용하실 수 있습니다!
+                <br />
+                리뷰를 많이 남길수록 나만의 웹소설을 찾을 수 있는 정확도가
+                올라갑니다.
                 <br />
                 <br />
                 <div class="d-flex justify-content-between">
-                  <b-button class="w-50 me-2" @click="getNovelRank()">
+                  <b-button class="w-50 me-2" @click="getRanking()">
                     인기 웹소설 랭킹
                   </b-button>
                   <b-button class="w-50" @click="getAllNovel()">
@@ -25,13 +27,18 @@
                 </div>
               </div>
               <div v-else>
-                <h2>추천 서비스를 받아보세요!</h2>
+                <h2>나만의 웹소설 추천</h2>
+                <br />
+                리뷰를 많이 남길수록 나만의 웹소설을 찾을 수 있는 정확도가
+                올라갑니다.
+                <br />
+                <br />
+                작성하신 리뷰 데이터는 매일 오전 4시에 반영됩니다.
+                <br />
+                <br />
                 <!-- 데모 버전인 관계로 버튼으로 작동 -->
-                <b-button class="recommend-btn" @click="generateRecommend()"
+                <b-button style="width: 100%" @click="generateRecommend()"
                   >작품 추천 받기</b-button
-                >
-                <b-button class="recommend-btn" @click="updateModel()"
-                  >작품 추천 업데이트</b-button
                 >
               </div>
             </div>
@@ -82,6 +89,14 @@
               class="card-image"
             ></b-card-img>
             <b-card-title class="card-title">{{ novel.title }}</b-card-title>
+            <b-card-text>{{ novel.author }}</b-card-text>
+            <b-card-text>{{ novel.genre }}</b-card-text>
+            <b-card-text>좋아요 {{ novel.likeCount }}</b-card-text>
+            <b-card-text
+              >{{ novel.grade ? novel.grade : 0 }} ({{
+                novel.reviewCount
+              }})</b-card-text
+            >
           </b-card>
         </b-col>
       </b-row>
@@ -120,7 +135,7 @@ export default {
         option
       );
       this.reviewCount = res2.data.totalElements;
-      if (this.reviewCount >= 20) {
+      if (this.reviewCount >= 1) {
         this.isRecommend = false;
       } else {
         this.isRecommend = true;
@@ -154,23 +169,8 @@ export default {
         console.log(res.data);
         this.isLoading = false;
       } catch (err) {
-        alert("로그인 인증에 실패했습니다");
+        alert("모델은 매일 새벽 4시에 갱신됩니다. 조금만 기다려주세요.");
         console.log(err);
-        location.href = "/";
-      }
-    },
-    async updateModel() {
-      this.message = "추천 모델을 학습중입니다.";
-      this.novelList = [];
-      this.isLoading = true;
-
-      try {
-        await axios.put(`${process.env.VUE_APP_API_URL}/recommend`);
-
-        this.isLoading = false;
-        this.generateRecommend();
-      } catch (err) {
-        alert(err);
       }
     },
     async sleep(sec) {
@@ -190,6 +190,15 @@ export default {
     },
     goToLoginPage() {
       this.$router.push("/login");
+    },
+    getRanking() {
+      try {
+        this.$router.push({
+          name: "ranking",
+        });
+      } catch (err) {
+        console.log(err);
+      }
     },
   },
   mounted() {

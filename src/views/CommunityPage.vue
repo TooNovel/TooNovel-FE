@@ -17,7 +17,6 @@
           <b-nav-item @click="fetchPosts('FREE')">자유</b-nav-item>
           <b-nav-item @click="fetchPosts('NOVEL')">소설</b-nav-item>
           <b-nav-item @click="fetchPosts('ASK')">질문</b-nav-item>
-          <b-nav-item @click="fetchPosts('SUGGEST')">건의</b-nav-item>
           <b-nav-item @click="fetchPosts('PROMOTE')">홍보</b-nav-item>
         </b-nav>
       </div>
@@ -78,44 +77,47 @@ export default {
   created() {
     this.pages = this.$route.params.data;
     const content = this.$route.params.data.content;
-    this.posts = content.map((item) => {
-      const createdDate = item.createdDate;
-      const year = createdDate[0];
-      const month = createdDate[1];
-      const day = createdDate[2];
-      const hour = createdDate[3];
-      const minute = createdDate[4];
-      const formattedDate = `${year}-${month}-${day} ${hour}:${minute}`;
+    this.posts = content
+      .map((item) => {
+        if (item.category === "SUGGEST") {
+          return null;
+        }
+        const title = item.title + `  (${item.commentCount})`;
+        const createdDate = item.createdDate;
+        const year = createdDate[0];
+        const month = createdDate[1];
+        const day = createdDate[2];
+        const hour = createdDate[3];
+        const minute = createdDate[4];
+        const formattedDate = `${year}-${month}-${day} ${hour}:${minute}`;
 
-      let categoryText;
-      switch (item.category) {
-        case "SUGGEST":
-          categoryText = "건의";
-          break;
-        case "FREE":
-          categoryText = "자유";
-          break;
-        case "NOVEL":
-          categoryText = "소설";
-          break;
-        case "ASK":
-          categoryText = "질문";
-          break;
-        case "PROMOTE":
-          categoryText = "홍보";
-          break;
-        default:
-          categoryText = item.category;
-      }
+        let categoryText;
+        switch (item.category) {
+          case "FREE":
+            categoryText = "자유";
+            break;
+          case "NOVEL":
+            categoryText = "소설";
+            break;
+          case "ASK":
+            categoryText = "질문";
+            break;
+          case "PROMOTE":
+            categoryText = "홍보";
+            break;
+          default:
+            categoryText = item.category;
+        }
 
-      return {
-        id: item.postId,
-        category: categoryText,
-        title: item.title,
-        nickname: item.nickname,
-        createdDate: formattedDate,
-      };
-    });
+        return {
+          id: item.postId,
+          category: categoryText,
+          title: title,
+          nickname: item.nickname,
+          createdDate: formattedDate,
+        };
+      })
+      .filter(Boolean);
     console.log(this.posts);
   },
   methods: {
@@ -126,44 +128,47 @@ export default {
         );
         this.pages = res.data;
         const content = res.data.content;
-        this.posts = content.map((item) => {
-          const createdDate = item.createdDate;
-          const year = createdDate[0];
-          const month = createdDate[1];
-          const day = createdDate[2];
-          const hour = createdDate[3];
-          const minute = createdDate[4];
-          const formattedDate = `${year}-${month}-${day} ${hour}:${minute}`;
+        this.posts = content
+          .map((item) => {
+            if (item.category === "SUGGEST") {
+              return null;
+            }
+            const title = item.title + `  (${item.commentCount})`;
+            const createdDate = item.createdDate;
+            const year = createdDate[0];
+            const month = createdDate[1];
+            const day = createdDate[2];
+            const hour = createdDate[3];
+            const minute = createdDate[4];
+            const formattedDate = `${year}-${month}-${day} ${hour}:${minute}`;
 
-          let categoryText;
-          switch (item.category) {
-            case "SUGGEST":
-              categoryText = "건의";
-              break;
-            case "FREE":
-              categoryText = "자유";
-              break;
-            case "NOVEL":
-              categoryText = "소설";
-              break;
-            case "ASK":
-              categoryText = "질문";
-              break;
-            case "PROMOTE":
-              categoryText = "홍보";
-              break;
-            default:
-              categoryText = item.category;
-          }
+            let categoryText;
+            switch (item.category) {
+              case "FREE":
+                categoryText = "자유";
+                break;
+              case "NOVEL":
+                categoryText = "소설";
+                break;
+              case "ASK":
+                categoryText = "질문";
+                break;
+              case "PROMOTE":
+                categoryText = "홍보";
+                break;
+              default:
+                categoryText = item.category;
+            }
 
-          return {
-            id: item.postId,
-            category: categoryText,
-            title: item.title,
-            nickname: item.nickname,
-            createdDate: formattedDate,
-          };
-        });
+            return {
+              id: item.postId,
+              category: categoryText,
+              title: title,
+              nickname: item.nickname,
+              createdDate: formattedDate,
+            };
+          })
+          .filter(Boolean);
       } catch (err) {
         console.log(err);
       }
@@ -176,6 +181,7 @@ export default {
         this.pages = res.data;
         const content = res.data.content;
         this.posts = content.map((item) => {
+          const title = item.title + item.commentCount;
           const createdDate = item.createdDate;
           const year = createdDate[0];
           const month = createdDate[1];
@@ -186,9 +192,6 @@ export default {
 
           let categoryText;
           switch (item.category) {
-            case "SUGGEST":
-              categoryText = "건의";
-              break;
             case "FREE":
               categoryText = "자유";
               break;
@@ -208,7 +211,7 @@ export default {
           return {
             id: item.postId,
             category: categoryText,
-            title: item.title,
+            title: title,
             nickname: item.nickname,
             createdDate: formattedDate,
           };
