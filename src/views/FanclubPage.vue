@@ -150,11 +150,6 @@ export default {
       console.log(err);
     }
   },
-  methods: {
-    async ToChatRoom() {
-      this.$router.push({ name: "ChatRoom" });
-    },
-  },
   components: {
     Carousel3d,
     Slide,
@@ -172,6 +167,9 @@ export default {
     }
   },
   methods: {
+    async ToChatRoom() {
+      this.$router.push({ name: "ChatRoom" });
+    },
     async joinRoom(uid) {
       try {
         const option = {

@@ -7,7 +7,7 @@
             <b-row>
               <b-col cols="auto" style="height: 80px">
                 <h4>
-                  <b>{{ user.nickname }}의 채팅방</b>
+                  <b>나의 채팅방</b>
                 </h4>
               </b-col>
             </b-row>
@@ -18,10 +18,6 @@
       <section>
         <div>
           <div v-if="role == 'AUTHOR'">
-            <h5>
-              <b>나의 채팅방</b>
-              <!-- <b-button @click="ToReply()">답장 보기</b-button> -->
-            </h5>
             <div>
               <my-chatroom></my-chatroom>
             </div>
@@ -65,12 +61,13 @@ export default {
       },
     };
     try {
-      const chat = await axios.get(`/api/v1/chat`, option);
-      const user = await axios.get(`/api/v1/user/me`, option);
+      const chat = await axios.get(
+        `${process.env.VUE_APP_API_URL}/chat`,
+        option
+      );
       const accessToken = this.$getAccessToken();
       const role = this.$getTokenInfo(accessToken).role;
       this.role = role;
-      this.user = user.data;
       this.chatList = chat.data;
     } catch (err) {
       console.log(err);

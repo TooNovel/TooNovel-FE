@@ -45,7 +45,10 @@ export default {
     };
     try {
       const rId = 1;
-      const res = await axios.get("/api/v1/chat/" + rId, option);
+      const res = await axios.get(
+        `${process.env.VUE_APP_API_URL}/chat/` + rId,
+        option
+      );
       console.log(res);
       this.chatList = res.data;
     } catch (err) {

@@ -45,8 +45,14 @@ export default {
           Authorization: "Bearer " + this.$getAccessToken(),
         },
       };
-      const user = await axios.get(`/api/v1/user/me`, option);
-      const chat = await axios.get(`/api/v1/chat/`, option);
+      const user = await axios.get(
+        `${process.env.VUE_APP_API_URL}/user/me`,
+        option
+      );
+      const chat = await axios.get(
+        `${process.env.VUE_APP_API_URL}/chat/`,
+        option
+      );
       this.user = user.data;
       this.chatList = chat.data;
       for (let chats of this.chatList) {

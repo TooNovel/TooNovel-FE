@@ -71,8 +71,14 @@ export default {
           Authorization: "Bearer " + this.$getAccessToken(),
         },
       };
-      const user = await axios.get(`/api/v1/user/me`, option);
-      const chat = await axios.get(`/api/v1/chat/`, option);
+      const user = await axios.get(
+        `${process.env.VUE_APP_API_URL}/user/me`,
+        option
+      );
+      const chat = await axios.get(
+        `${process.env.VUE_APP_API_URL}/chat/`,
+        option
+      );
       this.user = user.data;
       this.chatList = chat.data;
       for (let chats of this.chatList) {
@@ -88,14 +94,7 @@ export default {
   methods: {
     async ToChatting(res) {
       try {
-        // const option = {
-        //   headers: {
-        //     Authorization: "Bearer " + this.$getAccessToken(),
-        //   },
-        // };
         const roomId = res.chatRoomId;
-        // const chat = await axios.get(`/api/v1/chat/${roomId}`, option);
-        // conosole.log(chat);
         location.href = `/chatWindow/${roomId}`;
       } catch (err) {
         console.log(err);
@@ -111,8 +110,11 @@ export default {
         const data = {
           chatRoomName: this.chatRoomName,
         };
-        const res = await axios.post("/api/v1/chat", data, option);
-        console.log(res.data, " ---> 내가 만든 채팅방");
+        const res = await axios.post(
+          `${process.env.VUE_APP_API_URL}/chat`,
+          data,
+          option
+        );
         this.myChatRoom = res.data;
         this.$router.go(0);
         alert("채팅방이 정상적으로 생성되었습니다!");
@@ -128,13 +130,14 @@ export default {
               Authorization: "Bearer " + this.$getAccessToken(),
             },
           };
-          console.log(roomId);
-          console.log("삭제하기~");
-          await axios.delete(`/api/v1/chat/${roomId}`, option);
+          await axios.delete(
+            `${process.env.VUE_APP_API_URL}/chat/${roomId}`,
+            option
+          );
           alert("삭제 되었습니다!");
           this.$router.go(0);
         } else {
-          console.log("취소하기~");
+          console.log("취소하기");
         }
       } catch (err) {
         console.log(err);

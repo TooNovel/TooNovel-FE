@@ -152,10 +152,12 @@ export default {
       replyState: false,
       condition: false,
       filterResult: "bad",
+      date: null,
     };
   },
   async created() {
     try {
+      this.date = new Date();
       const accessToken = this.$getAccessToken();
       const users = this.$getTokenInfo(accessToken);
       this.users = users;
@@ -167,8 +169,24 @@ export default {
           Authorization: "Bearer " + this.$getAccessToken(),
         },
       };
-      const chatList = await axios.get(`/api/v1/chat/${this.roomId}`, option);
-      const user = await axios.get(`/api/v1/user/me`, option);
+      let month = 0;
+      if (this.date.getMonth() < 9) {
+        month = "0" + (this.date.getMonth() + 1);
+      } else {
+        month = this.date.getMonth() + 1;
+      }
+      const chatList = await axios.get(
+        `${process.env.VUE_APP_API_URL}/chat/${
+          this.roomId
+        }?date=${this.date.getFullYear()}-${month}-${this.date.getDate()}`,
+        option
+      );
+      this.date.setDate(this.date.getDate() - 1);
+      console.log(chatList);
+      const user = await axios.get(
+        `${process.env.VUE_APP_API_URL}/user/me`,
+        option
+      );
       this.nickname = user.data.nickname;
       this.chattingList = chatList.data;
       setTimeout(() => {
@@ -203,49 +221,70 @@ export default {
       this.isButtonVisible = false;
     },
     async infiniteHandler($state) {
-      if (!this.chattingList.length) {
-        try {
-          const option = {
-            headers: {
-              Authorization: "Bearer " + this.$getAccessToken(),
-            },
-          };
-          const res = await axios.get(`/api/v1/chat/${this.roomId}`, option);
-          this.chattingList = res.data;
-          this.chatId = this.chattingList[this.chattingList.length - 1].chatId;
-          $state.loaded();
-        } catch (err) {
-          console.log(err);
-        }
-        return;
-      }
-      const chatId = this.chattingList[this.chattingList.length - 1].chatId;
+      //if (!this.chattingList.length) {
       try {
+        // const option = {
+        //   headers: {
+        //     Authorization: "Bearer " + this.$getAccessToken(),
+        //   },
+        // };
+        // const res = await axios.get(
+        //   `/${process.env.VUE_APP_API_URL}/chat/${this.roomId}`,
+        //   option
+        // );
         const option = {
           headers: {
             Authorization: "Bearer " + this.$getAccessToken(),
           },
         };
-        const chatList = await axios.get(
-          `/api/v1/chat/${this.roomId}?chatId=${chatId}`,
+        let month = 0;
+        if (this.date.getMonth() < 9) {
+          month = "0" + (this.date.getMonth() + 1);
+        } else {
+          month = this.date.getMonth() + 1;
+        }
+        const res = await axios.get(
+          `${process.env.VUE_APP_API_URL}/chat/${
+            this.roomId
+          }?date=${this.date.getFullYear()}-${month}-${this.date.getDate()}`,
           option
         );
-        console.log("length : " + chatList.data.length);
-        if (chatList.data.length) {
-          this.chattingList = this.chattingList.concat(chatList.data);
-          this.chatId = this.chattingList[this.chattingList.length - 1].chatId;
-          $state.loaded;
-          const chatId = chatList.data[chatList.data.length - 1].chatId;
-          if (this.chatId == chatId) {
-            $state.complete;
-          }
-        } else {
-          this.condition = true;
-          $state.complete;
-        }
+        this.date.setDate(this.date.getDate() - 1);
+        this.chattingList.push(res.data);
+        this.chatId = this.chattingList[this.chattingList.length - 1].chatId;
+        $state.loaded();
       } catch (err) {
         console.log(err);
       }
+      //return;
+      //}
+      //const chatId = this.chattingList[this.chattingList.length - 1].chatId;
+      // try {
+      //   const option = {
+      //     headers: {
+      //       Authorization: "Bearer " + this.$getAccessToken(),
+      //     },
+      //   };
+      //   const chatList = await axios.get(
+      //     `${process.env.VUE_APP_API_URL}/chat/${this.roomId}?chatId=${chatId}`,
+      //     option
+      //   );
+      //   console.log("length : " + chatList.data.length);
+      //   if (chatList.data.length) {
+      //     this.chattingList = this.chattingList.concat(chatList.data);
+      //     this.chatId = this.chattingList[this.chattingList.length - 1].chatId;
+      //     $state.loaded;
+      //     const chatId = chatList.data[chatList.data.length - 1].chatId;
+      //     if (this.chatId == chatId) {
+      //       $state.complete;
+      //     }
+      //   } else {
+      //     this.condition = true;
+      //     $state.complete;
+      //   }
+      // } catch (err) {
+      //   console.log(err);
+      // }
     },
     connect() {
       const socket = new SockJS("http://localhost:8080/ws");
@@ -417,7 +456,7 @@ body {
 }
 
 #chatForm {
-  position: fixed;
+  position: relative;
   bottom: 0;
   left: 0;
   width: 100%;
