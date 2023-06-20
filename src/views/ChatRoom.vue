@@ -1,37 +1,29 @@
 <template>
   <div class="chatBody">
     <div>
-      <header class="chatHeader">
-        <b-navbar>
-          <b-container fluid>
-            <b-row>
-              <b-col cols="auto" style="height: 80px">
-                <h4>
-                  <b>나의 채팅방</b>
-                </h4>
-              </b-col>
-            </b-row>
-          </b-container>
-        </b-navbar>
-      </header>
-      <br />
-      <section>
-        <div>
-          <div v-if="role == 'AUTHOR'">
-            <div>
-              <my-chatroom></my-chatroom>
-            </div>
+      <div id="chatHeader">
+        <div class="row">
+          <div class="col-2">
+            <div @click="ToMessenger()">🔙</div>
           </div>
+          <header class="col-10">
+            <div class="row">
+              <div class="col-10">나의 채팅방</div>
+            </div>
+          </header>
+        </div>
+      </div>
+      <section>
+        <div v-if="role == 'AUTHOR'">
+          <my-chatroom></my-chatroom>
+          <hr />
+        </div>
+        <div class="myFollowTitle">
           <h5>
             <b>내가 팔로우한 채팅방</b>
           </h5>
-          <div>
-            <my-followchat></my-followchat>
-          </div>
-          <!-- end of for -->
         </div>
-        <br />
-        <hr />
+        <my-followchat></my-followchat>
       </section>
     </div>
   </div>
@@ -78,11 +70,8 @@ export default {
     "my-followchat": MyFollowChat,
   },
   methods: {
-    async ToReply() {
-      const options = "width=500,height=600";
-      this.roomId = 1;
-      const url = "/chatReply";
-      window.open(url, "_blank", options);
+    ToMessenger() {
+      location.href = "/fanclub";
     },
   },
 };
@@ -90,6 +79,11 @@ export default {
 
 <style lang="scss" scoped>
 @import "@/style/chat.css";
+h3 {
+  color: white;
+  font-family: Hanna;
+}
+
 html {
   height: 100%;
 }
@@ -98,10 +92,36 @@ body {
   width: 100%;
   height: 100%;
 }
+header {
+  background-color: darkseagreen;
+}
+#chatHeader {
+  width: 98%;
+  height: 60px;
+  text-align: center;
+  line-height: 60px;
+  font-size: 25px;
+  font-weight: 900;
+  border-bottom: 1px solid #ddd;
+  background-color: darkseagreen;
+}
 .chatBody {
   position: absolute;
-  width: 40%;
-  left: 40%;
-  margin: 0 0 0 -150px;
+  background-color: whitesmoke;
+  width: 30%;
+  height: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+}
+.outHeader {
+  justify-content: center;
+  display: flex;
+}
+.innerHeader {
+  padding-top: 20px;
+}
+.myFollowTitle {
+  margin-left: 5%;
+  margin-top: 5%;
 }
 </style>

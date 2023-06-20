@@ -16,10 +16,11 @@
                 alt="img"
               />
             </div>
-            <div class="info-box">
-              <p class="site-name">{{ myChatRoom.chatRoomName }}</p>
-
-              <p class="last-msg">{{ myChatRoom.nickname }}</p>
+            <div class="row">
+              <div class="info-box col">
+                <p class="site-name">{{ myChatRoom.chatRoomName }}</p>
+                <p class="last-msg">{{ myChatRoom.nickname }}</p>
+              </div>
             </div>
           </div>
         </div>
@@ -29,28 +30,38 @@
             type="button"
             aria-label="Close"
             class="close"
-            style="background-color: whitesmoke; border-color: whitesmoke"
           >
             ×
           </button>
         </div>
       </div>
-      <!--end of god-->
     </div>
-    <div v-else>
-      <p>
-        <b>아직 개설한 채팅방이 없습니다!</b><br /><b>새로 만드시겠습니까?</b>
-      </p>
-      <b-icon
-        class="icon"
-        icon="plus-circle"
-        variant="success"
-        @click="createChat()"
-      ></b-icon>
-      <b-input type="text" v-model="chatRoomName"></b-input>
+    <div v-else class="centered-container">
+      <br />
+      <div>
+        <h5><p>아직 개설한 채팅방이 없습니다! 새로 만드시겠습니까?</p></h5>
+      </div>
+      <div>
+        <button
+          class="w-btn w-btn-indigo"
+          type="button"
+          style="background-color: whitesmoke"
+        >
+          <b-icon
+            class="icon"
+            icon="plus-circle"
+            @click="createChat()"
+          ></b-icon>
+        </button>
+      </div>
+      <b-input
+        size="md"
+        type="text"
+        v-model="chatRoomName"
+        style="margin-top: 3%; width: 60%"
+      ></b-input>
     </div>
     <br />
-    <hr />
   </div>
 </template>
 
@@ -149,24 +160,26 @@ export default {
 
 <style scoped>
 @import "@/style/chat.css";
+.centered-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+h5 {
+  font-family: Hanna;
+}
+
 img {
   width: 54px;
   height: 54px;
   border-radius: 16px;
 }
-/* html {
-  height: 100%;
+.close {
+  background-color: whitesmoke;
+  border-color: whitesmoke;
 }
-body {
-  position: relative;
-  width: 100%;
-  height: 100%;
+div.info-box.col {
+  width: 80%;
 }
-
-#myChatContent {
-  position: absolute;
-  width: 40%;
-  left: 40%;
-  margin: 0 0 0 -150px;
-} */
 </style>
