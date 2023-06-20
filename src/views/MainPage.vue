@@ -6,6 +6,7 @@
         :pagination="true"
         :controls-visible="true"
         :pagination-custom="paginationCustom"
+        :height="300"
         ref="carousel"
       >
         <slide
@@ -33,6 +34,7 @@
         :clickable="false"
         :controls-visible="true"
         :space="320"
+        :height="300"
       >
         <slide
           v-for="(novel, index) in novelList"
