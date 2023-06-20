@@ -169,6 +169,7 @@ header {
 }
 .review-img > img {
   border-radius: 6px;
+  height: 300px;
 }
 .novel-info {
   padding: 10px;
