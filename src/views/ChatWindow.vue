@@ -5,110 +5,38 @@
         <div id="chatHeader">
           <div class="row">
             <div class="col-2">
-              <div @click="ToChatRoom()">🔄️</div>
+              <div @click="toChatRoom()">🔄️</div>
             </div>
             <div class="col-10">
               <div class="row">
                 <div class="col-10">{{ this.nickname }}의 채팅방</div>
-                <div class="col-2"></div>
               </div>
             </div>
           </div>
         </div>
-        <div v-if="!condition">
-          <b-button @click="infiniteHandler">더보기</b-button>
-        </div>
-        <div v-else>
-          <div>이전 대화 내용이 없습니다.</div>
-        </div>
-        <div>
-          <div>
-            <span class="anotherName">독자</span>
-            <div>
-              <input type="text" v-model="filterResult" />
-            </div>
-            <!-- <div v-if="chatting.filterResult == 'bad'"></div> -->
-            <div
-              v-if="filterResult == 'ok' && users.role == 'AUTHOR'"
-              class="msg"
-            >
-              <span>메세지</span>
-            </div>
-            <div
-              v-else-if="filterResult == 'bad' && users.role == 'AUTHOR'"
-              class="msg blurred"
-              @click="filterCheck(filterResult)"
-            >
-              <span>메세지</span>
-            </div>
-          </div>
-        </div>
+        <button style="background-color: gainsboro" @click="loadChat()">
+          더보기
+        </button>
         <div
           id="chatLog"
           v-for="(chatting, index) in chattingList.slice().reverse()"
           :key="index"
           ref="chatLog"
         >
-          <div
-            class="anotherMsg"
-            @mouseover="doMouseOver(chatting.chatId)"
-            @mouseleave="doMouseLeave"
-          >
-            <div v-if="chatting.senderId != users.userId">
-              <span class="anotherName">{{ chatting.senderName }}</span>
-              <!-- <span>필터 체크 : {{ chatting.filterResult }}</span> -->
-              <div class="msg">
-                <span>
-                  {{
-                    chatting.message ||
-                    chatting.userMessage +
-                      " 에 대한 답장 : " +
-                      chatting.replyMessage ||
-                    "이건 뜨면 안되는데"
-                  }}
-                </span>
-              </div>
-              <div class="col">
-                <div
-                  v-if="
-                    users.role == 'AUTHOR' &&
-                    isButtonVisible &&
-                    chatting.chatId == chatIdState
-                  "
-                >
-                  <button @click="ToReply(chatting)">↪️</button>
-                </div>
-              </div>
+          <div class="chat" v-if="chatting.replyId == null">
+            <!-- filtered 클래스에 블러 스타일 적용해주시면 됩니다 -->
+            <div :class="{ filtered: isFiltered(chatting.filterResult) }">
+              그냥채팅 : {{ chatting.message }}
             </div>
           </div>
-          <div class="myMsg">
-            <div class="msg" v-if="chatting.senderId == users.userId">
-              <span>
-                {{
-                  chatting.message ||
-                  chatting.userMessage +
-                    " 에 대한 답장 : " +
-                    chatting.replyMessage ||
-                  "이건 뜨면 안되는데"
-                }}
-              </span>
-            </div>
+          <!-- reply는 일단 스타일 적용 안했습니다 -->
+          <div class="chat reply" v-if="chatting.replyId != null">
+            답장 : {{ chatting.replyMessage }}
           </div>
         </div>
         <div>
           <form id="chatForm">
-            <div v-if="replyState">
-              <input
-                type="text"
-                id="message"
-                placeholder="답장 하기"
-                v-model="message"
-              />
-              <b-button type="button" @click="sendReply()">
-                <b-icon icon="messenger" aria-hidden="true"></b-icon>
-              </b-button>
-            </div>
-            <div v-else>
+            <div>
               <b-input
                 type="text"
                 id="message"
@@ -140,151 +68,106 @@ export default {
       message: null,
       stompClient: null,
       connected: false,
-      chatRoomList: [],
       chattingList: [],
-      replyChatList: [],
-      senderName: null,
       nickname: null,
-      chatId: null,
-      userMessage: null,
-      isButtonVisible: false,
-      chatIdState: null,
       replyState: false,
-      condition: false,
-      filterResult: "bad",
       date: null,
+      loadChatLimiter: 0,
     };
   },
   async created() {
     try {
+      // 초기 설정
       this.date = new Date();
       const accessToken = this.$getAccessToken();
       const users = this.$getTokenInfo(accessToken);
       this.users = users;
       const roomId = this.$route.params.roomId;
       this.roomId = roomId;
-      this.connect();
       const option = {
         headers: {
           Authorization: "Bearer " + this.$getAccessToken(),
         },
       };
-      let month = 0;
-      if (this.date.getMonth() < 9) {
-        month = "0" + (this.date.getMonth() + 1);
-      } else {
-        month = this.date.getMonth() + 1;
-      }
-      const chatList = await axios.get(
-        `${process.env.VUE_APP_API_URL}/chat/${
-          this.roomId
-        }?date=${this.date.getFullYear()}-${month}-${this.date.getDate()}`,
-        option
-      );
-      this.date.setDate(this.date.getDate() - 1);
-      console.log(chatList);
       const user = await axios.get(
         `${process.env.VUE_APP_API_URL}/user/me`,
         option
       );
       this.nickname = user.data.nickname;
-      this.chattingList = chatList.data;
-      setTimeout(() => {
-        window.scrollTo(0, document.getElementById("contentWrap").scrollHeight);
-      }, 500);
+
+      // 웹소켓 연결
+      this.connect();
+
+      // 오늘 채팅 불러오기
+      this.loadChat();
+
+      window.scrollTo(0, document.getElementById("contentWrap").scrollHeight);
     } catch (err) {
       console.log(err);
     }
   },
-  async mounted() {
-    // console.log("---mounted---");
-    // const contentWrap = document.getElementById("contentWrap");
-    // contentWrap.scrollTop = contentWrap.scrollHeight;
-  },
   methods: {
-    async ToChatRoom() {
+    async toChatRoom() {
       location.href = "/chatRoom";
     },
-    async filterCheck(res) {
-      console.log(res);
-      this.filterResult = "ok";
-    },
-    async ToReply(res) {
-      this.replyState = true;
-      this.userMessage = res.message;
-    },
-    async doMouseOver(res) {
-      this.isButtonVisible = true;
-      this.chatIdState = res;
-    },
-    async doMouseLeave() {
-      this.isButtonVisible = false;
-    },
-    async infiniteHandler($state) {
-      //if (!this.chattingList.length) {
+    async loadChat() {
       try {
-        // const option = {
-        //   headers: {
-        //     Authorization: "Bearer " + this.$getAccessToken(),
-        //   },
-        // };
-        // const res = await axios.get(
-        //   `/${process.env.VUE_APP_API_URL}/chat/${this.roomId}`,
-        //   option
-        // );
-        const option = {
-          headers: {
-            Authorization: "Bearer " + this.$getAccessToken(),
-          },
-        };
-        let month = 0;
-        if (this.date.getMonth() < 9) {
-          month = "0" + (this.date.getMonth() + 1);
-        } else {
-          month = this.date.getMonth() + 1;
+        while (this.loadChatLimiter < 31) {
+          // 30일치 다 조회되었을 때 alert창이라던가 버튼 숨기기 같은게 있으면 좋을 듯 합니다
+          const beforeChatLength = this.chattingList.length;
+          const option = {
+            headers: {
+              Authorization: "Bearer " + this.$getAccessToken(),
+            },
+          };
+
+          // chatting 요청
+          let month =
+            this.date.getMonth() + 1 < 10
+              ? "0" + (this.date.getMonth() + 1)
+              : this.date.getMonth() + 1;
+          let day =
+            this.date.getDate() < 10
+              ? "0" + this.date.getDate()
+              : this.date.getDate();
+          const chatRes = await axios.get(
+            `${process.env.VUE_APP_API_URL}/chat/${
+              this.roomId
+            }?date=${this.date.getFullYear()}-${month}-${day}`,
+            option
+          );
+          const tempChatList = chatRes.data.filter((chat) => {
+            if (chat.senderId == this.users.userId) return chat;
+          });
+
+          // reply 요청
+          const replyRes = await axios.get(
+            `${process.env.VUE_APP_API_URL}/chat/reply/${
+              this.roomId
+            }?date=${this.date.getFullYear()}-${month}-${day}`,
+            option
+          );
+          console.log(this.date.getDate());
+          console.log(replyRes.data);
+
+          // 데이터 세팅
+          this.chattingList = this.chattingList.concat(tempChatList);
+          this.chattingList = this.chattingList.concat(replyRes.data);
+          this.date.setDate(this.date.getDate() - 1);
+
+          this.loadChatLimiter++;
+
+          // 채팅 목록의 길이가 변화하지 않았다면(= 해당 날짜의 채팅이 없다면) while 반복
+          if (beforeChatLength == this.chattingList.length) {
+            continue;
+          } else {
+            // 해당 날짜의 채팅이 조회되었으면 탈출
+            break;
+          }
         }
-        const res = await axios.get(
-          `${process.env.VUE_APP_API_URL}/chat/${
-            this.roomId
-          }?date=${this.date.getFullYear()}-${month}-${this.date.getDate()}`,
-          option
-        );
-        this.date.setDate(this.date.getDate() - 1);
-        this.chattingList.push(res.data);
-        this.chatId = this.chattingList[this.chattingList.length - 1].chatId;
-        $state.loaded();
       } catch (err) {
         console.log(err);
       }
-      //return;
-      //}
-      //const chatId = this.chattingList[this.chattingList.length - 1].chatId;
-      // try {
-      //   const option = {
-      //     headers: {
-      //       Authorization: "Bearer " + this.$getAccessToken(),
-      //     },
-      //   };
-      //   const chatList = await axios.get(
-      //     `${process.env.VUE_APP_API_URL}/chat/${this.roomId}?chatId=${chatId}`,
-      //     option
-      //   );
-      //   console.log("length : " + chatList.data.length);
-      //   if (chatList.data.length) {
-      //     this.chattingList = this.chattingList.concat(chatList.data);
-      //     this.chatId = this.chattingList[this.chattingList.length - 1].chatId;
-      //     $state.loaded;
-      //     const chatId = chatList.data[chatList.data.length - 1].chatId;
-      //     if (this.chatId == chatId) {
-      //       $state.complete;
-      //     }
-      //   } else {
-      //     this.condition = true;
-      //     $state.complete;
-      //   }
-      // } catch (err) {
-      //   console.log(err);
-      // }
     },
     connect() {
       const socket = new SockJS("http://localhost:8080/ws");
@@ -302,9 +185,7 @@ export default {
             console.log("room's tick", tick);
             const chatting = JSON.parse(tick.body);
             // 채팅방에서 수신된 메시지 처리. 정상 작동
-            //if (chatting.senderId === this.userId) {
             this.chattingList.unshift(chatting);
-            //}
             setTimeout(() => {
               window.scrollTo(
                 0,
@@ -320,7 +201,6 @@ export default {
 
           this.stompClient.subscribe(`/reply/${this.roomId}`, (tick) => {
             console.log("reply tick", tick);
-            // this.replyChatList.unshift(JSON.parse(tick.body));
           });
         },
         (error) => {
@@ -335,30 +215,14 @@ export default {
         message: this.message,
       };
       try {
-        this.stompClient.send(
-          `/app/chat/${this.roomId}`,
-          JSON.stringify(obj),
-          {}
-        );
+        if (this.message != null && this.message != "") {
+          this.stompClient.send(
+            `/app/chat/${this.roomId}`,
+            JSON.stringify(obj),
+            {}
+          );
+        }
         this.message = "";
-      } catch (error) {
-        console.log(error);
-      }
-    },
-    sendReply() {
-      const obj = {
-        senderId: this.users.userId,
-        replyMessage: this.message,
-        chatId: this.chatIdState,
-        userMessage: this.userMessage,
-      };
-
-      try {
-        this.stompClient.send(
-          `/app/reply/${this.roomId}`,
-          JSON.stringify(obj),
-          {}
-        );
       } catch (error) {
         console.log(error);
       }
@@ -371,14 +235,10 @@ export default {
         this.connected = false;
       });
     },
+    isFiltered(msg) {
+      return msg == "bad" ? true : false;
+    },
   },
-  destroyed() {
-    // console.log("DESTROY=================================");
-    // this.disconnect();
-  },
-  // components: {
-  //   InfiniteLoading,
-  // },
 };
 </script>
 
@@ -497,5 +357,9 @@ body {
 
 #message:focus {
   outline: none;
+}
+
+.filtered {
+  color: red;
 }
 </style>
