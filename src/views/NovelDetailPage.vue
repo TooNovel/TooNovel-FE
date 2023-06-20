@@ -18,7 +18,36 @@
               <b>작가</b>
               <p>{{ novel.author }}</p>
               <novel-like :novel="novel"></novel-like>
+              <div class="platform-buttons">
+                <a
+                  v-for="platform in novel.platforms"
+                  :key="platform.platformId"
+                  :href="platform.url"
+                >
+                  <button class="platform-button">
+                    <img
+                      v-if="platform.platformId === 1"
+                      src="/series.png"
+                      alt="네이버 시리즈"
+                      class="platform-image"
+                    />
+                    <img
+                      v-if="platform.platformId === 2"
+                      src="/kakaopage.png"
+                      alt="카카오페이지"
+                      class="platform-image"
+                    />
+                    <img
+                      v-if="platform.platformId === 3"
+                      src="/munpia.png"
+                      alt="문피아"
+                      class="platform-image"
+                    />
+                  </button>
+                </a>
+              </div>
             </b-col>
+            <b-col> </b-col>
           </b-row>
           <br />
           <div class="row">
