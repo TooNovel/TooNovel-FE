@@ -135,26 +135,27 @@ export default {
         }
       }
     },
-    async adminUser() {
-      // 회원 관리 페이지 이동 및 데이터 전달 추가 예정
-      try {
-        const option = {
-          headers: {
-            Authorization: "Bearer " + this.$getAccessToken(),
-          },
-        };
-        const res = await axios.get(
-          `${process.env.VUE_APP_API_URL}/user?page=${0}`,
-          option
-        );
-        this.$router.push({
-          name: "AdminUserPage",
-          params: { data: res.data },
-        });
-      } catch (err) {
-        console.log(err);
-      }
-    },
+    // 현재 회원관리 페이지 api가 없는 관계로 추후 추가되면 사용 예정
+    // async adminUser() {
+    //   // 회원 관리 페이지 이동 및 데이터 전달 추가 예정
+    //   try {
+    //     const option = {
+    //       headers: {
+    //         Authorization: "Bearer " + this.$getAccessToken(),
+    //       },
+    //     };
+    //     const res = await axios.get(
+    //       `${process.env.VUE_APP_API_URL}/user?page=${0}`,
+    //       option
+    //     );
+    //     this.$router.push({
+    //       name: "AdminUserPage",
+    //       params: { data: res.data },
+    //     });
+    //   } catch (err) {
+    //     console.log(err);
+    //   }
+    // },
     async adminAuthor() {
       try {
         const option = {
