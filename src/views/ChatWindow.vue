@@ -5,29 +5,55 @@
         <div id="chatHeader">
           <div class="row">
             <div class="col-2">
-              <div @click="toChatRoom()">🔄️</div>
+              <div @click="toChatRoom()">🔙</div>
             </div>
-            <div class="col-10">
+            <header class="col-10">
               <div class="row">
                 <div class="col-10">{{ this.nickname }}의 채팅방</div>
               </div>
-            </div>
+            </header>
           </div>
         </div>
-        <button style="background-color: gainsboro" @click="loadChat()">
-          더보기
-        </button>
+        <br />
+        <div class="button-container">
+          <button
+            class="w-btn-outline w-btn-indigo-outline"
+            type="button"
+            @click="loadChat()"
+          >
+            더보기
+          </button>
+        </div>
         <div
           id="chatLog"
           v-for="(chatting, index) in chattingList.slice().reverse()"
           :key="index"
           ref="chatLog"
         >
-          <div class="chat" v-if="chatting.replyId == null">
-            <!-- filtered 클래스에 블러 스타일 적용해주시면 됩니다 -->
-            <div :class="{ filtered: isFiltered(chatting.filterResult) }">
-              그냥채팅 : {{ chatting.message }}
+          <div v-if="chatting.replyId == null">
+            <div v-if="chatting.senderId == users.userId">
+              <div class="myMsg">
+                <div class="msg">{{ chatting.message }}</div>
+              </div>
             </div>
+            <!-- 다른 사용자가 보낸 메세지 -->
+            <div v-else>
+              <div class="anotherMsg">
+                <span class="anotherName">{{ chatting.senderName }}</span>
+                <div
+                  v-if="!chatting.creator"
+                  :class="{ filtered: isFiltered(chatting.filterResult) }"
+                >
+                  <div class="msg" @click="cancleFilter(chatting.filterResult)">
+                    {{ chatting.message }}
+                  </div>
+                </div>
+                <div v-else>
+                  <div class="msg">{{ chatting.message }}</div>
+                </div>
+              </div>
+            </div>
+            <!-- filtered 클래스에 블러 스타일 적용해주시면 됩니다 -->
           </div>
           <!-- reply는 일단 스타일 적용 안했습니다 -->
           <div class="chat reply" v-if="chatting.replyId != null">
@@ -38,12 +64,13 @@
           <form id="chatForm">
             <div>
               <b-input
+                size="lg"
                 type="text"
                 id="message"
                 placeholder="메시지를 입력하세요"
                 v-model="message"
               />
-              <b-button variant="success" @click="sendMsg()">
+              <b-button class="send" @click="sendMsg()" size="lg">
                 <b-icon icon="messenger" aria-hidden="true"></b-icon>
               </b-button>
             </div>
@@ -101,12 +128,20 @@ export default {
       // 오늘 채팅 불러오기
       this.loadChat();
 
-      window.scrollTo(0, document.getElementById("contentWrap").scrollHeight);
+      setTimeout(() => {
+        window.scrollTo(0, document.getElementById("contentWrap").scrollHeight);
+      }, 100);
     } catch (err) {
       console.log(err);
     }
   },
   methods: {
+    async cancleFilter(res) {
+      if (res == "bad") {
+        const ok = "ok";
+        this.isFiltered(ok);
+      }
+    },
     async toChatRoom() {
       location.href = "/chatRoom";
     },
@@ -236,6 +271,7 @@ export default {
       });
     },
     isFiltered(msg) {
+      console.log(msg);
       return msg == "bad" ? true : false;
     },
   },
@@ -243,9 +279,6 @@ export default {
 </script>
 
 <style scoped>
-.blurred {
-  filter: blur(3px);
-}
 html {
   height: 100%;
 }
@@ -254,15 +287,16 @@ body {
   width: 100%;
   height: 100%;
 }
-
+.button-container {
+  display: flex;
+  justify-content: center;
+}
 #contentWrap {
   position: absolute;
   left: 50%;
-  transform: translateX(-50%);
-  /* width: 40%;
-  margin: 0 0 0 -150px; */
-  width: 50%;
+  width: 30%;
   height: 100%;
+  transform: translateX(-50%);
 }
 
 #chatWrap {
@@ -276,7 +310,7 @@ body {
   font-size: 25px;
   font-weight: 900;
   border-bottom: 1px solid #ddd;
-  background-color: #086851;
+  background-color: darkseagreen;
 }
 
 #chatLog {
@@ -306,7 +340,7 @@ body {
 }
 
 .myMsg > .msg {
-  background-color: #086851;
+  background-color: rgb(135, 176, 135);
   color: #fff;
 }
 
@@ -324,28 +358,9 @@ body {
   border-top: 2px solid #f0f0f0;
 }
 
-/* #chatForm {
-  position: fixed;
-  bottom: 0;
-  border-top: 2px solid #f0f0f0;
-  background-color: whitesmoke;
-  width: 40%;
-  display: flex;
-  align-items: center;
-} */
-
 #chatForm > div {
   display: flex;
   align-items: center;
-  margin-right: 10px;
-}
-
-#chatForm > input[type="text"] #chatForm > b-input[type="text"] {
-  outline: none;
-  background: none;
-  border: none;
-  color: #0084ff;
-  font-size: 17px;
 }
 
 #message {
@@ -360,6 +375,14 @@ body {
 }
 
 .filtered {
-  color: red;
+  filter: blur(3px);
+}
+.send {
+  margin-left: 10%;
+  background-color: darkseagreen;
+  border: none;
+}
+.send:hover {
+  background-color: rgb(131, 171, 131);
 }
 </style>
