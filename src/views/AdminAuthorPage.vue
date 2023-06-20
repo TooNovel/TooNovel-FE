@@ -1,5 +1,6 @@
 <template>
   <div id="community">
+    <MyPageNavbar></MyPageNavbar>
     <header>
       <div class="row justify-content-end">
         <div class="col">
@@ -45,6 +46,7 @@
 
 <script>
 import axios from "axios";
+import MyPageNavbar from "@/components/MyPageNavbar.vue";
 
 export default {
   data() {
@@ -162,6 +164,7 @@ export default {
       }
     },
   },
+  components: { MyPageNavbar },
 };
 </script>
 <style scoped>
