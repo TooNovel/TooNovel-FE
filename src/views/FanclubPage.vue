@@ -106,7 +106,6 @@
                   채팅방 참여
                 </b-button>
               </b-card-text>
-              <b-card-text>{{ author.userId }}</b-card-text>
             </b-card>
           </b-col>
         </b-row>
@@ -195,6 +194,7 @@ export default {
           $state.loaded();
         } catch (err) {
           console.log(err);
+          $state.complete();
         }
         return;
       }
