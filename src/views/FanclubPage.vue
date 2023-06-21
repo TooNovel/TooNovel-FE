@@ -176,6 +176,7 @@ export default {
       roomList: [],
       authors: [],
       userId: 0,
+      enrollId: 0,
       searchedAuthor: false,
     };
   },
@@ -206,6 +207,7 @@ export default {
       console.log(res);
       this.authors = res.data;
       this.userId = this.authors[this.authors.length - 1].userId;
+      this.enrollIdId = this.authors[this.authors.length - 1].enrollId;
     } catch (err) {
       console.log(err);
     }
@@ -244,6 +246,7 @@ export default {
           );
           this.authors = res.data;
           this.userId = this.authors[this.authors.length - 1].userId;
+          this.enrollId = this.authors[this.authors.length - 1].enrollId;
           $state.loaded();
         } catch (err) {
           console.log(err);
@@ -252,20 +255,21 @@ export default {
         return;
       }
       try {
-        console.log(this.userId);
+        console.log(this.enrollId);
         const res = await axios.get(
           `${process.env.VUE_APP_API_URL}/user/author?enrollId=` +
-            this.userId +
+            this.enrollId +
             `&nickname=` +
             this.author
         );
         console.log("length :" + res.data.length);
         if (res.data.length) {
-          this.authors = this.authors.concat(res.data);
-          this.userId = this.authors[this.authors.length - 1].userId;
-          $state.loaded(); //데이터 로딩
-          if (this.userId / res.data.length == 0) {
+          if (this.enrollId / res.data.length == 0) {
             $state.complete(); //데이터가 없으면 로딩 끝
+          } else {
+            this.authors = this.authors.concat(res.data);
+            this.enrollId = res.data[res.data.length - 1].enrollId;
+            $state.loaded(); //데이터 로딩
           }
         } else {
           $state.complete();
@@ -278,14 +282,17 @@ export default {
     },
     async search() {
       try {
+        this.searchedAuthor = false;
         const res = await axios.get(
           `${process.env.VUE_APP_API_URL}/user/author?nickname=${this.author}`
         );
         this.authors = [];
         this.authors = res.data;
+        this.enrollId = res.data[res.data.length - 1].enrollId;
         this.searchedAuthor = true;
       } catch (err) {
         console.log(err);
+        this.searchedAuthor = true;
       }
     },
   },
