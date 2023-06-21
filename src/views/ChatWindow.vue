@@ -133,8 +133,8 @@ export default {
       // 웹소켓 연결
       this.connect();
 
-      // 오늘 채팅 불러오기
-      this.loadChat();
+      // 최근 일주일 채팅 불러오기
+      this.loadChatForAWeek();
 
       setTimeout(() => {
         window.scrollTo(0, document.getElementById("contentWrap").scrollHeight);
@@ -149,6 +149,42 @@ export default {
     },
     async toChatRoom() {
       location.href = "/chatRoom";
+    },
+    async loadChatForAWeek() {
+      const option = {
+        headers: {
+          Authorization: "Bearer " + this.$getAccessToken(),
+        },
+      };
+
+      // chatting 요청
+      const chatRes = await axios.get(
+        `${process.env.VUE_APP_API_URL}/chat/${this.roomId}`,
+        option
+      );
+      const tempChatList = chatRes.data.filter((chat) => {
+        if (
+          chat.senderId == this.users.userId || // 내가 보낸 채팅은 보이게
+          this.users.role == "AUTHOR" || // 내가 작가면 전부 보이게
+          chat.creator // 작가의 채팅도 보이게
+        )
+          return chat;
+      });
+
+      // reply 요청
+      const replyRes = await axios.get(
+        `${process.env.VUE_APP_API_URL}/chat/reply/${this.roomId}`,
+        option
+      );
+      console.log(this.date.getDate());
+      console.log(replyRes.data);
+
+      // 데이터 세팅
+      this.chattingList = this.chattingList.concat(tempChatList);
+      this.chattingList = this.chattingList.concat(replyRes.data);
+      this.date.setDate(this.date.getDate() - 8);
+
+      this.loadChatLimiter = this.loadChatLimiter + 7;
     },
     async loadChat() {
       try {
@@ -205,6 +241,7 @@ export default {
 
           // 채팅 목록의 길이가 변화하지 않았다면(= 해당 날짜의 채팅이 없다면) while 반복
           if (beforeChatLength == this.chattingList.length) {
+            await new Promise((resolve) => setTimeout(resolve, 100)); // 0.1초 동안 대기
             continue;
           } else {
             // 해당 날짜의 채팅이 조회되었으면 탈출
