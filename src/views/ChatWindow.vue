@@ -39,7 +39,7 @@
               </div>
             </div>
             <!-- 다른 사용자가 보낸 메세지 -->
-            <div v-if="chatting.senderId != users.userId">
+            <div v-if="chatting.senderId != users.userId || chatting.creator">
               <div class="anotherMsg">
                 <span class="anotherName">{{ chatting.senderName }}</span>
                 <div
@@ -55,9 +55,8 @@
                 </div>
               </div>
             </div>
-            <!-- filtered 클래스에 블러 스타일 적용해주시면 됩니다 -->
           </div>
-          <!-- reply는 일단 스타일 적용 안했습니다 -->
+          <!-- 답장 -->
           <div class="chat reply" v-if="chatting.replyId != null">
             답장 : {{ chatting.replyMessage }}
           </div>
@@ -177,7 +176,8 @@ export default {
           const tempChatList = chatRes.data.filter((chat) => {
             if (
               chat.senderId == this.users.userId || // 내가 보낸 채팅은 보이게
-              this.users.role == "AUTHOR" // 내가 작가면 전부 보이게
+              this.users.role == "AUTHOR" || // 내가 작가면 전부 보이게
+              chat.creator // 작가의 채팅도 보이게
             )
               return chat;
           });
