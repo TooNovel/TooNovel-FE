@@ -30,14 +30,16 @@
           :key="index"
           ref="chatLog"
         >
+          <!-- 일반 채팅(답장이 아닌 채팅) -->
           <div v-if="chatting.replyId == null">
+            <!-- 보낸 사람 = 나 -->
             <div v-if="chatting.senderId == users.userId">
               <div class="myMsg">
                 <div class="msg">{{ chatting.message }}</div>
               </div>
             </div>
             <!-- 다른 사용자가 보낸 메세지 -->
-            <div v-else>
+            <div v-if="chatting.senderId != users.userId">
               <div class="anotherMsg">
                 <span class="anotherName">{{ chatting.senderName }}</span>
                 <div
@@ -171,8 +173,13 @@ export default {
             }?date=${this.date.getFullYear()}-${month}-${day}`,
             option
           );
+          console.log(chatRes.data);
           const tempChatList = chatRes.data.filter((chat) => {
-            if (chat.senderId == this.users.userId) return chat;
+            if (
+              chat.senderId == this.users.userId || // 내가 보낸 채팅은 보이게
+              this.users.role == "AUTHOR" // 내가 작가면 전부 보이게
+            )
+              return chat;
           });
 
           // reply 요청
