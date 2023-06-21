@@ -17,11 +17,19 @@
         <br />
         <div class="button-container">
           <button
+            v-if="loadChatLimiter < 31"
             class="w-btn-outline w-btn-indigo-outline"
             type="button"
             @click="loadChat()"
           >
             더보기
+          </button>
+          <button
+            v-if="loadChatLimiter >= 31"
+            class="w-btn-outline w-btn-indigo-outline"
+            type="button"
+          >
+            최근 30일까지의 채팅만 볼 수 있습니다.
           </button>
         </div>
         <div
