@@ -43,7 +43,7 @@
               <div class="anotherMsg">
                 <span class="anotherName">{{ chatting.senderName }}</span>
                 <div :class="{ filtered: isFiltered(chatting.filterResult) }">
-                  <div class="msg" @click="cancleFilter(chatting.filterResult)">
+                  <div class="msg" @click="cancleFilter(chatting)">
                     {{ chatting.message }}
                   </div>
                 </div>
@@ -131,11 +131,8 @@ export default {
     }
   },
   methods: {
-    async cancleFilter(res) {
-      if (res == "bad") {
-        const ok = "ok";
-        this.isFiltered(ok);
-      }
+    async cancleFilter(chat) {
+      chat.filterResult = "ok";
     },
     async toChatRoom() {
       location.href = "/chatRoom";
