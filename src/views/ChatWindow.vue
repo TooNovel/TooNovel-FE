@@ -42,16 +42,10 @@
             <div v-if="chatting.senderId != users.userId || chatting.creator">
               <div class="anotherMsg">
                 <span class="anotherName">{{ chatting.senderName }}</span>
-                <div
-                  v-if="!chatting.creator"
-                  :class="{ filtered: isFiltered(chatting.filterResult) }"
-                >
+                <div :class="{ filtered: isFiltered(chatting.filterResult) }">
                   <div class="msg" @click="cancleFilter(chatting.filterResult)">
                     {{ chatting.message }}
                   </div>
-                </div>
-                <div v-else>
-                  <div class="msg">{{ chatting.message }}</div>
                 </div>
               </div>
             </div>
