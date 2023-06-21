@@ -205,7 +205,7 @@ export default {
       }
     },
     connect() {
-      const socket = new SockJS("http://localhost:8080/ws");
+      const socket = new SockJS(process.env.VUE_APP_SOCKET_URL + "/ws");
       this.stompClient = Stomp.over(socket);
       console.log("connect 완료");
 
