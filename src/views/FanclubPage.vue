@@ -282,6 +282,7 @@ export default {
     },
     async search() {
       try {
+        this.searchedAuthor = false;
         const res = await axios.get(
           `${process.env.VUE_APP_API_URL}/user/author?nickname=${this.author}`
         );
