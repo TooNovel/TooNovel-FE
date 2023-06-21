@@ -3,7 +3,7 @@
     <div id="loading" v-if="isLoading" style="height: 600px">
       <div class="loader">Loading...</div>
     </div>
-    <main style="margin-top: 3%">
+    <main v-else style="margin-top: 3%">
       <article>
         <b-container class="bv-example-row">
           <b-row class="rows">
@@ -169,11 +169,11 @@ export default {
       selectedGrade: "--",
       novelLiked: false,
       userId: "",
-      isLoading: true,
-      accessToken: this.$getAccessToken(),
+      isLoading: false,
     };
   },
   async created() {
+    this.isLoading = true;
     await this.sleep(1500);
     try {
       if (this.$getAccessToken() != null) {
@@ -229,10 +229,22 @@ export default {
         );
         const newReview = res.data;
         this.reviews.push(newReview);
-        this.$router.go(0);
+        this.reviewContent = "";
+        this.reviewGrade = 0;
+        const id = this.$route.params.novel_id;
+        const reviewRes = await axios.get(
+          `${process.env.VUE_APP_API_URL}/review/` + id + "/novel"
+        );
+        this.reviews = reviewRes.data.content;
+        this.reviews.forEach((review) => {
+          review.createdDate = `${review.createdDate[0]} / ${review.createdDate[1]} / ${review.createdDate[2]}`;
+        });
       } catch (err) {
         if (this.$getAccessToken() == null || this.$getAccessToken() === "") {
           alert("로그인 후 리뷰 작성할 수 있습니다!");
+        }
+        if (err.response.data.code == "R002") {
+          alert(err.response.data.message);
         }
         console.log(err);
       }
