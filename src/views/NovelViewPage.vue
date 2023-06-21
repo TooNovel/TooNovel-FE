@@ -4,7 +4,7 @@
     <div id="loading" v-if="isLoading" style="height: 800px">
       <div class="loader">Loading...</div>
     </div>
-    <div class="novel-list-box" ref="allProductList">
+    <div v-else class="novel-list-box" ref="allProductList">
       <b-row>
         <b-col
           v-for="(novel, index) in novels"
@@ -31,6 +31,7 @@
       </b-row>
     </div>
     <infinite-loading
+      v-if="!isLoading"
       @infinite="infiniteHandler"
       spinner="waveDots"
     ></infinite-loading>
