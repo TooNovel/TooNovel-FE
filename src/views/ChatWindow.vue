@@ -39,7 +39,12 @@
               </div>
             </div>
             <!-- 다른 사용자가 보낸 메세지 -->
-            <div v-if="chatting.senderId != users.userId || chatting.creator">
+            <div
+              v-if="
+                chatting.senderId != users.userId ||
+                (chatting.creator && chatting.senderId != users.userId)
+              "
+            >
               <div class="anotherMsg">
                 <span class="anotherName">{{ chatting.senderName }}</span>
                 <div :class="{ filtered: isFiltered(chatting.filterResult) }">
@@ -218,7 +223,12 @@ export default {
             console.log("room's tick", tick);
             const chatting = JSON.parse(tick.body);
             // 채팅방에서 수신된 메시지 처리. 정상 작동
-            this.chattingList.unshift(chatting);
+            if (
+              chatting.senderId == this.users.userId || // 내가 보낸 채팅은 보이게
+              this.users.role == "AUTHOR" || // 내가 작가면 전부 보이게
+              chatting.creator // 작가의 채팅도 보이게
+            )
+              this.chattingList.unshift(chatting);
             setTimeout(() => {
               window.scrollTo(
                 0,
@@ -269,7 +279,6 @@ export default {
       });
     },
     isFiltered(msg) {
-      console.log(msg);
       return msg == "bad" ? true : false;
     },
   },
