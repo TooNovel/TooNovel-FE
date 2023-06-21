@@ -6,7 +6,7 @@
     <main>
       <router-view />
     </main>
-    <footer>
+    <footer v-if="!hideHeaderFooter">
       <main-footer></main-footer>
     </footer>
   </div>
@@ -24,7 +24,14 @@ export default {
     "main-footer": MainFooter,
   },
 
-  data: () => ({}),
+  data: () => ({
+    //showFooter: true,
+  }),
+  computed: {
+    hideHeaderFooter() {
+      return this.$route.meta.hideHeaderFooter === true;
+    },
+  },
 };
 </script>
 <style>

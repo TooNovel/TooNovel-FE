@@ -9,10 +9,15 @@
           <b-form-input placeholder="작가명" type="text" v-model="author" />
         </div>
         <div class="col-auto">
-          <b-button variant="primary" @click="search()">검색</b-button>
+          <b-button
+            @click="search()"
+            style="background-color: darkseagreen; border: 0"
+          >
+            <b-icon icon="search" scale="1" style="margin-top: 3px"></b-icon>
+          </b-button>
         </div>
         <div class="col-auto">
-          <b-button variant="warning" @click="chatroom()">
+          <b-button variant="warning" @click="ToChatRoom()">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="16"
@@ -33,7 +38,7 @@
     <div v-if="!searchedAuthor">
       <div>
         <div v-if="authorList.length > 0">
-          <h3>최신 작가</h3>
+          <h2>🧑‍💻 최신 작가</h2>
           <carousel-3d
             :disable3d="true"
             :space="365"
@@ -45,14 +50,23 @@
               v-for="(author, index) in authorList"
               :key="index"
               :index="index"
-              style="width: 250px; height: 300px"
+              style="
+                width: 250px;
+                height: 270px;
+                border-radius: 12px;
+                background-color: whitesmoke;
+              "
             >
-              <img :src="author.imageUrl" height="200px" />
-              {{ author.nickname }}
+              <img :src="author.imageUrl" class="myImg" />
               <br />
-              <b-button variant="primary" @click="joinRoom(author.userId)">
-                채팅방 참여
-              </b-button>
+              <h5 style="margin-bottom: 10px">{{ author.nickname }}</h5>
+              <button
+                class="w-btn-outline w-btn-green-outline"
+                type="button"
+                @click="joinRoom(author.userId)"
+              >
+                참여
+              </button>
             </slide>
           </carousel-3d>
         </div>
@@ -60,7 +74,7 @@
       <br />
       <div>
         <div v-if="roomList.length > 0">
-          <h3>인기 채팅방</h3>
+          <h2>🗨️ 인기 채팅방</h2>
           <carousel-3d
             :disable3d="true"
             :space="365"
@@ -72,14 +86,22 @@
               v-for="(room, index) in roomList"
               :key="index"
               :index="index"
-              style="width: 250px; height: 300px"
+              style="
+                width: 250px;
+                height: 270px;
+                border-radius: 12px;
+                background-color: whitesmoke;
+              "
             >
               <img :src="room.imageUrl" height="200px" />
-              {{ room.nickname }}
-              <br />
-              <b-button variant="primary" @click="joinRoom(room.userId)">
-                채팅방 참여
-              </b-button>
+              <h5 style="margin-bottom: 10px">{{ room.nickname }}</h5>
+              <button
+                class="w-btn-outline w-btn-green-outline"
+                type="button"
+                @click="joinRoom(room.userId)"
+              >
+                참여
+              </button>
             </slide>
           </carousel-3d>
         </div>
@@ -97,14 +119,36 @@
             md="4"
             lg="3"
           >
-            <b-card @click="detailNovelList(author.userId)">
-              <b-card-img :src="author.imageUrl" class="card-image">
-              </b-card-img>
-              <b-card-title>{{ author.nickname }}</b-card-title>
-              <b-card-text>
-                <b-button variant="primary" @click="joinRoom(author.rid)">
-                  채팅방 참여
-                </b-button>
+            <b-card
+              @click="detailNovelList(author.userId)"
+              style="
+                width: 250px;
+                height: 300px;
+                border-radius: 12px;
+                background-color: whitesmoke;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+              "
+            >
+              <b-card-img
+                :src="author.imageUrl"
+                class="card-image"
+                style="margin-bottom: 20px"
+              ></b-card-img>
+              <b-card-title
+                ><h5 class="text-center">
+                  {{ author.nickname }}
+                </h5></b-card-title
+              >
+              <b-card-text class="text-center">
+                <button
+                  class="w-btn-outline w-btn-green-outline"
+                  type="button"
+                  @click="joinRoom(author.rid)"
+                >
+                  참여
+                </button>
               </b-card-text>
             </b-card>
           </b-col>
@@ -122,6 +166,7 @@
 import axios from "axios";
 import { Carousel3d, Slide } from "vue-carousel-3d";
 import InfiniteLoading from "vue-infinite-loading";
+//import axios from "axios";
 
 export default {
   data() {
@@ -140,7 +185,6 @@ export default {
         `${process.env.VUE_APP_API_URL}/user/author`
       );
       this.authorList = authorRes.data;
-
       const roomRes = await axios.get(
         `${process.env.VUE_APP_API_URL}/user/chatroom`
       );
@@ -159,6 +203,7 @@ export default {
       const res = await axios.get(
         `${process.env.VUE_APP_API_URL}/user/author?nickname=${this.author}`
       );
+      console.log(res);
       this.authors = res.data;
       this.userId = this.authors[this.authors.length - 1].userId;
     } catch (err) {
@@ -166,6 +211,9 @@ export default {
     }
   },
   methods: {
+    async ToChatRoom() {
+      this.$router.push({ name: "ChatRoom" });
+    },
     async joinRoom(uid) {
       try {
         const option = {
@@ -178,8 +226,13 @@ export default {
           {},
           option
         );
+        alert("가입이 완료됐습니다!");
       } catch (err) {
-        console.log(err);
+        if (err.response.status == 400) {
+          alert(err.response.data.message);
+        } else if (err.response.status == 404) {
+          alert(err.response.data.message);
+        }
       }
     },
     async infiniteHandler($state) {
@@ -239,6 +292,26 @@ export default {
 };
 </script>
 <style scoped>
+@import "@/style/button.css";
+
+.myImg {
+  height: 150px;
+}
+
+img {
+  border-radius: 12px;
+}
+
+h1,
+h2,
+h3,
+h5,
+h6,
+b,
+button {
+  font-family: "Hanna";
+}
+
 #fanclub {
   margin: 3%;
 }
