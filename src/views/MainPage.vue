@@ -21,9 +21,6 @@
             height="300px"
             @click="detailNovelList(product)"
           />
-          <p>{{ product.title }}</p>
-          <p>{{ product.author }}</p>
-          <p>{{ product.price }}</p>
         </slide>
       </carousel-3d>
     </div>
@@ -90,7 +87,7 @@
       <h3>인기 리뷰</h3>
       <carousel-3d
         :disable3d="true"
-        :space="365"
+        :space="300"
         :clickable="false"
         :controls-visible="true"
         class="carousel-container"
@@ -99,7 +96,7 @@
           v-for="(review, index) in reviewList"
           :key="index"
           :index="index"
-          style="width: 250px; height: 300px"
+          style="width: 250px"
         >
           <img
             :src="review.imageUrl"
@@ -107,20 +104,25 @@
             @click="detailNovelList(review)"
             class="userimg"
           />
-          <!-- review를 받아오는 데이터에서 novelId 값이 없어 아직 미 구현 -->
-          <span @click="detailNovelList(review)" style="text-align: center">
-            {{ review.nickname }}
-            <br />
-            {{ review.reviewGrade }}
-            <br />
-            {{
-              review.reviewContent.length > 45
-                ? review.reviewContent.substring(0, 44) + "..."
-                : review.reviewContent
-            }}
-            <br />
-            {{ review.title + ", " + review.author }}
-          </span>
+          <div @click="detailNovelList(review)" class="review-form">
+            <p>{{ review.nickname }}</p>
+            <div class="review-grade">
+              <span style="font-size: 20px; letter-spacing: -0.2em">
+                {{ "★".repeat(review.reviewGrade) }}
+                {{ "☆".repeat(5 - review.reviewGrade) }}
+              </span>
+            </div>
+            <p class="review-content">
+              {{
+                review.reviewContent.length > 20
+                  ? review.reviewContent.substring(0, 20) + "..."
+                  : review.reviewContent
+              }}
+            </p>
+            <div class="title-author">
+              <p>{{ review.title }}<br />{{ review.author }}</p>
+            </div>
+          </div>
         </slide>
       </carousel-3d>
     </div>
@@ -241,11 +243,21 @@ h5 {
 }
 
 .carousel-container .carousel-3d-slide .userimg {
-  margin-top: 10px;
+  margin-top: 15px;
   border-radius: 50%;
-  width: 100px;
-  height: 100px;
+  width: 80px;
+  height: 80px;
   object-fit: cover;
+  padding-top: 5px;
+}
+
+.carousel-container .carousel-3d-slide .myImg {
+  margin-top: 15px;
+  border-radius: 50%;
+  width: 150px;
+  height: 150px;
+  object-fit: cover;
+  margin-bottom: 15px;
 }
 
 .carousel-container .carousel-3d-slide .myImg {
@@ -262,5 +274,44 @@ h5 {
   display: flex;
   flex-direction: column;
   align-items: center;
+
+  justify-content: space-around;
+}
+
+.review-form {
+  text-align: center;
+  padding: 5px 10px;
+  height: 70%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+}
+
+.review-form > p {
+  margin: 2px 0;
+}
+
+.carousel-container {
+  height: 300px;
+}
+.carousel-3d-slider > div {
+  width: 100%;
+  height: 100%;
+  border: none;
+  box-shadow: 0 0 40px 0 rgba(94, 92, 154, 0.06);
+  border-radius: 10px;
+  font-size: 14px;
+}
+.carousel-3d-controls {
+  width: 1000px;
+  height: 1000px;
+}
+.title-author {
+  display: flex;
+  flex-direction: column;
+}
+.review-content {
+  margin-top: 10px !important;
+  margin-bottom: 10px !important;
 }
 </style>
