@@ -59,6 +59,13 @@
                   <div class="msg" @click="cancleFilter(chatting)">
                     {{ chatting.message }}
                   </div>
+                  <!-- 위 div에 마우스 호버되면 아래 span이 보이도록 구상중 -->
+                  <!-- @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@작가만 답장 버튼 보이도록 구성해야함 -->
+                  <span
+                    @click="selectMsg(chatting)"
+                    v-if="chatOwnerNickname == users.nickname"
+                    >답장</span
+                  >
                 </div>
               </div>
             </div>
@@ -69,6 +76,10 @@
           </div>
         </div>
         <div>
+          <div v-if="isReply">
+            <span>{{ replyChat.message }}</span>
+            <span @click="cancleReply()">X</span>
+          </div>
           <form id="chatForm">
             <div>
               <b-input
@@ -109,6 +120,9 @@ export default {
       date: null,
       loadChatLimiter: 0,
       chatRoomName: null,
+      isReply: false,
+      replyChat: {},
+      chatOwnerNickname: null,
     };
   },
   async created() {
@@ -130,6 +144,8 @@ export default {
         option
       );
       this.nickname = user.data.nickname;
+      this.chatOwnerNickname = this.$store.getters.getChatOwnerNickname;
+      this.$store.commit("setChatOwnerNickname", null);
 
       // 웹소켓 연결
       this.connect();
@@ -172,8 +188,9 @@ export default {
           chat.senderId == this.users.userId || // 내가 보낸 채팅은 보이게
           this.users.role == "AUTHOR" || // 내가 작가면 전부 보이게
           chat.creator // 작가의 채팅도 보이게
-        )
+        ) {
           return chat;
+        }
       });
 
       // reply 요청
@@ -181,14 +198,31 @@ export default {
         `${process.env.VUE_APP_API_URL}/chat/reply/${this.roomId}`,
         option
       );
-      console.log(this.date.getDate());
-      console.log(replyRes.data);
 
       // 데이터 세팅
       this.chattingList = this.chattingList.concat(tempChatList);
       this.chattingList = this.chattingList.concat(replyRes.data);
-      this.date.setDate(this.date.getDate() - 8);
 
+      // createdDate 배열을 Date 객체로 변환 및 조정
+      this.chattingList.forEach((chat) => {
+        // month 값을 조정하고 초 이하 단위는 무시
+        chat.createdDate = new Date(
+          chat.createdDate[0],
+          chat.createdDate[1] - 1,
+          chat.createdDate[2],
+          chat.createdDate[3],
+          chat.createdDate[4],
+          chat.createdDate[5]
+        );
+      });
+
+      // 정렬
+      this.chattingList.sort((a, b) => {
+        return b.createdDate - a.createdDate;
+      });
+
+      // 날짜 설정
+      this.date.setDate(this.date.getDate() - 8);
       this.loadChatLimiter = this.loadChatLimiter + 7;
     },
     async loadChat() {
@@ -217,14 +251,14 @@ export default {
             }?date=${this.date.getFullYear()}-${month}-${day}`,
             option
           );
-          console.log(chatRes.data);
           const tempChatList = chatRes.data.filter((chat) => {
             if (
               chat.senderId == this.users.userId || // 내가 보낸 채팅은 보이게
               this.users.role == "AUTHOR" || // 내가 작가면 전부 보이게
               chat.creator // 작가의 채팅도 보이게
-            )
+            ) {
               return chat;
+            }
           });
 
           // reply 요청
@@ -234,14 +268,42 @@ export default {
             }?date=${this.date.getFullYear()}-${month}-${day}`,
             option
           );
-          console.log(this.date.getDate());
-          console.log(replyRes.data);
+
+          tempChatList.forEach((chat) => {
+            // month 값을 조정하고 초 이하 단위는 무시
+            chat.createdDate = new Date(
+              chat.createdDate[0],
+              chat.createdDate[1] - 1,
+              chat.createdDate[2],
+              chat.createdDate[3],
+              chat.createdDate[4],
+              chat.createdDate[5]
+            );
+          });
+
+          replyRes.data.forEach((chat) => {
+            // month 값을 조정하고 초 이하 단위는 무시
+            chat.createdDate = new Date(
+              chat.createdDate[0],
+              chat.createdDate[1] - 1,
+              chat.createdDate[2],
+              chat.createdDate[3],
+              chat.createdDate[4],
+              chat.createdDate[5]
+            );
+          });
 
           // 데이터 세팅
           this.chattingList = this.chattingList.concat(tempChatList);
           this.chattingList = this.chattingList.concat(replyRes.data);
-          this.date.setDate(this.date.getDate() - 1);
 
+          // 정렬
+          this.chattingList.sort((a, b) => {
+            return b.createdDate - a.createdDate;
+          });
+
+          // 날짜 설정
+          this.date.setDate(this.date.getDate() - 1);
           this.loadChatLimiter++;
 
           // 채팅 목록의 길이가 변화하지 않았다면(= 해당 날짜의 채팅이 없다면) while 반복
@@ -260,17 +322,14 @@ export default {
     connect() {
       const socket = new SockJS(process.env.VUE_APP_SOCKET_URL + "/ws");
       this.stompClient = Stomp.over(socket);
-      console.log("connect 완료");
 
       this.stompClient.connect(
         {
           Authorization: this.$getAccessToken(),
         },
-        (frame) => {
+        () => {
           this.connected = true;
-          console.log("frame", frame);
           this.stompClient.subscribe(`/chat/${this.roomId}`, (tick) => {
-            console.log("room's tick", tick);
             const chatting = JSON.parse(tick.body);
             // 채팅방에서 수신된 메시지 처리. 정상 작동
             if (
@@ -293,7 +352,14 @@ export default {
           });
 
           this.stompClient.subscribe(`/reply/${this.roomId}`, (tick) => {
-            console.log("reply tick", tick);
+            const reply = JSON.parse(tick.body);
+            this.chattingList.unshift(reply);
+            setTimeout(() => {
+              window.scrollTo(
+                0,
+                document.getElementById("contentWrap").scrollHeight
+              );
+            }, 100);
           });
         },
         (error) => {
@@ -303,21 +369,41 @@ export default {
       );
     },
     sendMsg() {
-      const obj = {
-        senderId: this.users.userId,
-        message: this.message,
-      };
-      try {
-        if (this.message != null && this.message != "") {
+      if (!this.isReply) {
+        try {
+          const obj = {
+            senderId: this.users.userId,
+            message: this.message,
+          };
+          if (this.message != null && this.message != "") {
+            this.stompClient.send(
+              `/app/chat/${this.roomId}`,
+              JSON.stringify(obj),
+              {}
+            );
+          }
+          this.message = "";
+        } catch (error) {
+          console.log(error);
+        }
+      } else {
+        try {
+          const obj = {
+            senderId: this.users.userId,
+            replyMessage: this.message,
+            chatId: this.replyChat.chatId,
+            userMessage: this.replyChat.message,
+          };
           this.stompClient.send(
-            `/app/chat/${this.roomId}`,
+            `/app/reply/${this.roomId}`,
             JSON.stringify(obj),
             {}
           );
+          this.message = "";
+          this.cancleReply();
+        } catch (error) {
+          console.log(error);
         }
-        this.message = "";
-      } catch (error) {
-        console.log(error);
       }
     },
     disconnect() {
@@ -330,6 +416,14 @@ export default {
     },
     isFiltered(msg) {
       return msg == "bad" ? true : false;
+    },
+    selectMsg(chatting) {
+      this.isReply = true;
+      this.replyChat = chatting;
+    },
+    cancleReply() {
+      this.isReply = false;
+      this.replyChat = {};
     },
   },
 };
