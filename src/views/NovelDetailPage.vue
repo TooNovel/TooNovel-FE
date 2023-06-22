@@ -117,7 +117,7 @@
                   </div>
                 </div>
               </div>
-              <div class="row">
+              <div class="row" style="white-space: pre-line">
                 <p>{{ review.reviewContent }}</p>
               </div>
               <div class="row">
@@ -323,6 +323,14 @@ export default {
 <style scoped>
 @import "@/style/novel-detail.css";
 @import "@/style/loader.css";
+button {
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+  border-radius: 50%;
+  border: solid 2px white;
+  background-color: white;
+}
 #loading {
   height: 600px;
   display: flex;
