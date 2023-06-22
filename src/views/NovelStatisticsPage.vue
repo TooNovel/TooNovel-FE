@@ -2,16 +2,16 @@
   <div>
     <main style="margin-top: 3%">
       <MyPageNavbar></MyPageNavbar>
-      <div id="writerStatistics">
+      <div class="chart-wrap">
         <div v-if="reviews.length == 0">아직 통계가 없습니다.</div>
         <div v-else>
-          <div id="statistics1">
+          <div class="age-chart-container">
             연령대별 통계
-            <canvas ref="genderChart" width="400" height="400"></canvas>
+            <canvas ref="genderChart" width="400px" height="400px"></canvas>
           </div>
-          <div id="statistics1">
+          <div class="gender-chart-container">
             성별 통계
-            <canvas ref="ageChart" width="400" height="400"></canvas>
+            <canvas ref="ageChart" width="500px" height="500px"></canvas>
           </div>
         </div>
       </div>
@@ -94,9 +94,18 @@ import {
   CategoryScale,
   LinearScale,
   BarElement,
+  PieController,
+  ArcElement,
 } from "chart.js";
 
-Chart.register(BarController, CategoryScale, LinearScale, BarElement);
+Chart.register(
+  BarController,
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  PieController,
+  ArcElement
+);
 
 export default {
   name: "NovelDetailPage",
@@ -199,7 +208,7 @@ export default {
         },
       });
       this.ageChart = new Chart(ctx2, {
-        type: "bar",
+        type: "pie",
         data: {
           labels: ["남성", "여성"],
           datasets: [
@@ -216,17 +225,23 @@ export default {
           ],
         },
         options: {
-          responsive: false,
-          scales: {
-            y: {
-              type: "linear",
-              ticks: {
-                beginAtZero: true,
-                maxTicksLimit: 3,
-                callback: function (value) {
-                  return Math.floor(value);
-                },
-              },
+          responsive: true,
+          legend: {
+            position: "top",
+            fontColor: "black",
+            align: "center",
+            display: true,
+            fullWidth: true,
+            labels: {
+              fontColor: "rgb(0, 0, 0)",
+            },
+          },
+          plugins: {
+            labels: {
+              render: "value",
+              fontColor: "black",
+              fontSize: 15,
+              precision: 2,
             },
           },
         },
@@ -291,15 +306,23 @@ export default {
 </script>
 <style scoped>
 @import "@/style/novel-detail.css";
-
-#writerStatistics {
-  width: 800px;
-  display: inline;
+.chart-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100rem;
+  overflow: hidden;
+  margin-bottom: 50px;
 }
-#statistics1 {
-  width: 400px;
+.age-chart-container {
+  display: block;
+  float: left;
+  width: 50rem; /* 원하는 가로 크기 */
 }
-#statistics2 {
-  width: 400px;
+.gender-chart-container {
+  display: block;
+  float: left;
+  width: 50rem; /* 원하는 가로 크기 */
+  height: 20rem; /* 원하는 세로 크기 */
 }
 </style>
