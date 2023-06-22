@@ -39,7 +39,6 @@ export default {
     return {
       roomId: "", // 추후에 api 통신으로 받아올것
       user: {}, // userId, nickname...
-      chatRoomName: "",
       role: null,
     };
   },

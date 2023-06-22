@@ -9,7 +9,7 @@
             </div>
             <header class="col-10">
               <div class="row">
-                <div class="col-10">{{ this.nickname }}의 채팅방</div>
+                <div class="col-10">{{ this.chatRoomName }}</div>
               </div>
             </header>
           </div>
@@ -108,6 +108,7 @@ export default {
       replyState: false,
       date: null,
       loadChatLimiter: 0,
+      chatRoomName: null,
     };
   },
   async created() {
@@ -139,6 +140,10 @@ export default {
       setTimeout(() => {
         window.scrollTo(0, document.getElementById("contentWrap").scrollHeight);
       }, 100);
+
+      // 화면 상단 표시용
+      this.chatRoomName = this.$store.getters.getChatRoomName;
+      this.$store.commit("setChatRoomName", null);
     } catch (err) {
       console.log(err);
     }

@@ -105,6 +105,7 @@ export default {
   methods: {
     async ToChatting(res) {
       try {
+        this.$store.commit("setChatRoomName", res.chatRoomName);
         const roomId = res.chatRoomId;
         location.href = `/chatWindow/${roomId}`;
       } catch (err) {

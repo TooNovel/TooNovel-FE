@@ -80,6 +80,7 @@ export default {
   methods: {
     async ToMyFollwingChat(res) {
       try {
+        this.$store.commit("setChatRoomName", res.chatRoomName);
         const roomId = res.chatRoomId;
         location.href = `/chatWindow/${roomId}`;
       } catch (err) {
