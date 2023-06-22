@@ -229,7 +229,6 @@ export default {
 .info {
   background-color: white;
   text-align: center;
-  box-shadow: 2px 2px 10px 2px rgba(94, 92, 154, 0.2);
   border-radius: 30px;
   margin: 10px;
 }
