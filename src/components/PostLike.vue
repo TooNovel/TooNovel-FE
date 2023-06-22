@@ -84,4 +84,13 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+button {
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+  border-radius: 50%;
+  border: solid 2px white;
+  background-color: white;
+}
+</style>
