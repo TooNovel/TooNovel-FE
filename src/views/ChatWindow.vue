@@ -17,11 +17,19 @@
         <br />
         <div class="button-container">
           <button
+            v-if="loadChatLimiter < 31"
             class="w-btn-outline w-btn-indigo-outline"
             type="button"
             @click="loadChat()"
           >
             더보기
+          </button>
+          <button
+            v-if="loadChatLimiter >= 31"
+            class="w-btn-outline w-btn-indigo-outline"
+            type="button"
+          >
+            최근 30일까지의 채팅만 볼 수 있습니다.
           </button>
         </div>
         <div
@@ -30,32 +38,32 @@
           :key="index"
           ref="chatLog"
         >
+          <!-- 일반 채팅(답장이 아닌 채팅) -->
           <div v-if="chatting.replyId == null">
+            <!-- 보낸 사람 = 나 -->
             <div v-if="chatting.senderId == users.userId">
               <div class="myMsg">
                 <div class="msg">{{ chatting.message }}</div>
               </div>
             </div>
             <!-- 다른 사용자가 보낸 메세지 -->
-            <div v-else>
+            <div
+              v-if="
+                chatting.senderId != users.userId ||
+                (chatting.creator && chatting.senderId != users.userId)
+              "
+            >
               <div class="anotherMsg">
                 <span class="anotherName">{{ chatting.senderName }}</span>
-                <div
-                  v-if="!chatting.creator"
-                  :class="{ filtered: isFiltered(chatting.filterResult) }"
-                >
-                  <div class="msg" @click="cancleFilter(chatting.filterResult)">
+                <div :class="{ filtered: isFiltered(chatting.filterResult) }">
+                  <div class="msg" @click="cancleFilter(chatting)">
                     {{ chatting.message }}
                   </div>
                 </div>
-                <div v-else>
-                  <div class="msg">{{ chatting.message }}</div>
-                </div>
               </div>
             </div>
-            <!-- filtered 클래스에 블러 스타일 적용해주시면 됩니다 -->
           </div>
-          <!-- reply는 일단 스타일 적용 안했습니다 -->
+          <!-- 답장 -->
           <div class="chat reply" v-if="chatting.replyId != null">
             답장 : {{ chatting.replyMessage }}
           </div>
@@ -125,8 +133,8 @@ export default {
       // 웹소켓 연결
       this.connect();
 
-      // 오늘 채팅 불러오기
-      this.loadChat();
+      // 최근 일주일 채팅 불러오기
+      this.loadChatForAWeek();
 
       setTimeout(() => {
         window.scrollTo(0, document.getElementById("contentWrap").scrollHeight);
@@ -136,14 +144,47 @@ export default {
     }
   },
   methods: {
-    async cancleFilter(res) {
-      if (res == "bad") {
-        const ok = "ok";
-        this.isFiltered(ok);
-      }
+    async cancleFilter(chat) {
+      chat.filterResult = "ok";
     },
     async toChatRoom() {
       location.href = "/chatRoom";
+    },
+    async loadChatForAWeek() {
+      const option = {
+        headers: {
+          Authorization: "Bearer " + this.$getAccessToken(),
+        },
+      };
+
+      // chatting 요청
+      const chatRes = await axios.get(
+        `${process.env.VUE_APP_API_URL}/chat/${this.roomId}`,
+        option
+      );
+      const tempChatList = chatRes.data.filter((chat) => {
+        if (
+          chat.senderId == this.users.userId || // 내가 보낸 채팅은 보이게
+          this.users.role == "AUTHOR" || // 내가 작가면 전부 보이게
+          chat.creator // 작가의 채팅도 보이게
+        )
+          return chat;
+      });
+
+      // reply 요청
+      const replyRes = await axios.get(
+        `${process.env.VUE_APP_API_URL}/chat/reply/${this.roomId}`,
+        option
+      );
+      console.log(this.date.getDate());
+      console.log(replyRes.data);
+
+      // 데이터 세팅
+      this.chattingList = this.chattingList.concat(tempChatList);
+      this.chattingList = this.chattingList.concat(replyRes.data);
+      this.date.setDate(this.date.getDate() - 8);
+
+      this.loadChatLimiter = this.loadChatLimiter + 7;
     },
     async loadChat() {
       try {
@@ -171,8 +212,14 @@ export default {
             }?date=${this.date.getFullYear()}-${month}-${day}`,
             option
           );
+          console.log(chatRes.data);
           const tempChatList = chatRes.data.filter((chat) => {
-            if (chat.senderId == this.users.userId) return chat;
+            if (
+              chat.senderId == this.users.userId || // 내가 보낸 채팅은 보이게
+              this.users.role == "AUTHOR" || // 내가 작가면 전부 보이게
+              chat.creator // 작가의 채팅도 보이게
+            )
+              return chat;
           });
 
           // reply 요청
@@ -194,6 +241,7 @@ export default {
 
           // 채팅 목록의 길이가 변화하지 않았다면(= 해당 날짜의 채팅이 없다면) while 반복
           if (beforeChatLength == this.chattingList.length) {
+            await new Promise((resolve) => setTimeout(resolve, 100)); // 0.1초 동안 대기
             continue;
           } else {
             // 해당 날짜의 채팅이 조회되었으면 탈출
@@ -220,7 +268,12 @@ export default {
             console.log("room's tick", tick);
             const chatting = JSON.parse(tick.body);
             // 채팅방에서 수신된 메시지 처리. 정상 작동
-            this.chattingList.unshift(chatting);
+            if (
+              chatting.senderId == this.users.userId || // 내가 보낸 채팅은 보이게
+              this.users.role == "AUTHOR" || // 내가 작가면 전부 보이게
+              chatting.creator // 작가의 채팅도 보이게
+            )
+              this.chattingList.unshift(chatting);
             setTimeout(() => {
               window.scrollTo(
                 0,
@@ -271,7 +324,6 @@ export default {
       });
     },
     isFiltered(msg) {
-      console.log(msg);
       return msg == "bad" ? true : false;
     },
   },
