@@ -5,7 +5,8 @@
       <h4>프로필 수정</h4>
       <div>
         <label for="file">
-          <div class="btn-upload">이미지:<img :src="imageUrl" /></div>
+          <div class="btn-upload"><img :src="imageUrl" /></div>
+          <label>⬆️클릭해서 이미지를 넣어주세요!</label>
         </label>
         <input id="file" type="file" ref="fileInput" accept="image/*" />
       </div>
@@ -110,6 +111,7 @@ export default {
   align-items: center;
   justify-content: center;
   text-align: center;
+  margin: 40px;
 }
 .img-box {
   border-radius: 100px;
