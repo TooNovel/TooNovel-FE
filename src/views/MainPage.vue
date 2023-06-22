@@ -202,9 +202,22 @@ export default {
           {},
           option
         );
+        alert("가입이 완료됐습니다!");
+        this.ToChatRoom();
       } catch (err) {
-        console.log(err);
+        if (err.response.data.code == "H004") {
+          alert(err.response.data.message);
+          this.ToChatRoom();
+        } else if (err.response.data.code == "A002") {
+          alert("로그인이 필요합니다.");
+          this.$router.push("/login");
+        } else if (err.response.data.code == "H002") {
+          alert(err.response.data.message);
+        }
       }
+    },
+    async ToChatRoom() {
+      this.$router.push({ name: "ChatRoom" });
     },
   },
 };
