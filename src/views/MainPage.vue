@@ -242,6 +242,11 @@ h5 {
   font-family: "Hanna";
 }
 
+.carousel-container {
+  height: 300px;
+  overflow: revert;
+}
+
 .carousel-container .carousel-3d-slide .userimg {
   margin-top: 15px;
   border-radius: 50%;
@@ -282,14 +287,11 @@ h5 {
   margin: 2px 0;
 }
 
-.carousel-container {
-  height: 300px;
-}
 .carousel-3d-slider > div {
   width: 100%;
   height: 100%;
   border: none;
-  box-shadow: 0 0 40px 0 rgba(94, 92, 154, 0.06);
+  box-shadow: 0 0 20px 0 rgba(94, 92, 154, 0.2);
   border-radius: 10px;
   font-size: 14px;
 }
