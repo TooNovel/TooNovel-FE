@@ -242,8 +242,7 @@ h5 {
   font-family: "Hanna";
 }
 
-.carousel-container {
-  height: 300px;
+.carousel-3d-container {
   overflow: revert;
 }
 
