@@ -58,12 +58,12 @@
               "
             >
               <img :src="author.imageUrl" class="myImg" />
-              <br />
               <h5 style="margin-bottom: 10px">{{ author.nickname }}</h5>
               <button
                 class="w-btn-outline w-btn-green-outline"
                 type="button"
                 @click="joinRoom(author.userId)"
+                id="searchBtn"
               >
                 참여
               </button>
@@ -93,7 +93,7 @@
                 background-color: whitesmoke;
               "
             >
-              <img :src="room.imageUrl" height="200px" />
+              <img :src="room.imageUrl" class="myImg" />
               <h5 style="margin-bottom: 10px">{{ room.nickname }}</h5>
               <button
                 class="w-btn-outline w-btn-green-outline"
@@ -134,10 +134,12 @@
               <b-card-img
                 :src="author.imageUrl"
                 class="card-image"
-                style="margin-bottom: 20px"
               ></b-card-img>
               <b-card-title
-                ><h5 class="text-center">
+                ><h5
+                  class="text-center"
+                  style="margin-bottom: 10px; margin-top: 10px"
+                >
                   {{ author.nickname }}
                 </h5></b-card-title
               >
@@ -306,12 +308,20 @@ export default {
 <style scoped>
 @import "@/style/button.css";
 
-.myImg {
+.card-image {
+  border-radius: 50%;
+  width: 150px;
   height: 150px;
+  object-fit: cover;
+  margin-bottom: 10px;
+  margin-top: 5px;
 }
-
-img {
-  border-radius: 12px;
+.carousel-container .carousel-3d-slide .myImg {
+  border-radius: 50%;
+  width: 150px;
+  height: 150px;
+  object-fit: cover;
+  margin-bottom: 15px;
 }
 
 h1,
@@ -333,13 +343,6 @@ button {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-}
-
-img {
-  border-radius: 50%;
-  width: 150px;
-  height: 150px;
-  object-fit: cover;
 }
 
 .author-list-box {

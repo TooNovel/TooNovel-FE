@@ -65,14 +65,23 @@
           v-for="(author, index) in authorList"
           :key="index"
           :index="index"
-          style="width: 250px; height: 350px"
+          style="
+            width: 250px;
+            height: 270px;
+            border-radius: 12px;
+            background-color: whitesmoke;
+          "
         >
-          <img :src="author.imageUrl" height="200px" class="userimg" />
-          {{ author.nickname }}
-          <br />
-          <b-button variant="primary" @click="joinRoom(author.userId)">
-            채팅방 참여
-          </b-button>
+          <img :src="author.imageUrl" class="myImg" />
+          <h5 style="margin-bottom: 10px">{{ author.nickname }}</h5>
+          <button
+            class="w-btn-outline w-btn-green-outline"
+            type="button"
+            @click="joinRoom(author.userId)"
+            id="searchBtn"
+          >
+            참여
+          </button>
         </slide>
       </carousel-3d>
     </div>
@@ -226,7 +235,8 @@ export default {
 #products {
   margin: 5%;
 }
-h3 {
+h3,
+h5 {
   font-family: "Hanna";
 }
 
@@ -236,6 +246,15 @@ h3 {
   width: 100px;
   height: 100px;
   object-fit: cover;
+}
+
+.carousel-container .carousel-3d-slide .myImg {
+  margin-top: 15px;
+  border-radius: 50%;
+  width: 150px;
+  height: 150px;
+  object-fit: cover;
+  margin-bottom: 15px;
 }
 
 .carousel-container .carousel-3d-slide {
