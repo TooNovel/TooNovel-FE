@@ -251,16 +251,7 @@ h5 {
   padding-top: 5px;
 }
 
-.carousel-container .carousel-3d-slide .myImg {
-  margin-top: 15px;
-  border-radius: 50%;
-  width: 150px;
-  height: 150px;
-  object-fit: cover;
-  margin-bottom: 15px;
-}
-
-.carousel-container .carousel-3d-slide .myImg {
+.myImg {
   margin-top: 15px;
   border-radius: 50%;
   width: 150px;
