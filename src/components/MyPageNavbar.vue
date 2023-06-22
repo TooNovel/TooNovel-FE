@@ -27,6 +27,7 @@
           </li>
         </div>
         <div v-if="role == 'ADMIN'">
+          <li><button @click="mypage()">프로필</button></li>
           <li>
             <button @click="adminAuthor()">작가 신청 관리</button>
           </li>
