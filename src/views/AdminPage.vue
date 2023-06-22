@@ -163,7 +163,7 @@ export default {
               callbacks: {
                 label: (context) => {
                   const data = context.parsed.y;
-                  return `데이터 개수 : ${data}`;
+                  return `추가된 리뷰 개수 : ${data}`;
                 },
               },
             },
@@ -210,7 +210,7 @@ export default {
               callbacks: {
                 label: (context) => {
                   const data = context.parsed.y;
-                  return `데이터 개수 : ${data}`;
+                  return `추가된 웹소설 개수 : ${data}`;
                 },
               },
             },
