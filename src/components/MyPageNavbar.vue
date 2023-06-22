@@ -1,29 +1,45 @@
 <template>
-  <div id="myPage">
-    <div>
+  <div class="mypage-nav">
+    <div class="ul-nav">
       <ul>
         <div v-if="role == 'USER'">
-          <li><b-button @click="mypage()">프로필</b-button></li>
-          <li><b-button @click="getLikeNovel()">좋아요 누른 작품</b-button></li>
-          <li><b-button @click="getMyReview()">내가 쓴 리뷰</b-button></li>
-          <li><b-button @click="enrollAuthor()">작가신청</b-button></li>
+          <li><button @click="mypage()">프로필</button></li>
+          <li>
+            <button @click="getLikeNovel()">좋아요 한 작품</button>
+          </li>
+          <li>
+            <button @click="getMyReview()">작성한 리뷰</button>
+          </li>
+          <li>
+            <button @click="enrollAuthor()">작가 신청</button>
+          </li>
         </div>
         <div v-if="role == 'AUTHOR'">
-          <li><b-button @click="mypage()">프로필</b-button></li>
-          <li><b-button @click="getLikeNovel()">좋아요 누른 작품</b-button></li>
-          <li><b-button @click="getMyReview()">내가 쓴 리뷰</b-button></li>
-          <li><b-button @click="getNovelByAuthor()">내작품보기</b-button></li>
+          <li><button @click="mypage()">프로필</button></li>
+          <li>
+            <button @click="getLikeNovel()">좋아요 한 작품</button>
+          </li>
+          <li>
+            <button @click="getMyReview()">작성한 리뷰</button>
+          </li>
+          <li>
+            <button @click="getNovelByAuthor()">내 작품</button>
+          </li>
         </div>
         <div v-if="role == 'ADMIN'">
-          <li><b-button @click="adminAuthor()">작가 신청 관리</b-button></li>
-          <li><b-button @click="adminStastistic()">통계 조회</b-button></li>
           <li>
-            <b-button @click="adminModelUpdate()">모델 업데이트</b-button>
+            <button @click="adminAuthor()">작가 신청 관리</button>
+          </li>
+          <li>
+            <button @click="adminStastistic()">통계 조회</button>
+          </li>
+          <li>
+            <button @click="adminModelUpdate()">모델 업데이트</button>
           </li>
         </div>
       </ul>
+      <hr />
     </div>
-    <hr />
   </div>
 </template>
 
@@ -192,3 +208,28 @@ export default {
   },
 };
 </script>
+<style scoped>
+.ul-nav > ul > div {
+  display: flex;
+  justify-content: center;
+  text-align: center;
+}
+li {
+  margin: 10px;
+}
+
+ul {
+  list-style-type: none;
+}
+button {
+  cursor: pointer;
+  border-radius: 10px;
+  border: 2px solid #93bb91;
+  background-color: white;
+  box-shadow: 1px 1px 1px 1px #a9eaa6;
+  font-family: "Hanna";
+}
+button:hover {
+  background-color: #a9eaa6;
+}
+</style>

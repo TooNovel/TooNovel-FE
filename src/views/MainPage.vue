@@ -242,8 +242,7 @@ h5 {
   font-family: "Hanna";
 }
 
-.carousel-container {
-  height: 300px;
+.carousel-3d-container {
   overflow: revert;
 }
 
@@ -274,6 +273,10 @@ h5 {
   justify-content: space-around;
 }
 
+.carousel-3d-slide {
+  box-shadow: 5px 5px 20px 5px rgba(94, 92, 154, 0.2);
+}
+
 .review-form {
   text-align: center;
   padding: 5px 10px;
@@ -291,7 +294,6 @@ h5 {
   width: 100%;
   height: 100%;
   border: none;
-  box-shadow: 0 0 20px 0 rgba(94, 92, 154, 0.2);
   border-radius: 10px;
   font-size: 14px;
 }

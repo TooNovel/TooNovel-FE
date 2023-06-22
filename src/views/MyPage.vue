@@ -1,27 +1,30 @@
 <template>
-  <div id="myPage">
+  <div>
     <MyPageNavbar></MyPageNavbar>
-    <hr />
-    <div>
-      <label>이미지</label>
-      <div>:<img :src="imageUrl" /></div>
-      <input type="file" ref="fileInput" accept="image/*" />
+    <div class="mypage">
+      <h4>프로필 수정</h4>
+      <div>
+        <label for="file">
+          <div class="btn-upload"><img :src="imageUrl" /></div>
+          <label>⬆️클릭해서 이미지를 넣어주세요!</label>
+        </label>
+        <input id="file" type="file" ref="fileInput" accept="image/*" />
+      </div>
+      <div class="nick-box">
+        <label>닉네임</label>
+        <input type="text" v-model="nickname" />
+      </div>
+      <div class="birth-box">
+        <label>생년월일</label>
+        <input type="text" v-model="birth" readonly disabled />
+      </div>
+      <div class="gender-box">
+        <label>성별</label>
+        <input type="text" v-model="gender" readonly disabled />
+      </div>
+      <button>회원탈퇴</button>
+      <button @click="uploadImage">회원수정</button>
     </div>
-    <div>
-      <label>닉네임</label>
-      <input type="text" v-model="nickname" />
-    </div>
-    <div>
-      <label>생년월일</label>
-      <input type="text" v-model="birth" readonly />
-    </div>
-    <div>
-      <label>성별</label>
-      <input type="text" v-model="gender" readonly />
-    </div>
-
-    <button>회원탈퇴</button>
-    <button @click="uploadImage">회원수정</button>
   </div>
 </template>
 
@@ -99,3 +102,72 @@ export default {
   components: { MyPageNavbar },
 };
 </script>
+
+<style scoped>
+* {
+  font-family: "Hanna";
+}
+.mypage {
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  margin: 40px;
+}
+.img-box {
+  border-radius: 100px;
+  border-radius: 10px solid black;
+  margin: 0 auto;
+  width: 10rem;
+  height: 10rem;
+  margin-bottom: 10px;
+  box-shadow: 2px 2px 2px 2px #a9eaa6;
+}
+.gender-box {
+  margin: 10px;
+}
+.birth-box {
+  margin: 10px;
+}
+.nick-box {
+  margin: 10px;
+}
+input {
+  margin-left: 5px;
+  border: 0px;
+  border-bottom: 2px solid #a9eaa6;
+  border-radius: 30px;
+  padding-left: 10px;
+}
+
+button {
+  cursor: pointer;
+  border-radius: 10px;
+  border: 2px solid #93bb91;
+  background-color: white;
+  box-shadow: 1px 1px 1px 1px #a9eaa6;
+  font-family: "Hanna";
+  margin-left: 20px;
+}
+
+button:hover {
+  background-color: #a9eaa6;
+}
+
+.btn-upload {
+  width: 200px;
+  height: 200px;
+  background: #fff;
+  border: 1px solid #a9eaa6;
+  border-radius: 100px;
+  box-shadow: 1px 1px 1px 1px #a9eaa6;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#file {
+  display: none;
+}
+</style>
