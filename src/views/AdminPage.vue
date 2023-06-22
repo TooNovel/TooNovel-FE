@@ -3,7 +3,7 @@
     <MyPageNavbar></MyPageNavbar>
     <div class="info">
       <h2>
-        기본 통계데이터는 저번주부터 오늘까지 총 1주일간의데이터를 제공합니다.
+        기본 통계데이터는 지난주부터 오늘까지 총 1주일간의 데이터를 제공합니다.
       </h2>
     </div>
     <div class="review-box">
@@ -11,6 +11,7 @@
         <h1>일별 리뷰 데이터</h1>
         <input type="date" id="start-date" v-model="reviewStartDate" /> ~
         <input type="date" id="end-date" v-model="reviewEndDate" />
+        <br />
         <button class="date-btn" @click="reviewDate()">날짜 선택</button>
       </div>
       <div class="chart-container">
@@ -22,6 +23,7 @@
         <h1>일별 작품 데이터</h1>
         <input type="date" id="start-date" v-model="novelStartDate" /> ~
         <input type="date" id="end-date" v-model="novelEndDate" />
+        <br />
         <button class="date-btn" @click="novelDate()">날짜 선택</button>
       </div>
       <div class="chart-container">
@@ -226,6 +228,8 @@ export default {
 }
 .info {
   background-color: white;
+  text-align: center;
+  box-shadow: 2px 2px 10px 2px rgba(94, 92, 154, 0.2);
   border-radius: 30px;
   margin: 10px;
 }
@@ -237,10 +241,12 @@ export default {
 .novel-box {
   background-color: white;
   border-radius: 30px;
+  margin: 10px;
   margin-top: 100px;
 }
 .chart-container {
-  background-color: rgb(182, 224, 186);
+  background-color: white;
+  box-shadow: 5px 5px 20px 5px rgba(94, 92, 154, 0.2);
   border-radius: 20px;
   height: 500px;
   margin-top: 70px;
@@ -256,7 +262,7 @@ export default {
   background-color: white;
   box-shadow: 1px 1px 1px 1px #a9eaa6;
   font-family: "Hanna";
-  margin-left: 20px;
+  margin-top: 10px;
 }
 
 .date-btn:hover {
