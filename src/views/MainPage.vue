@@ -243,7 +243,7 @@ h5 {
 }
 
 .carousel-3d-container {
-  overflow: revert;
+  overflow: revert !important;
 }
 
 .carousel-container .carousel-3d-slide .userimg {

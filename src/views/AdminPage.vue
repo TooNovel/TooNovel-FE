@@ -3,35 +3,31 @@
     <MyPageNavbar></MyPageNavbar>
     <div class="info">
       <h2>
-        기본 통계데이터는 저번주부터 오늘까지 총 1주일간의데이터를 제공합니다.
+        기본 통계데이터는 지난주부터 오늘까지 총 1주일간의 데이터를 제공합니다.
       </h2>
     </div>
     <div class="review-box">
-      <div>
-        <h2>리뷰 데이터 조회 날짜 선택</h2>
-        <input type="date" id="start-date" v-model="reviewStartDate" />
-        <br />
+      <div class="date-box">
+        <h1>일별 리뷰 데이터</h1>
+        <input type="date" id="start-date" v-model="reviewStartDate" /> ~
         <input type="date" id="end-date" v-model="reviewEndDate" />
         <br />
-        <button @click="reviewDate()">날짜 선택</button>
+        <button class="date-btn" @click="reviewDate()">날짜 선택</button>
       </div>
       <div class="chart-container">
-        <h1>일별 리뷰 데이터</h1>
-        <canvas ref="reviewChart" width="200"></canvas>
+        <canvas ref="reviewChart"></canvas>
       </div>
     </div>
     <div class="novel-box">
-      <div>
-        <h2>웹소설 데이터 조회 날짜 선택</h2>
-        <input type="date" id="start-date" v-model="novelStartDate" />
-        <br />
+      <div class="date-box">
+        <h1>일별 작품 데이터</h1>
+        <input type="date" id="start-date" v-model="novelStartDate" /> ~
         <input type="date" id="end-date" v-model="novelEndDate" />
         <br />
-        <button @click="novelDate()">날짜 선택</button>
+        <button class="date-btn" @click="novelDate()">날짜 선택</button>
       </div>
       <div class="chart-container">
-        <h1>일별 작품 데이터</h1>
-        <canvas ref="novelChart" width="200"></canvas>
+        <canvas ref="novelChart"></canvas>
       </div>
     </div>
   </div>
@@ -147,8 +143,8 @@ export default {
               borderColor: "red",
               backgroundColor: "rgba(255, 0, 0, 0.5)",
               pointStyle: "circle",
-              pointRadius: 10,
-              pointHoverRadius: 15,
+              pointRadius: 5,
+              pointHoverRadius: 10,
             },
           ],
         },
@@ -193,8 +189,8 @@ export default {
               borderColor: "red",
               backgroundColor: "rgba(255, 0, 0, 0.5)",
               pointStyle: "circle",
-              pointRadius: 10,
-              pointHoverRadius: 15,
+              pointRadius: 5,
+              pointHoverRadius: 10,
             },
           ],
         },
@@ -227,8 +223,12 @@ export default {
 };
 </script>
 <style scope>
+* {
+  font-family: "Hanna";
+}
 .info {
   background-color: white;
+  text-align: center;
   border-radius: 30px;
   margin: 10px;
 }
@@ -240,11 +240,31 @@ export default {
 .novel-box {
   background-color: white;
   border-radius: 30px;
+  margin: 10px;
   margin-top: 100px;
 }
 .chart-container {
-  background-color: rgb(133, 185, 138);
-  border-radius: 30px;
+  background-color: white;
+  box-shadow: 5px 5px 20px 5px rgba(94, 92, 154, 0.2);
+  border-radius: 20px;
+  height: 500px;
   margin-top: 70px;
+}
+
+.date-box {
+  float: left;
+}
+
+.date-btn {
+  cursor: pointer;
+  border: 2px solid #93bb91;
+  background-color: white;
+  box-shadow: 1px 1px 1px 1px #a9eaa6;
+  font-family: "Hanna";
+  margin-top: 10px;
+}
+
+.date-btn:hover {
+  background-color: #a9eaa6;
 }
 </style>
