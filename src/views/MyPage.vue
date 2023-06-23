@@ -5,10 +5,16 @@
       <h4>프로필 수정</h4>
       <div>
         <label for="file">
-          <div class="btn-upload"><img :src="imageUrl" class="img-box" /></div>
+          <div class="btn-upload"><img :src="imageUrl" id="img-box" /></div>
           <label>⬆️클릭해서 이미지를 넣어주세요!</label>
         </label>
-        <input id="file" type="file" ref="fileInput" accept="image/*" />
+        <input
+          id="file"
+          type="file"
+          ref="fileInput"
+          accept="image/*"
+          @change="getFileName($event.target.files)"
+        />
       </div>
       <div class="nick-box">
         <label>닉네임</label>
@@ -40,6 +46,8 @@ export default {
       gender: "",
       imageUrl: "",
       birth: "",
+      fileName: "",
+      beforeName: "",
     };
   },
   methods: {
@@ -47,35 +55,79 @@ export default {
       event.target.src =
         "https://via.placeholder.com/600x600.png?text=No+Image";
     },
-    async uploadImage() {
-      try {
-        const res = await axios.get(`${process.env.VUE_APP_API_URL}/aws/s3`);
-        const preSignedUrl = res.data.preSignedUrl;
-        const encodedFileName = res.data.encodedFileName;
-        try {
-          const fileInput = this.$refs.fileInput;
-          const file = fileInput.files[0];
-          await axios.put(preSignedUrl, file);
-          const uploadedUrl = `${process.env.VUE_APP_S3_PATH}/${encodedFileName}`;
-          this.imageUrl = uploadedUrl;
-        } catch (error) {
-          console.error(error);
-        }
-        const option = {
-          headers: {
-            Authorization: "Bearer " + this.$getAccessToken(),
-          },
+    async getFileName(files) {
+      this.fileName = files[0];
+      await this.base64(this.fileName);
+    },
+    base64(file) {
+      return new Promise((resolve) => {
+        let success = new FileReader();
+        success.onload = (e) => {
+          resolve(e.target.result);
+          const previewImage = document.getElementById("img-box");
+          previewImage.src = e.target.result;
         };
-        await axios.patch(
-          `${process.env.VUE_APP_API_URL}/user/me`,
-          {
-            nickname: this.nickname,
-            imageUrl: this.imageUrl,
-          },
-          option
-        );
-      } catch (err) {
-        console.error(err);
+        success.readAsDataURL(file);
+      });
+    },
+    async uploadImage() {
+      const imageUrl = document.getElementById("img-box");
+      if (this.beforeName === this.nickname && imageUrl.src === this.imageUrl) {
+        alert("수정 후 회원수정 버튼을 눌러주세요^^");
+        return;
+      }
+      if (imageUrl.src === this.imageUrl) {
+        try {
+          const option = {
+            headers: {
+              Authorization: "Bearer " + this.$getAccessToken(),
+            },
+          };
+          await axios.patch(
+            `${process.env.VUE_APP_API_URL}/user/me`,
+            {
+              nickname: this.nickname,
+              imageUrl: this.imageUrl,
+            },
+            option
+          );
+          this.beforeName = this.nickname;
+          alert("회원 수정이 완료되었습니다.");
+        } catch (err) {
+          console.log(err);
+        }
+      } else {
+        try {
+          const res = await axios.get(`${process.env.VUE_APP_API_URL}/aws/s3`);
+          const preSignedUrl = res.data.preSignedUrl;
+          const encodedFileName = res.data.encodedFileName;
+          try {
+            const fileInput = this.$refs.fileInput;
+            const file = fileInput.files[0];
+            await axios.put(preSignedUrl, file);
+            const uploadedUrl = `${process.env.VUE_APP_S3_PATH}/${encodedFileName}`;
+            this.imageUrl = uploadedUrl;
+          } catch (error) {
+            console.error(error);
+          }
+          const option = {
+            headers: {
+              Authorization: "Bearer " + this.$getAccessToken(),
+            },
+          };
+          await axios.patch(
+            `${process.env.VUE_APP_API_URL}/user/me`,
+            {
+              nickname: this.nickname,
+              imageUrl: this.imageUrl,
+            },
+            option
+          );
+          this.beforeName = this.nickname;
+          alert("회원 수정이 완료되었습니다.");
+        } catch (err) {
+          console.error(err);
+        }
       }
     },
   },
@@ -90,8 +142,8 @@ export default {
         `${process.env.VUE_APP_API_URL}/user/me`,
         option
       );
-      console.log(res);
       this.nickname = res.data.nickname;
+      this.beforeName = res.data.nickname;
       this.gender = res.data.gender;
       this.imageUrl = res.data.imageUrl;
       this.birth = res.data.birth;
@@ -113,7 +165,7 @@ export default {
   text-align: center;
   margin: 40px;
 }
-.img-box {
+#img-box {
   border-radius: 100px;
   border-radius: 10px solid black;
   margin: 0 auto;
