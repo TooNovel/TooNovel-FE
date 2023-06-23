@@ -70,34 +70,57 @@ export default {
       });
     },
     async uploadImage() {
-      try {
-        const res = await axios.get(`${process.env.VUE_APP_API_URL}/aws/s3`);
-        const preSignedUrl = res.data.preSignedUrl;
-        const encodedFileName = res.data.encodedFileName;
+      const imageUrl = document.getElementById("img-box");
+      if (imageUrl.src === this.imageUrl) {
         try {
-          const fileInput = this.$refs.fileInput;
-          const file = fileInput.files[0];
-          await axios.put(preSignedUrl, file);
-          const uploadedUrl = `${process.env.VUE_APP_S3_PATH}/${encodedFileName}`;
-          this.imageUrl = uploadedUrl;
-        } catch (error) {
-          console.error(error);
+          const option = {
+            headers: {
+              Authorization: "Bearer " + this.$getAccessToken(),
+            },
+          };
+          await axios.patch(
+            `${process.env.VUE_APP_API_URL}/user/me`,
+            {
+              nickname: this.nickname,
+              imageUrl: this.imageUrl,
+            },
+            option
+          );
+          alert("회원 수정이 완료되었습니다.");
+        } catch (err) {
+          console.log(err);
         }
-        const option = {
-          headers: {
-            Authorization: "Bearer " + this.$getAccessToken(),
-          },
-        };
-        await axios.patch(
-          `${process.env.VUE_APP_API_URL}/user/me`,
-          {
-            nickname: this.nickname,
-            imageUrl: this.imageUrl,
-          },
-          option
-        );
-      } catch (err) {
-        console.error(err);
+      } else {
+        try {
+          const res = await axios.get(`${process.env.VUE_APP_API_URL}/aws/s3`);
+          const preSignedUrl = res.data.preSignedUrl;
+          const encodedFileName = res.data.encodedFileName;
+          try {
+            const fileInput = this.$refs.fileInput;
+            const file = fileInput.files[0];
+            await axios.put(preSignedUrl, file);
+            const uploadedUrl = `${process.env.VUE_APP_S3_PATH}/${encodedFileName}`;
+            this.imageUrl = uploadedUrl;
+          } catch (error) {
+            console.error(error);
+          }
+          const option = {
+            headers: {
+              Authorization: "Bearer " + this.$getAccessToken(),
+            },
+          };
+          await axios.patch(
+            `${process.env.VUE_APP_API_URL}/user/me`,
+            {
+              nickname: this.nickname,
+              imageUrl: this.imageUrl,
+            },
+            option
+          );
+          alert("회원 수정이 완료되었습니다.");
+        } catch (err) {
+          console.error(err);
+        }
       }
     },
   },
