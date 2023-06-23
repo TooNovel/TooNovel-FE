@@ -122,7 +122,7 @@
                         </div>
                       </div>
                       <div id="profile_name">
-                        <b>{{ review.nickname }}</b>
+                        <p>{{ review.nickname }}</p>
                       </div>
                     </div>
                   </div>
@@ -139,9 +139,11 @@
                               class="col-1"
                               id="deleteBtn"
                             >
-                              <div style="font-size: 1rem; margin-right: 5px">
+                              <div>
                                 <b-icon
-                                  icon="x-circle"
+                                  font-scale="1.5"
+                                  icon="trash"
+                                  aria-hidden="true"
                                   @click="deleteReview(review.reviewId)"
                                 ></b-icon>
                               </div>
@@ -162,7 +164,7 @@
                       <div class="review-block">
                         <div class="col">
                           <div class="row">
-                            <div class="col-10" id="createDate">
+                            <div class="col-10" id="star-ragting">
                               <star-rating
                                 :border-width="4"
                                 border-color="#d8d8d8"
@@ -408,14 +410,30 @@ body {
   width: 100%;
   height: 100%;
 }
+#star-ragting {
+  display: flex;
+  justify-content: flex-end;
+}
+
+#createDate {
+  color: gray;
+  padding-right: 5%;
+}
+
+#deleteBtn {
+  padding-right: 5%;
+}
+
 #createDate,
 #deleteBtn {
   display: flex;
   align-items: center;
   justify-content: flex-end;
+  margin-top: 10px;
 }
 #profile_name {
-  margin-left: 10px;
+  margin-left: 20px;
+  margin-top: 10px;
 }
 #image {
   box-shadow: 1px 1px 10px 0px rgba(94, 92, 154, 0.2);
@@ -423,7 +441,7 @@ body {
 .reviewBox {
   margin-top: 10px;
   box-shadow: 1px 1px 10px 0px rgba(94, 92, 154, 0.2);
-  padding: 3%;
+  padding: 2%;
 }
 .review-block {
   display: flex;
@@ -436,12 +454,15 @@ body {
   justify-content: flex-end;
 }
 #reviewContent {
+  white-space: pre-line;
+  font-size: 20px;
   margin: 2%;
 }
 #imageDiv {
   width: 300px;
 }
 #novelContent {
+  font-size: 20px;
   background-color: white;
   border-radius: 20px;
   justify-content: center;
