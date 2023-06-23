@@ -77,7 +77,7 @@
                 <div class="reply-msg-sendername">{{ chatting.userName }}</div>
                 <div class="reply-msg">{{ chatting.userMessage }}</div>
                 <hr />
-                답장 : {{ chatting.replyMessage }}
+                {{ chatting.replyMessage }}
               </div>
             </div>
             <!-- 내가 채팅방 주인이 아니면 -->
@@ -189,7 +189,7 @@ export default {
   },
   methods: {
     async cancleFilter(chat) {
-      chat.filterResult = "ok";
+      chat.filterResult = "open";
     },
     async toChatRoom() {
       location.href = "/chatRoom";
@@ -441,8 +441,19 @@ export default {
       return msg == "bad" ? true : false;
     },
     selectMsg(chatting) {
-      this.isReply = true;
-      this.replyChat = chatting;
+      if (chatting.filterResult != "ok") {
+        if (
+          confirm(
+            "해당 메세지는 다른 사용자에게 불쾌감을 줄 수 있습니다. 진행하시겠습니까?"
+          )
+        ) {
+          this.isReply = true;
+          this.replyChat = chatting;
+        }
+      } else {
+        this.isReply = true;
+        this.replyChat = chatting;
+      }
     },
     cancleReply() {
       this.isReply = false;
