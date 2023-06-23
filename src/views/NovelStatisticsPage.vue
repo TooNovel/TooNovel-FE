@@ -34,20 +34,24 @@ import {
   Title,
   Tooltip,
   Legend,
-  BarElement,
-  CategoryScale,
-  LinearScale,
   ArcElement,
+  CategoryScale,
+  BarElement,
+  LinearScale,
+  BarController,
+  PieController,
 } from "chart.js";
 
 Chart.register(
   Title,
   Tooltip,
   Legend,
-  BarElement,
-  CategoryScale,
   ArcElement,
-  LinearScale
+  CategoryScale,
+  BarElement,
+  LinearScale,
+  BarController,
+  PieController
 );
 
 export default {
