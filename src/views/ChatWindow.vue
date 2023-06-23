@@ -62,7 +62,7 @@
                   <!-- 위 div에 마우스 호버되면 아래 span이 보이도록 구상중 -->
                   <span
                     @click="selectMsg(chatting)"
-                    v-if="chatOwnerNickname == nickname"
+                    v-if="chatOwner == users.userId"
                     >답장</span
                   >
                 </div>
@@ -72,7 +72,7 @@
           <!-- 답장 -->
           <div v-if="chatting.replyId != null">
             <!-- 내가 채팅방 주인이면 -->
-            <div class="myMsg" v-if="chatOwnerNickname == nickname">
+            <div class="myMsg" v-if="chatOwner == users.userId">
               <div class="msg">
                 <div class="reply-msg-sendername">{{ chatting.userName }}</div>
                 <div class="reply-msg">{{ chatting.userMessage }}</div>
@@ -81,7 +81,7 @@
               </div>
             </div>
             <!-- 내가 채팅방 주인이 아니면 -->
-            <div class="anotherMsg" v-if="chatOwnerNickname != nickname">
+            <div class="anotherMsg" v-if="chatOwner != users.userId">
               <span class="anotherName">{{ chatting.senderName }}</span>
               <div class="msg">
                 <div class="reply-msg-sendername">{{ chatting.userName }}</div>
@@ -139,15 +139,15 @@ export default {
       chatRoomName: null,
       isReply: false,
       replyChat: {},
-      chatOwnerNickname: null,
+      chatOwner: null,
     };
   },
   async created() {
     try {
       // 비정상적인 요청
-      this.chatOwnerNickname = await this.$store.getters.getChatOwnerNickname;
+      this.chatOwner = await this.$store.getters.getChatOwner;
       this.chatRoomName = await this.$store.getters.getChatRoomName;
-      if (this.chatOwnerNickname == null || this.chatRoomName == null) {
+      if (this.chatOwner == null || this.chatRoomName == null) {
         this.$router.push({ name: "ChatRoom" });
         return;
       }
@@ -169,7 +169,7 @@ export default {
         option
       );
       this.nickname = user.data.nickname;
-      this.$store.commit("setChatOwnerNickname", null);
+      this.$store.commit("setChatOwner", null);
 
       // 웹소켓 연결
       this.connect();

@@ -106,7 +106,7 @@ export default {
     async ToChatting(res) {
       try {
         this.$store.commit("setChatRoomName", res.chatRoomName);
-        this.$store.commit("setChatOwnerNickname", res.nickname);
+        this.$store.commit("setChatOwner", res.userId);
         const roomId = res.chatRoomId;
         location.href = `/chatWindow/${roomId}`;
       } catch (err) {

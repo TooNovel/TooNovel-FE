@@ -9,15 +9,15 @@ const store = new Vuex.Store({
   // [변수들의 집합]
   state: {
     chatRoomName: null,
-    chatOwnerNickname: null,
+    chatOwner: null,
   },
   // [변수들을 조작하는 함수들]
   mutations: {
     setChatRoomName(state, chatRoomName) {
       state.chatRoomName = chatRoomName;
     },
-    setChatOwnerNickname(state, nickname) {
-      state.chatOwnerNickname = nickname;
+    setChatOwner(state, id) {
+      state.chatOwner = id;
     },
   },
   // [state의 변수들을 get 호출]
@@ -25,8 +25,8 @@ const store = new Vuex.Store({
     getChatRoomName(state) {
       return state.chatRoomName;
     },
-    getChatOwnerNickname(state) {
-      return state.chatOwnerNickname;
+    getChatOwner(state) {
+      return state.chatOwner;
     },
   },
 });
