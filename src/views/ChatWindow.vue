@@ -144,6 +144,14 @@ export default {
   },
   async created() {
     try {
+      // 비정상적인 요청
+      this.chatOwnerNickname = await this.$store.getters.getChatOwnerNickname;
+      this.chatRoomName = await this.$store.getters.getChatRoomName;
+      if (this.chatOwnerNickname == null || this.chatRoomName == null) {
+        this.$router.push({ name: "ChatRoom" });
+        return;
+      }
+
       // 초기 설정
       this.date = new Date();
       const accessToken = this.$getAccessToken();
@@ -161,7 +169,6 @@ export default {
         option
       );
       this.nickname = user.data.nickname;
-      this.chatOwnerNickname = this.$store.getters.getChatOwnerNickname;
       this.$store.commit("setChatOwnerNickname", null);
 
       // 웹소켓 연결
@@ -175,7 +182,6 @@ export default {
       }, 100);
 
       // 화면 상단 표시용
-      this.chatRoomName = this.$store.getters.getChatRoomName;
       this.$store.commit("setChatRoomName", null);
     } catch (err) {
       console.log(err);
