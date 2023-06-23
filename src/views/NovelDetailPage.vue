@@ -1,162 +1,216 @@
 <template>
-  <div>
-    <div id="loading" v-if="isLoading" style="height: 600px">
-      <div class="loader">Loading...</div>
-    </div>
-    <main v-else style="margin-top: 3%">
-      <article>
-        <b-container class="bv-example-row">
-          <b-row class="rows">
-            <b-col>
-              <img id="image" :src="novel.image" />
-            </b-col>
-            <b-col class="col-9">
-              <b>제목</b>
-              <p>{{ novel.title }}</p>
-              <b>장르</b>
-              <p>{{ novel.genre }}</p>
-              <b>작가</b>
-              <p>{{ novel.author }}</p>
-              <novel-like :novel="novel"></novel-like>
-              <div class="platform-buttons">
-                <a
-                  v-for="platform in novel.platforms"
-                  :key="platform.platformId"
-                  :href="platform.url"
-                >
-                  <button class="platform-button">
-                    <img
-                      v-if="platform.platformId === 1"
-                      src="/series.png"
-                      alt="네이버 시리즈"
-                      class="platform-image"
-                    />
-                    <img
-                      v-if="platform.platformId === 2"
-                      src="/kakaopage.png"
-                      alt="카카오페이지"
-                      class="platform-image"
-                    />
-                    <img
-                      v-if="platform.platformId === 3"
-                      src="/munpia.png"
-                      alt="문피아"
-                      class="platform-image"
-                    />
-                    <span class="platform-name">{{
-                      platform.platformName
-                    }}</span>
-                  </button>
-                </a>
+  <div id="reviewContent">
+    <div id="reviewWrap">
+      <div id="loading" v-if="isLoading" style="height: 600px">
+        <div class="loader">Loading...</div>
+      </div>
+      <main v-else style="margin-top: 3%">
+        <article>
+          <b-container class="bv-example-row">
+            <div class="row">
+              <div id="imageDiv" class="col-1">
+                <img id="image" :src="novel.image" />
               </div>
-            </b-col>
-            <b-col> </b-col>
-          </b-row>
-          <br />
-          <div class="row">
-            <div class="descrption">
-              <label><b>간단 소개</b></label>
-              <p>{{ novel.description }}</p>
-            </div>
-          </div>
-        </b-container>
-        <br />
-        <b-container>
-          <h6><b>리뷰 작성하기</b></h6>
-          <div class="row">
-            <b-form>
-              <div class="col">
-                <b-textarea rows="10" type="text" v-model="reviewContent">
-                </b-textarea>
-              </div>
-              <div class="col" style="margin-top: 1%">
-                <label><b>평점 남기기ㅤ</b></label>
-                <b-form-select v-model="reviewGrade">
-                  <option value="--">------</option>
-                  <option value="0">0</option>
-                  <option value="1">1</option>
-                  <option value="2">2</option>
-                  <option value="3">3</option>
-                  <option value="4">4</option>
-                  <option value="5">5</option>
-                </b-form-select>
-                <b-button
-                  id="reviewBtn"
-                  @click="reviewWrite()"
-                  style="margin-left: 1%"
-                  >등록</b-button
-                >
-              </div>
-            </b-form>
-          </div>
-        </b-container>
-        <br />
-        <b-container>
-          <h4><b>🗨️리뷰</b></h4>
-          <div v-for="review in reviews" v-bind:key="review.reviewId">
-            <div class="reviewBox">
-              <div class="row">
-                <div class="col">
-                  <p><b>작성자ㅤ</b>{{ review.nickname }}</p>
-                </div>
-                <div class="col">
-                  <div class="row">
-                    <div class="col">
-                      <p><b>작성일자ㅤ</b>{{ review.createdDate }}</p>
-                    </div>
-                    <div v-if="userId === review.userId" class="col-1">
-                      <button
-                        @click="deleteReview(review.reviewId)"
-                        type="button"
-                        aria-label="Close"
-                        class="close"
-                      >
-                        ×
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="row" style="white-space: pre-line">
-                <p>{{ review.reviewContent }}</p>
-              </div>
-              <div class="row">
-                <div class="col">평점 : {{ review.reviewGrade }}</div>
-                <div class="col">
-                  <div class="right_area">
-                    <button
-                      @click="reviewLike(review)"
-                      :class="{ active: review.isActived }"
+              <div id="novelContent" class="col">
+                <div id="novelWrap">
+                  <h2>
+                    <b>{{ novel.title }}</b>
+                  </h2>
+                  <hr />
+                  <h5>{{ novel.genre }} | {{ novel.author }}</h5>
+                  <novel-like :novel="novel"></novel-like>
+                  <div class="platform-buttons">
+                    <a
+                      v-for="platform in novel.platforms"
+                      :key="platform.platformId"
+                      :href="platform.url"
                     >
-                      <img
-                        src="https://cdn-icons-png.flaticon.com/512/803/803087.png"
-                        width="24"
-                        height="24"
-                      />
-                    </button>
-                    좋아요 : {{ review.reviewLike }}
+                      <button class="platform-button">
+                        <img
+                          v-if="platform.platformId === 1"
+                          src="/series.png"
+                          alt="네이버 시리즈"
+                          class="platform-image"
+                        />
+                        <img
+                          v-if="platform.platformId === 2"
+                          src="/kakaopage.png"
+                          alt="카카오페이지"
+                          class="platform-image"
+                        />
+                        <img
+                          v-if="platform.platformId === 3"
+                          src="/munpia.png"
+                          alt="문피아"
+                          class="platform-image"
+                        />
+                        <span class="platform-name">{{
+                          platform.platformName
+                        }}</span>
+                      </button>
+                    </a>
                   </div>
                 </div>
               </div>
             </div>
             <br />
+          </b-container>
+          <b-container>
+            <div class="descrption">
+              <label><b>간단 소개</b></label>
+              <p>{{ novel.description }}</p>
+            </div>
+          </b-container>
+          <br />
+          <br />
+          <b-container>
+            <div>
+              <div class="row">
+                <div class="col">
+                  <h6><b>리뷰 작성하기</b></h6>
+                </div>
+                <div class="col">
+                  <div style="display: flex; justify-content: flex-end">
+                    <div>
+                      <star-rating
+                        :border-width="4"
+                        border-color="#d8d8d8"
+                        :rounded-corners="true"
+                        :star-size="30"
+                        v-model="reviewGrade"
+                        :star-points="[
+                          23, 2, 14, 17, 0, 19, 10, 34, 7, 50, 23, 43, 38, 50,
+                          36, 34, 46, 19, 31, 17,
+                        ]"
+                      ></star-rating>
+                    </div>
+                    <div style="margin-left: 5%">
+                      <b-button id="reviewBtn" @click="reviewWrite()"
+                        >등록</b-button
+                      >
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <br />
+            <div class="row">
+              <b-form>
+                <div class="col">
+                  <b-textarea rows="10" type="text" v-model="reviewContent">
+                  </b-textarea>
+                </div>
+              </b-form>
+            </div>
+          </b-container>
+          <br />
+          <b-container>
+            <h4><b>🗨️리뷰</b></h4>
+            <div v-for="review in reviews" v-bind:key="review.reviewId">
+              <div class="reviewBox">
+                <div class="row">
+                  <div class="col">
+                    <div id="profile">
+                      <div>
+                        <div>
+                          <img :src="review.imageUrl" width="50px" />
+                        </div>
+                      </div>
+                      <div id="profile_name">
+                        <b>{{ review.nickname }}</b>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col">
+                    <div class="row">
+                      <div class="review-block">
+                        <div class="col">
+                          <div class="row">
+                            <div class="col-11" id="createDate">
+                              {{ review.createdDate }}
+                            </div>
+                            <div
+                              v-if="userId === review.userId"
+                              class="col-1"
+                              id="deleteBtn"
+                            >
+                              <div style="font-size: 1rem; margin-right: 5px">
+                                <b-icon
+                                  icon="x-circle"
+                                  @click="deleteReview(review.reviewId)"
+                                ></b-icon>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div id="reviewContent">
+                  {{ review.reviewContent }}
+                </div>
+                <div class="row">
+                  <div class="col"></div>
+                  <div class="col">
+                    <div class="row">
+                      <div class="review-block">
+                        <div class="col">
+                          <div class="row">
+                            <div class="col-10" id="createDate">
+                              <star-rating
+                                :border-width="4"
+                                border-color="#d8d8d8"
+                                :rounded-corners="true"
+                                :star-size="20"
+                                v-model="review.reviewGrade"
+                                read-only
+                                :star-points="[
+                                  23, 2, 14, 17, 0, 19, 10, 34, 7, 50, 23, 43,
+                                  38, 50, 36, 34, 46, 19, 31, 17,
+                                ]"
+                              ></star-rating>
+                            </div>
+                            <div class="col">
+                              <button
+                                @click="reviewLike(review)"
+                                :class="{ active: review.isActived }"
+                              >
+                                <img
+                                  src="https://cdn-icons-png.flaticon.com/512/803/803087.png"
+                                  width="24"
+                                  height="24"
+                                />
+                              </button>
+                              {{ review.reviewLike }}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <br />
+            </div>
+          </b-container>
+        </article>
+        <div class="template-container">
+          <div id="suggest">
+            <b id="memo">웹소설 신청💡</b>
+            <p>찾으시는 웹소설이 없으신가요?</p>
+            <p>작품 신청을 통해 빠진 작품을 알려주세요!</p>
+            <b-button variant="info" @click="novelRequest()">신청하기</b-button>
           </div>
-        </b-container>
-      </article>
-      <div class="template-container">
-        <div id="suggest">
-          <b id="memo">웹소설 신청💡</b>
-          <p>찾으시는 웹소설이 없으신가요?</p>
-          <p>작품 신청을 통해 빠진 작품을 알려주세요!</p>
-          <b-button variant="info" @click="novelRequest()">신청하기</b-button>
         </div>
-      </div>
-    </main>
+      </main>
+    </div>
   </div>
 </template>
 <script scoped>
 import axios from "axios";
 import NovelLike from "@/components/NovelLike.vue";
+import StarRating from "vue-star-rating";
 
 export default {
   name: "NovelDetailPage",
@@ -284,6 +338,7 @@ export default {
       }
     },
     async deleteReview(reviewId) {
+      alert("삭제하시겠습니까?");
       try {
         const option = {
           headers: {
@@ -317,10 +372,11 @@ export default {
   },
   components: {
     "novel-like": NovelLike,
+    StarRating,
   },
 };
 </script>
-<style scoped>
+<style lang="scss" scoped>
 @import "@/style/novel-detail.css";
 @import "@/style/loader.css";
 button {
@@ -331,6 +387,67 @@ button {
   border: solid 2px white;
   background-color: white;
 }
+html {
+  height: 100%;
+}
+body {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+#createDate,
+#deleteBtn {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+#profile_name {
+  margin-left: 10px;
+}
+.reviewBox {
+  box-shadow: 5px 5px 20px 5px rgba(94, 92, 154, 0.2);
+  padding: 3%;
+}
+.review-block {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  margin-right: 10%;
+}
+#review-block-bottom {
+  display: flex;
+  justify-content: flex-end;
+}
+#reviewContent {
+  margin: 2%;
+}
+#imageDiv {
+  width: 300px;
+}
+#novelContent {
+  background-color: white;
+  border-radius: 20px;
+  justify-content: center;
+  align-items: center;
+  width: 900px;
+}
+#novelWrap {
+  padding: 5%;
+}
+#reviewWrap {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+#profile {
+  display: flex;
+}
+.descrption {
+  background-color: white;
+  border-radius: 10px;
+  padding: 2%;
+}
+
 #loading {
   height: 600px;
   display: flex;
@@ -374,5 +491,13 @@ button {
 
 .template-container:hover #suggest b {
   visibility: hidden;
+}
+button {
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+  border-radius: 50%;
+  border: solid 2px white;
+  background-color: white;
 }
 </style>
