@@ -63,8 +63,9 @@
                   <span
                     @click="selectMsg(chatting)"
                     v-if="chatOwner == users.userId"
-                    >답장</span
                   >
+                    <span>답장</span>
+                  </span>
                 </div>
               </div>
             </div>
@@ -94,8 +95,10 @@
         </div>
         <div>
           <div v-if="isReply">
-            <span>{{ replyChat.message }}</span>
-            <span @click="cancleReply()">X</span>
+            <div class="reply-box">
+              <span class="reply-box-msg">{{ replyChat.message }}</span>
+              <span class="reply-box-cancle" @click="cancleReply()">X</span>
+            </div>
           </div>
           <form id="chatForm">
             <div>
@@ -577,5 +580,19 @@ body {
 .reply-msg {
   /* color: gray; */
   font-size: small;
+}
+.reply-box {
+  display: flex;
+  background-color: #f5f5f5;
+  padding: 10px;
+}
+.reply-box-msg {
+  width: 95%;
+}
+.reply-box-cancle {
+  width: 5%;
+  text-align: center;
+  align-self: center;
+  color: gray;
 }
 </style>
