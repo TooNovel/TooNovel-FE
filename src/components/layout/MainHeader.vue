@@ -28,15 +28,18 @@
     </b-navbar-nav>
 
     <b-navbar-nav class="right">
-      <b-nav-form class="mt-1" style="margin-right: 10px" id="searchForm">
+      <b-nav-form
+        class="mt-1"
+        style="margin-right: 10px"
+        id="searchForm"
+        @submit.prevent="toSearch"
+      >
         <input
           placeholder="작품 제목을 검색하세요!"
           type="text"
           v-model="searchTitle"
         />
-        <b-button size="sm" class="my-2 my-sm-0" @click="toSearch()"
-          >검색</b-button
-        >
+        <b-button size="sm" class="my-2 my-sm-0" type="submit">검색</b-button>
       </b-nav-form>
       <div v-if="isLogined">
         <b-nav-form class="mt-1">
@@ -183,8 +186,15 @@ export default {
       this.$router.push("/community");
     },
     toSearch() {
-      location.href =
-        "/search?novelId=null&genre=&author=&title=" + this.searchTitle;
+      this.$router.push({
+        path: "/search",
+        query: {
+          novelId: null,
+          genre: "",
+          author: "",
+          title: this.searchTitle,
+        },
+      });
     },
     toFanclub() {
       this.$router.push("/fanclub");

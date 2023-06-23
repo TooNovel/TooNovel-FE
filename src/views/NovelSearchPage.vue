@@ -12,10 +12,14 @@
           buttons
         ></b-form-radio-group>
         <b-input-group prepend="제목" style="margin-top: 20px">
-          <b-form-input type="text" v-model="searchTitle" />
+          <b-form-input
+            type="text"
+            v-model="searchTitle"
+            @keyup.enter="search()"
+          />
         </b-input-group>
         <b-input-group prepend="작가" style="margin-top: 20px">
-          <b-form-input type="text" v-model="author" />
+          <b-form-input type="text" v-model="author" @keyup.enter="search()" />
           <b-button variant="secondary" @click="search()">검색</b-button>
         </b-input-group>
       </b-form-group>
