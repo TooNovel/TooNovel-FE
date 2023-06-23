@@ -5,7 +5,7 @@
       <h4>프로필 수정</h4>
       <div>
         <label for="file">
-          <div class="btn-upload"><img :src="imageUrl" /></div>
+          <div class="btn-upload"><img :src="imageUrl" class="img-box" /></div>
           <label>⬆️클릭해서 이미지를 넣어주세요!</label>
         </label>
         <input id="file" type="file" ref="fileInput" accept="image/*" />
@@ -117,9 +117,8 @@ export default {
   border-radius: 100px;
   border-radius: 10px solid black;
   margin: 0 auto;
-  width: 10rem;
-  height: 10rem;
-  margin-bottom: 10px;
+  width: 100%;
+  height: 100%;
   box-shadow: 2px 2px 2px 2px #a9eaa6;
 }
 .gender-box {
