@@ -15,80 +15,86 @@
           </div>
         </div>
         <br />
-        <div class="button-container">
-          <button
-            v-if="loadChatLimiter < 31"
-            class="w-btn-outline w-btn-indigo-outline"
-            type="button"
-            @click="loadChat()"
-          >
-            더보기
-          </button>
-          <button
-            v-if="loadChatLimiter >= 31"
-            class="w-btn-outline w-btn-indigo-outline"
-            type="button"
-          >
-            최근 30일까지의 채팅만 볼 수 있습니다.
-          </button>
-        </div>
-        <div
-          id="chatLog"
-          v-for="(chatting, index) in chattingList.slice().reverse()"
-          :key="index"
-          ref="chatLog"
-        >
-          <!-- 일반 채팅(답장이 아닌 채팅) -->
-          <div v-if="chatting.replyId == null">
-            <!-- 보낸 사람 = 나 -->
-            <div v-if="chatting.senderId == users.userId">
-              <div class="myMsg">
-                <div class="msg">{{ chatting.message }}</div>
-              </div>
-            </div>
-            <!-- 다른 사용자가 보낸 메세지 -->
-            <div
-              v-if="
-                chatting.senderId != users.userId ||
-                (chatting.creator && chatting.senderId != users.userId)
-              "
+        <div class="chat-container">
+          <div class="button-container">
+            <button
+              v-if="loadChatLimiter < 31"
+              class="w-btn-outline w-btn-indigo-outline"
+              type="button"
+              @click="loadChat()"
             >
-              <div class="anotherMsg">
-                <span class="anotherName">{{ chatting.senderName }}</span>
-                <div :class="{ filtered: isFiltered(chatting.filterResult) }">
-                  <div class="msg" @click="cancleFilter(chatting)">
-                    {{ chatting.message }}
+              더보기
+            </button>
+            <button
+              v-if="loadChatLimiter >= 31"
+              class="w-btn-outline w-btn-indigo-outline"
+              type="button"
+            >
+              최근 30일까지의 채팅만 볼 수 있습니다.
+            </button>
+          </div>
+          <div
+            id="chatLog"
+            v-for="(chatting, index) in chattingList.slice().reverse()"
+            :key="index"
+            ref="chatLog"
+          >
+            <!-- 일반 채팅(답장이 아닌 채팅) -->
+            <div v-if="chatting.replyId == null">
+              <!-- 보낸 사람 = 나 -->
+              <div v-if="chatting.senderId == users.userId">
+                <div class="myMsg">
+                  <div class="msg">{{ chatting.message }}</div>
+                </div>
+              </div>
+              <!-- 다른 사용자가 보낸 메세지 -->
+              <div
+                v-if="
+                  chatting.senderId != users.userId ||
+                  (chatting.creator && chatting.senderId != users.userId)
+                "
+              >
+                <div class="anotherMsg">
+                  <span class="anotherName">{{ chatting.senderName }}</span>
+                  <div :class="{ filtered: isFiltered(chatting.filterResult) }">
+                    <div class="msg" @click="cancleFilter(chatting)">
+                      {{ chatting.message }}
+                    </div>
+                    <!-- 위 div에 마우스 호버되면 아래 span이 보이도록 구상중 -->
+                    <span
+                      @click="selectMsg(chatting)"
+                      v-if="chatOwner == users.userId"
+                    >
+                      <span>답장</span>
+                    </span>
                   </div>
-                  <!-- 위 div에 마우스 호버되면 아래 span이 보이도록 구상중 -->
-                  <span
-                    @click="selectMsg(chatting)"
-                    v-if="chatOwner == users.userId"
-                  >
-                    <span>답장</span>
-                  </span>
                 </div>
               </div>
             </div>
-          </div>
-          <!-- 답장 -->
-          <div v-if="chatting.replyId != null">
-            <!-- 내가 채팅방 주인이면 -->
-            <div class="myMsg" v-if="chatOwner == users.userId">
-              <div class="msg">
-                <div class="reply-msg-sendername">{{ chatting.userName }}</div>
-                <div class="reply-msg">{{ chatting.userMessage }}</div>
-                <hr />
-                {{ chatting.replyMessage }}
+            <!-- 답장 -->
+            <div v-if="chatting.replyId != null">
+              <!-- 내가 채팅방 주인이면 -->
+              <div class="myMsg" v-if="chatOwner == users.userId">
+                <div class="msg">
+                  <div class="reply-msg-sendername">
+                    {{ chatting.userName }}
+                  </div>
+                  <div class="reply-msg">{{ chatting.userMessage }}</div>
+                  <hr />
+                  {{ chatting.replyMessage }}
+                </div>
               </div>
-            </div>
-            <!-- 내가 채팅방 주인이 아니면 -->
-            <div class="anotherMsg" v-if="chatOwner != users.userId">
-              <span class="anotherName">{{ chatting.senderName }}</span>
-              <div class="msg">
-                <div class="reply-msg-sendername">{{ chatting.userName }}</div>
-                <div class="reply-msg">{{ chatting.userMessage }}</div>
-                <hr />
-                {{ chatting.replyMessage }}
+              <!-- 내가 채팅방 주인이 아니면 -->
+              <div class="anotherMsg" v-if="chatOwner != users.userId">
+                <span class="anotherName">{{ chatting.senderName }}</span>
+                <div class="msg">
+                  <div class="reply-msg-sendername">
+                    {{ chatting.userName }}
+                  </div>
+                  <div class="reply-msg">{{ chatting.userMessage }}</div>
+                  <hr />
+                  {{ chatting.replyMessage }}
+                </div>
               </div>
             </div>
           </div>
@@ -594,5 +600,22 @@ body {
   text-align: center;
   align-self: center;
   color: gray;
+}
+.chat-container {
+  height: calc(85% - 3rem) !important;
+  overflow: hidden scroll;
+}
+#contentWrap,
+#contentCover,
+#chatWrap {
+  height: calc(100% - 3rem) !important;
+}
+div::-webkit-scrollbar {
+  width: 4px; /* 스크롤바의 너비 */
+}
+div::-webkit-scrollbar-thumb {
+  height: 30%; /* 스크롤바의 길이 */
+  background: #ccc; /* 스크롤바의 색상 */
+  border-radius: 10px;
 }
 </style>
