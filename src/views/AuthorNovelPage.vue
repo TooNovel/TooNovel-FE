@@ -2,6 +2,7 @@
   <div class="container">
     <MyPageNavbar></MyPageNavbar>
     <h3 class="title"><b>내가 연재한 작품</b></h3>
+    <h4 class="title">이미지에 마우스를 두면 통계를 볼 수 있습니다.</h4>
     <div v-if="novels.length == 0">
       <h1>아직 연재중인 작품이 없습니다.</h1>
     </div>
@@ -16,9 +17,21 @@
             sm="6"
             md="4"
             lg="3"
+            @mouseleave="toolTipOff()"
           >
-            <b-card @click="getStatistic(novel.novelId)">
-              <b-card-img :src="novel.image" class="card-image"></b-card-img>
+            <b-card>
+              <b-card-img
+                :src="novel.image"
+                class="card-image"
+                @mouseover="toolTipOn(index)"
+              >
+              </b-card-img>
+              <div v-if="toolTip === index">
+                <button @click="detailNovelList(novel.novelId)">
+                  상세보기
+                </button>
+                <button @click="getStatistic(novel.novelId)">통계보기</button>
+              </div>
               <b-card-title>{{ novel.title }}</b-card-title>
               <b-card-text>{{ novel.author }}</b-card-text>
               <b-card-text>{{ novel.genre }}</b-card-text>
@@ -42,9 +55,19 @@ export default {
     return {
       novels: [],
       novelId: 0,
+      toolTip: -1,
     };
   },
   methods: {
+    toolTipOn(index) {
+      this.toolTip = index;
+    },
+    toolTipOff() {
+      this.toolTip = -1;
+    },
+    detailNovelList(novelId) {
+      location.href = "/novel/" + novelId;
+    },
     async infiniteHandler($state) {
       try {
         const option = {
@@ -76,11 +99,7 @@ export default {
       event.target.src =
         "https://via.placeholder.com/600x600.png?text=No+Image";
     },
-    detailNovelList(novelId) {
-      location.href = "/novel/detailView/" + novelId;
-    },
     async getStatistic(novelId) {
-      alert(novelId);
       try {
         const option = {
           headers: {
@@ -102,7 +121,6 @@ export default {
         const reviewRes = await axios.get(
           `${process.env.VUE_APP_API_URL}/review/` + novelId + "/novel"
         );
-        console.log(reviewRes.data);
         this.$router.push({
           name: "NovelStatisticsPage",
           params: {
@@ -137,14 +155,20 @@ export default {
 .title {
   margin: 20px;
 }
-
 .novel-list-box {
   margin-top: 2%;
   margin-left: 5%;
   margin-right: 5%;
 }
-
-.card-image {
-  height: 350px;
+button {
+  cursor: pointer;
+  border-radius: 10px;
+  border: 2px solid #93bb91;
+  background-color: white;
+  box-shadow: 1px 1px 1px 1px #a9eaa6;
+  font-family: "Hanna";
+}
+button:hover {
+  background-color: #a9eaa6;
 }
 </style>

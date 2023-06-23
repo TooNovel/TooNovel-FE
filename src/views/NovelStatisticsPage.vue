@@ -1,92 +1,33 @@
 <template>
   <div>
-    <main style="margin-top: 3%">
-      <MyPageNavbar></MyPageNavbar>
-      <div class="chart-wrap">
-        <div v-if="reviews.length == 0">아직 통계가 없습니다.</div>
-        <div v-else>
-          <div class="age-chart-container">
-            연령대별 통계
-            <canvas ref="genderChart" width="400px" height="400px"></canvas>
+    <MyPageNavbar></MyPageNavbar>
+    <div class="info">
+      <h2>💚{{ novel.author }}💚 작가님</h2>
+    </div>
+    <div class="info">
+      <h2>✨ {{ novel.title }} ✨ 작품 통계</h2>
+    </div>
+    <div class="statistics-box">
+      <div v-if="reviews.length == 0">아직 통계가 없습니다.</div>
+      <div v-else>
+        <div class="age-box">
+          <h1>성별 통계</h1>
+          <div class="chart-container">
+            <canvas ref="genderChart"></canvas>
           </div>
-          <div class="gender-chart-container">
-            성별 통계
-            <canvas ref="ageChart" width="500px" height="500px"></canvas>
+        </div>
+        <div class="gender-box">
+          <h1>연령대별 통계</h1>
+          <div class="chart-container">
+            <canvas ref="ageChart"></canvas>
           </div>
         </div>
       </div>
-      <article>
-        <b-container class="bv-example-row">
-          <b-row class="rows">
-            <b-col>
-              <img id="image" :src="novel.image" />
-            </b-col>
-            <b-col class="col-9">
-              <b>제목</b>
-              <p>{{ novel.title }}</p>
-              <b>장르</b>
-              <p>{{ novel.genre }}</p>
-              <b>작가</b>
-              <p>{{ novel.author }}</p>
-              <novel-like :novel="novel"></novel-like>
-            </b-col>
-          </b-row>
-          <br />
-          <div class="row">
-            <div class="descrption">
-              <label><b>간단 소개</b></label>
-              <p>{{ novel.description }}</p>
-            </div>
-          </div>
-        </b-container>
-        <br />
-        <b-container>
-          <h4><b>🗨️리뷰</b></h4>
-          <div v-if="reviews.length == 0">아직 리뷰가 없습니다.</div>
-          <div v-else>
-            <div v-for="review in reviews" v-bind:key="review.reviewId">
-              <div class="reviewBox">
-                <div class="row">
-                  <div class="col">
-                    <p><b>작성자ㅤ</b>{{ review.nickname }}</p>
-                  </div>
-                  <div class="col">
-                    <p><b>작성일자ㅤ</b>{{ review.createdDate }}</p>
-                  </div>
-                </div>
-                <div class="row">
-                  <p>{{ review.reviewContent }}</p>
-                </div>
-                <div class="row">
-                  <div class="col">평점 : {{ review.reviewGrade }}</div>
-                  <div class="col">
-                    <div class="right_area">
-                      <button
-                        @click="reviewLike(review)"
-                        :class="{ active: review.isActived }"
-                      >
-                        <img
-                          src="https://cdn-icons-png.flaticon.com/512/803/803087.png"
-                          width="24"
-                          height="24"
-                        />
-                      </button>
-                      좋아요 : {{ review.reviewLike }}
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <br />
-            </div>
-          </div>
-        </b-container>
-      </article>
-    </main>
+    </div>
   </div>
 </template>
 <script scoped>
 import axios from "axios";
-import NovelLike from "@/components/NovelLike.vue";
 import MyPageNavbar from "@/components/MyPageNavbar.vue";
 import {
   Chart,
@@ -207,7 +148,7 @@ export default {
           },
         },
       });
-      this.ageChart = new Chart(ctx2, {
+      var config = {
         type: "pie",
         data: {
           labels: ["남성", "여성"],
@@ -244,8 +185,13 @@ export default {
               precision: 2,
             },
           },
+          title: {
+            display: true,
+            text: "Chart.js Pie Chart",
+          },
         },
-      });
+      };
+      this.ageChart = new Chart(ctx2, config);
     } catch (err) {
       console.log(err);
     }
@@ -299,13 +245,26 @@ export default {
     },
   },
   components: {
-    "novel-like": NovelLike,
     MyPageNavbar,
   },
 };
 </script>
 <style scoped>
-@import "@/style/novel-detail.css";
+.info {
+  background-color: white;
+  text-align: center;
+  border-radius: 10px;
+  border: 2px solid rgba(94, 92, 154, 0.2);
+  margin: 2rem;
+  padding: 4px;
+}
+.statistics-box {
+  background-color: white;
+  border-radius: 10px;
+  margin: 2rem;
+  padding: 20px;
+  box-shadow: 5px 5px 20px 5px rgba(94, 92, 154, 0.2);
+}
 .chart-wrap {
   display: flex;
   align-items: center;
@@ -319,10 +278,29 @@ export default {
   float: left;
   width: 50rem; /* 원하는 가로 크기 */
 }
-.gender-chart-container {
-  display: block;
-  float: left;
-  width: 50rem; /* 원하는 가로 크기 */
-  height: 20rem; /* 원하는 세로 크기 */
+.age-box {
+  background-color: white;
+  border-radius: 10px;
+  margin: 2rem;
+  padding: 20px;
+  text-align: center;
+  box-shadow: 5px 5px 20px 5px rgba(94, 92, 154, 0.2);
+}
+.gender-box {
+  background-color: white;
+  border-radius: 10px;
+  margin: 2rem;
+  margin-top: 45px;
+  text-align: center;
+  padding: 20px;
+  box-shadow: 5px 5px 20px 5px rgba(94, 92, 154, 0.2);
+}
+.chart-container {
+  background-color: white;
+  border-radius: 20px;
+  height: 200px;
+  display: flex;
+  justify-content: center;
+  text-align: center;
 }
 </style>

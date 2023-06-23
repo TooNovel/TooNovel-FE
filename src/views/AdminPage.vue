@@ -9,8 +9,8 @@
     <div class="review-box">
       <div class="date-box">
         <h1>일별 리뷰 데이터</h1>
-        <input type="date" id="start-date" v-model="reviewStartDate" /> ~
-        <input type="date" id="end-date" v-model="reviewEndDate" />
+        <input type="date" class="input-date" v-model="reviewStartDate" /> ~
+        <input type="date" class="input-date" v-model="reviewEndDate" />
         <br />
         <button class="date-btn" @click="reviewDate()">날짜 선택</button>
       </div>
@@ -21,8 +21,8 @@
     <div class="novel-box">
       <div class="date-box">
         <h1>일별 작품 데이터</h1>
-        <input type="date" id="start-date" v-model="novelStartDate" /> ~
-        <input type="date" id="end-date" v-model="novelEndDate" />
+        <input type="date" class="input-date" v-model="novelStartDate" /> ~
+        <input type="date" class="input-date" v-model="novelEndDate" />
         <br />
         <button class="date-btn" @click="novelDate()">날짜 선택</button>
       </div>
@@ -229,23 +229,28 @@ export default {
 .info {
   background-color: white;
   text-align: center;
-  border-radius: 30px;
-  margin: 10px;
+  border-radius: 10px;
+  border: 2px solid rgba(94, 92, 154, 0.2);
+  margin: 2rem;
+  padding: 4px;
 }
 .review-box {
   background-color: white;
-  border-radius: 30px;
-  margin: 10px;
+  border-radius: 10px;
+  margin: 2rem;
+  padding: 20px;
+  box-shadow: 5px 5px 20px 5px rgba(94, 92, 154, 0.2);
 }
 .novel-box {
   background-color: white;
-  border-radius: 30px;
-  margin: 10px;
-  margin-top: 100px;
+  border-radius: 10px;
+  margin: 2rem;
+  margin-top: 45px;
+  padding: 20px;
+  box-shadow: 5px 5px 20px 5px rgba(94, 92, 154, 0.2);
 }
 .chart-container {
   background-color: white;
-  box-shadow: 5px 5px 20px 5px rgba(94, 92, 154, 0.2);
   border-radius: 20px;
   height: 500px;
   margin-top: 70px;
@@ -254,14 +259,17 @@ export default {
 .date-box {
   float: left;
 }
-
+.input-date {
+  border: 2px solid #93bb91;
+  border-radius: 5px;
+}
 .date-btn {
   cursor: pointer;
   border: 2px solid #93bb91;
   background-color: white;
-  box-shadow: 1px 1px 1px 1px #a9eaa6;
   font-family: "Hanna";
   margin-top: 10px;
+  border-radius: 5px;
 }
 
 .date-btn:hover {
