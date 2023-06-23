@@ -5,10 +5,16 @@
       <h4>프로필 수정</h4>
       <div>
         <label for="file">
-          <div class="btn-upload"><img :src="imageUrl" class="img-box" /></div>
+          <div class="btn-upload"><img :src="imageUrl" id="img-box" /></div>
           <label>⬆️클릭해서 이미지를 넣어주세요!</label>
         </label>
-        <input id="file" type="file" ref="fileInput" accept="image/*" />
+        <input
+          id="file"
+          type="file"
+          ref="fileInput"
+          accept="image/*"
+          @change="getFileName($event.target.files)"
+        />
       </div>
       <div class="nick-box">
         <label>닉네임</label>
@@ -40,12 +46,28 @@ export default {
       gender: "",
       imageUrl: "",
       birth: "",
+      fileName: "",
     };
   },
   methods: {
     handleImageError(event) {
       event.target.src =
         "https://via.placeholder.com/600x600.png?text=No+Image";
+    },
+    async getFileName(files) {
+      this.fileName = files[0];
+      await this.base64(this.fileName);
+    },
+    base64(file) {
+      return new Promise((resolve) => {
+        let success = new FileReader();
+        success.onload = (e) => {
+          resolve(e.target.result);
+          const previewImage = document.getElementById("img-box");
+          previewImage.src = e.target.result;
+        };
+        success.readAsDataURL(file);
+      });
     },
     async uploadImage() {
       try {
@@ -90,7 +112,6 @@ export default {
         `${process.env.VUE_APP_API_URL}/user/me`,
         option
       );
-      console.log(res);
       this.nickname = res.data.nickname;
       this.gender = res.data.gender;
       this.imageUrl = res.data.imageUrl;
@@ -113,7 +134,7 @@ export default {
   text-align: center;
   margin: 40px;
 }
-.img-box {
+#img-box {
   border-radius: 100px;
   border-radius: 10px solid black;
   margin: 0 auto;
