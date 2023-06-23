@@ -71,7 +71,7 @@
                 class="w-btn-outline w-btn-green-outline"
                 type="button"
                 @click="joinRoom(author.userId)"
-                id="searchBtn"
+                id="joinBtn"
               >
                 참여
               </button>
@@ -107,6 +107,7 @@
                 class="w-btn-outline w-btn-green-outline"
                 type="button"
                 @click="joinRoom(room.userId)"
+                id="joinBtn"
               >
                 참여
               </button>
@@ -316,6 +317,14 @@ export default {
 <style scoped>
 @import "@/style/button.css";
 
+.card {
+  width: 100%;
+  height: 100%;
+  border: none;
+  box-shadow: 0 0 20px 0 rgba(94, 92, 154, 0.2);
+  border-radius: 10px;
+  font-size: 14px;
+}
 .card-image {
   border-radius: 50%;
   width: 150px;
@@ -325,6 +334,7 @@ export default {
   margin-top: 5px;
 }
 .carousel-container .carousel-3d-slide .myImg {
+  margin-top: 15px;
   border-radius: 50%;
   width: 150px;
   height: 150px;
@@ -347,10 +357,11 @@ button {
 }
 
 .carousel-container .carousel-3d-slide {
+  background-color: white;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: space-around;
 }
 
 .author-list-box {
@@ -361,5 +372,28 @@ button {
 
 #allProductList {
   height: 400px; /* 스크롤이 표시될 최대 높이값 */
+}
+
+.carousel-3d-slider > div {
+  width: 100%;
+  height: 100%;
+  border: none;
+  box-shadow: 0 0 20px 0 rgba(94, 92, 154, 0.2);
+  border-radius: 10px;
+  font-size: 14px;
+}
+
+.carousel-3d-controls {
+  width: 1000px;
+  height: 1000px;
+}
+
+.carousel-container {
+  height: 300px;
+  overflow: revert;
+}
+
+#joinBtn {
+  margin-bottom: 10px;
 }
 </style>
