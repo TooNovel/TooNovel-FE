@@ -31,21 +31,23 @@ import axios from "axios";
 import MyPageNavbar from "@/components/MyPageNavbar.vue";
 import {
   Chart,
-  BarController,
+  Title,
+  Tooltip,
+  Legend,
+  BarElement,
   CategoryScale,
   LinearScale,
-  BarElement,
-  PieController,
   ArcElement,
 } from "chart.js";
 
 Chart.register(
-  BarController,
-  CategoryScale,
-  LinearScale,
+  Title,
+  Tooltip,
+  Legend,
   BarElement,
-  PieController,
-  ArcElement
+  CategoryScale,
+  ArcElement,
+  LinearScale
 );
 
 export default {
