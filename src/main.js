@@ -15,11 +15,13 @@ import "bootstrap-vue/dist/bootstrap-vue.css";
 import { BootstrapVue, IconsPlugin } from "bootstrap-vue";
 import { Carousel3d, Slide } from "vue-carousel-3d";
 import infiniteScroll from "vue-infinite-scroll";
+import StarRating from "vue-star-rating";
 
 Vue.use(BootstrapVue);
 Vue.use(IconsPlugin);
 Vue.use(Carousel3d, Slide);
 Vue.use(infiniteScroll);
+Vue.use(StarRating);
 Vue.config.productionTip = false;
 
 Vue.prototype.$getTokenInfo = function (accessToken) {
