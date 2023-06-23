@@ -47,6 +47,7 @@ export default {
       imageUrl: "",
       birth: "",
       fileName: "",
+      beforeName: "",
     };
   },
   methods: {
@@ -71,6 +72,10 @@ export default {
     },
     async uploadImage() {
       const imageUrl = document.getElementById("img-box");
+      if (this.beforeName === this.nickname && imageUrl.src === this.imageUrl) {
+        alert("수정 후 회원수정 버튼을 눌러주세요^^");
+        return;
+      }
       if (imageUrl.src === this.imageUrl) {
         try {
           const option = {
@@ -86,6 +91,7 @@ export default {
             },
             option
           );
+          this.beforeName = this.nickname;
           alert("회원 수정이 완료되었습니다.");
         } catch (err) {
           console.log(err);
@@ -117,6 +123,7 @@ export default {
             },
             option
           );
+          this.beforeName = this.nickname;
           alert("회원 수정이 완료되었습니다.");
         } catch (err) {
           console.error(err);
@@ -136,6 +143,7 @@ export default {
         option
       );
       this.nickname = res.data.nickname;
+      this.beforeName = res.data.nickname;
       this.gender = res.data.gender;
       this.imageUrl = res.data.imageUrl;
       this.birth = res.data.birth;
