@@ -75,7 +75,7 @@
             class="w-btn-outline w-btn-green-outline"
             type="button"
             @click="joinRoom(author.userId)"
-            id="searchBtn"
+            id="joinBtn"
           >
             참여
           </button>
@@ -269,7 +269,6 @@ h5 {
   display: flex;
   flex-direction: column;
   align-items: center;
-
   justify-content: space-around;
 }
 
@@ -308,5 +307,9 @@ h5 {
 .review-content {
   margin-top: 10px !important;
   margin-bottom: 10px !important;
+}
+
+#joinBtn {
+  margin-bottom: 10px;
 }
 </style>
