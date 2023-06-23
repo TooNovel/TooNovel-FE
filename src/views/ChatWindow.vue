@@ -60,7 +60,6 @@
                     {{ chatting.message }}
                   </div>
                   <!-- 위 div에 마우스 호버되면 아래 span이 보이도록 구상중 -->
-                  <!-- @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@작가만 답장 버튼 보이도록 구성해야함 -->
                   <span
                     @click="selectMsg(chatting)"
                     v-if="chatOwnerNickname == users.nickname"
@@ -71,8 +70,26 @@
             </div>
           </div>
           <!-- 답장 -->
-          <div class="chat reply" v-if="chatting.replyId != null">
-            답장 : {{ chatting.replyMessage }}
+          <div v-if="chatting.replyId != null">
+            <!-- 내가 채팅방 주인이면 -->
+            <div class="myMsg" v-if="chatOwnerNickname == users.nickname">
+              <div class="msg">
+                <div class="reply-msg-sendername">{{ chatting.userName }}</div>
+                <div class="reply-msg">{{ chatting.userMessage }}</div>
+                <hr />
+                답장 : {{ chatting.replyMessage }}
+              </div>
+            </div>
+            <!-- 내가 채팅방 주인이 아니면 -->
+            <div class="anotherMsg" v-if="chatOwnerNickname != users.nickname">
+              <span class="anotherName">{{ chatting.senderName }}</span>
+              <div class="msg">
+                <div class="reply-msg-sendername">{{ chatting.userName }}</div>
+                <div class="reply-msg">{{ chatting.userMessage }}</div>
+                <hr />
+                {{ chatting.replyMessage }}
+              </div>
+            </div>
           </div>
         </div>
         <div>
@@ -535,5 +552,13 @@ body {
 }
 .send:hover {
   background-color: rgb(131, 171, 131);
+}
+.reply-msg-sendername {
+  color: gray;
+  font-size: small;
+}
+.reply-msg {
+  /* color: gray; */
+  font-size: small;
 }
 </style>
