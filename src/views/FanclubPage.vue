@@ -8,7 +8,12 @@
         <div style="display: flex; justify-content: flex-end">
           <div class="col-auto">
             <div style="display: flex; align-items: center">
-              <b-form-input placeholder="작가명" type="text" v-model="author" />
+              <b-form-input
+                placeholder="작가명"
+                type="text"
+                v-model="author"
+                @keyup.enter="search()"
+              />
               <div style="margin-left: 10px">
                 <b-button
                   @click="search()"

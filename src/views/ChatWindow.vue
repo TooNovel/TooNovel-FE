@@ -97,7 +97,7 @@
             <span>{{ replyChat.message }}</span>
             <span @click="cancleReply()">X</span>
           </div>
-          <form id="chatForm">
+          <form id="chatForm" @submit.prevent="sendMsg">
             <div>
               <b-input
                 size="lg"
@@ -106,7 +106,7 @@
                 placeholder="메시지를 입력하세요"
                 v-model="message"
               />
-              <b-button class="send" @click="sendMsg()" size="lg">
+              <b-button class="send" type="submit" size="lg">
                 <b-icon icon="messenger" aria-hidden="true"></b-icon>
               </b-button>
             </div>
