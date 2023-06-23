@@ -67,7 +67,7 @@
             <div>
               <div class="row">
                 <div class="col">
-                  <h6><b>리뷰 작성하기</b></h6>
+                  <h4>리뷰 작성하기</h4>
                 </div>
                 <div class="col">
                   <div style="display: flex; justify-content: flex-end">
@@ -85,9 +85,14 @@
                       ></star-rating>
                     </div>
                     <div style="margin-left: 5%">
-                      <b-button id="reviewBtn" @click="reviewWrite()"
-                        >등록</b-button
+                      <button
+                        class="w-btn-outline w-btn-green-outline"
+                        type="button"
+                        @click="reviewWrite()"
+                        id="reviewBtn"
                       >
+                        등록
+                      </button>
                     </div>
                   </div>
                 </div>
@@ -105,7 +110,7 @@
           </b-container>
           <br />
           <b-container>
-            <h4><b>🗨️리뷰</b></h4>
+            <h4>🗨️리뷰</h4>
             <div v-for="review in reviews" v-bind:key="review.reviewId">
               <div class="reviewBox">
                 <div class="row">
@@ -200,7 +205,15 @@
             <b id="memo">웹소설 신청💡</b>
             <p>찾으시는 웹소설이 없으신가요?</p>
             <p>작품 신청을 통해 빠진 작품을 알려주세요!</p>
-            <b-button variant="info" @click="novelRequest()">신청하기</b-button>
+            <button
+              class="w-btn-outline w-btn-green-outline"
+              type="button"
+              @click="novelRequest()"
+              id="reviewBtn"
+            >
+              신청하기
+            </button>
+            <!-- <b-button @click="novelRequest()">신청하기</b-button> -->
           </div>
         </div>
       </main>
@@ -404,8 +417,12 @@ body {
 #profile_name {
   margin-left: 10px;
 }
+#image {
+  box-shadow: 1px 1px 10px 0px rgba(94, 92, 154, 0.2);
+}
 .reviewBox {
-  box-shadow: 5px 5px 20px 5px rgba(94, 92, 154, 0.2);
+  margin-top: 10px;
+  box-shadow: 1px 1px 10px 0px rgba(94, 92, 154, 0.2);
   padding: 3%;
 }
 .review-block {
@@ -430,6 +447,7 @@ body {
   justify-content: center;
   align-items: center;
   width: 900px;
+  box-shadow: 1px 1px 10px 0px rgba(94, 92, 154, 0.2);
 }
 #novelWrap {
   padding: 5%;
@@ -439,6 +457,9 @@ body {
   justify-content: center;
   align-items: center;
 }
+#reviewBtn {
+  border-radius: 10px;
+}
 #profile {
   display: flex;
 }
@@ -446,6 +467,7 @@ body {
   background-color: white;
   border-radius: 10px;
   padding: 2%;
+  box-shadow: 1px 1px 10px 0px rgba(94, 92, 154, 0.2);
 }
 
 #loading {
@@ -476,7 +498,6 @@ body {
   right: 8em;
   display: grid;
 }
-
 .template-container:hover #suggest {
   right: 0;
 }
