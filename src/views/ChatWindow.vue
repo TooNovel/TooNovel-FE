@@ -62,7 +62,7 @@
                   <!-- 위 div에 마우스 호버되면 아래 span이 보이도록 구상중 -->
                   <span
                     @click="selectMsg(chatting)"
-                    v-if="chatOwnerNickname == users.nickname"
+                    v-if="chatOwnerNickname == nickname"
                     >답장</span
                   >
                 </div>
@@ -72,7 +72,7 @@
           <!-- 답장 -->
           <div v-if="chatting.replyId != null">
             <!-- 내가 채팅방 주인이면 -->
-            <div class="myMsg" v-if="chatOwnerNickname == users.nickname">
+            <div class="myMsg" v-if="chatOwnerNickname == nickname">
               <div class="msg">
                 <div class="reply-msg-sendername">{{ chatting.userName }}</div>
                 <div class="reply-msg">{{ chatting.userMessage }}</div>
@@ -81,7 +81,7 @@
               </div>
             </div>
             <!-- 내가 채팅방 주인이 아니면 -->
-            <div class="anotherMsg" v-if="chatOwnerNickname != users.nickname">
+            <div class="anotherMsg" v-if="chatOwnerNickname != nickname">
               <span class="anotherName">{{ chatting.senderName }}</span>
               <div class="msg">
                 <div class="reply-msg-sendername">{{ chatting.userName }}</div>
