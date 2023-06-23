@@ -30,7 +30,6 @@
 </template>
 
 <script>
-import axios from "axios";
 import MyChatRoom from "./MyChatRoom.vue";
 import MyFollowChat from "./MyFollowChat.vue";
 
@@ -40,27 +39,14 @@ export default {
     return {
       roomId: "", // 추후에 api 통신으로 받아올것
       user: {}, // userId, nickname...
-      chatRoomName: "",
-      //isCreator: true, // true 이면 작가, false면 독자
-      chatList: [],
       role: null,
     };
   },
   async created() {
-    const option = {
-      headers: {
-        Authorization: "Bearer " + this.$getAccessToken(),
-      },
-    };
     try {
-      const chat = await axios.get(
-        `${process.env.VUE_APP_API_URL}/chat`,
-        option
-      );
       const accessToken = this.$getAccessToken();
       const role = this.$getTokenInfo(accessToken).role;
       this.role = role;
-      this.chatList = chat.data;
     } catch (err) {
       console.log(err);
     }

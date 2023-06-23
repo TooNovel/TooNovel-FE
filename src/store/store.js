@@ -8,25 +8,25 @@ const store = new Vuex.Store({
   plugins: [createPersistedState()],
   // [변수들의 집합]
   state: {
-    accessToken: null,
-    refreshToken: null,
+    chatRoomName: null,
+    chatOwnerNickname: null,
   },
   // [변수들을 조작하는 함수들]
   mutations: {
-    setAccessToken(state, accessToken) {
-      state.accessToken = accessToken;
+    setChatRoomName(state, chatRoomName) {
+      state.chatRoomName = chatRoomName;
     },
-    setRefreshToken(state, refreshToken) {
-      state.refreshToken = refreshToken;
+    setChatOwnerNickname(state, nickname) {
+      state.chatOwnerNickname = nickname;
     },
   },
   // [state의 변수들을 get 호출]
   getters: {
-    getAccessToken(state) {
-      return state.accessToken;
+    getChatRoomName(state) {
+      return state.chatRoomName;
     },
-    getRefreshToken(state) {
-      return state.refreshToken;
+    getChatOwnerNickname(state) {
+      return state.chatOwnerNickname;
     },
   },
 });
