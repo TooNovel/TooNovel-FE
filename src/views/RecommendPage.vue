@@ -70,33 +70,58 @@
         <span v-html="message"></span>
       </div>
     </div>
-    <div id="allProductList">
+    <div class="novel-list-box">
       <b-row>
         <b-col
-          v-for="novel in novelList"
-          :key="novel.novelId"
+          v-for="(novel, index) in novelList"
+          :key="index"
           class="mb-3"
           cols="12"
           sm="6"
           md="4"
-          lg="4"
-          @click="detailNovelList(novel.novelId)"
+          lg="3"
         >
-          <b-card>
-            <b-card-img
-              :src="novel.image"
-              :alt="novel.title"
-              class="card-image"
-            ></b-card-img>
-            <b-card-title class="card-title">{{ novel.title }}</b-card-title>
-            <b-card-text>{{ novel.author }}</b-card-text>
-            <b-card-text>{{ novel.genre }}</b-card-text>
-            <b-card-text>좋아요 {{ novel.likeCount }}</b-card-text>
-            <b-card-text
-              >{{ novel.grade ? novel.grade : 0 }} ({{
-                novel.reviewCount
-              }})</b-card-text
+          <b-card @click="detailNovelList(novel.novelId)">
+            <b-card-img :src="novel.image" class="card-image"></b-card-img>
+            <b-card-text id="novel-text"
+              >{{ novel.genre }} | {{ novel.author }}</b-card-text
             >
+            <b-card-title>
+              {{
+                novel.title.length < 25
+                  ? novel.title
+                  : novel.title.slice(0, 20) + "..."
+              }}
+            </b-card-title>
+            <template #footer>
+              <div
+                style="
+                  display: flex;
+                  justify-content: space-between;
+                  align-items: center;
+                "
+              >
+                <star-rating
+                  :border-width="4"
+                  border-color="#d8d8d8"
+                  :rounded-corners="true"
+                  :star-size="20"
+                  v-model="novel.grade"
+                  read-only
+                  :star-points="[
+                    23, 2, 14, 17, 0, 19, 10, 34, 7, 50, 23, 43, 38, 50, 36, 34,
+                    46, 19, 31, 17,
+                  ]"
+                ></star-rating
+                >&nbsp;({{ novel.reviewCount }})&nbsp;&nbsp;
+                <b-icon
+                  icon="hand-thumbs-up"
+                  font-scale="1.5"
+                  variant="danger"
+                ></b-icon>
+                {{ novel.likeCount }}
+              </div>
+            </template>
           </b-card>
         </b-col>
       </b-row>
@@ -106,6 +131,7 @@
 
 <script>
 import axios from "axios";
+import StarRating from "vue-star-rating";
 
 export default {
   data() {
@@ -161,6 +187,7 @@ export default {
       this.message = `TooNovel의 추천 시스템이 개인 맞춤 추천 작품 리스트를 생성중입니다.<br>
         바로 오늘 ${formattedDate} 04:00에도 모델이 자동으로 학습되었습니다!`;
       this.isLoading = true;
+
       this.novelList = [];
 
       try {
@@ -174,16 +201,23 @@ export default {
           `${process.env.VUE_APP_API_URL}/recommend`,
           option
         );
-
         await this.sleep(2500);
         this.novelList = res.data;
         console.log(res.data);
         this.isLoading = false;
       } catch (err) {
-        alert("모델은 매일 새벽 4시에 갱신됩니다. 조금만 기다려주세요.");
-        console.log(err);
+        alert("새로 남기신 리뷰는 새벽 4시에 반영됩니다! 조금만 기다려주세요!");
+        this.isLoading = false;
+        this.getDefaultNovel();
       }
     },
+    async getDefaultNovel() {
+      const res = await axios.get(
+        `${process.env.VUE_APP_API_URL}/novel?sort=NOVEL_GRADE_DESC`
+      );
+      this.novelList = res.data;
+    },
+
     async sleep(sec) {
       return new Promise((resolve) => setTimeout(resolve, sec));
     },
@@ -211,6 +245,9 @@ export default {
         console.log(err);
       }
     },
+  },
+  components: {
+    StarRating,
   },
   mounted() {
     this.isLogined =
@@ -290,11 +327,6 @@ export default {
   margin-top: 10px;
   font-size: 20px;
 }
-#allProductList {
-  margin-top: 2%;
-  margin-left: 5%;
-  margin-right: 5%;
-}
 @-webkit-keyframes load1 {
   0%,
   80%,
@@ -318,5 +350,27 @@ export default {
     box-shadow: 0 -2em;
     height: 5em;
   }
+}
+p {
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+.title {
+  margin: 20px;
+}
+.novel-list-box {
+  margin-top: 2%;
+  margin-left: 5%;
+  margin-right: 5%;
+}
+.card-body {
+  height: 420px;
+}
+.card-image {
+  height: 300px;
+}
+.iconList {
+  color: gray;
+  margin-right: 10px;
 }
 </style>
