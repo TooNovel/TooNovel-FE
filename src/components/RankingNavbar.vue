@@ -1,45 +1,38 @@
 <template>
   <div id="rankingBar">
     <div class="info-box">
-      <h3>TooNovel Top 30</h3>
-      <p>TooNovel 에서 가장 인기 있는 작품 30개를 장르에 맞게 골라보세요</p>
+      <h2>👑TooNovel Top 30</h2>
+      <h3>원하는 기준에 맞춰 검색해 보세요😊</h3>
+      <p>TooNovel 에서 가장 인기 있는 작품 30개를 장르에 맞게 골라보세요!</p>
     </div>
-    <h3>원하는 기준에 맞춰 검색해 보세요</h3>
-    <div class="genre-box">
-      <ul id="list-box">
-        <div v-for="v in genres" v-bind:key="v">
-          <div class="button">
-            <li>
-              <P class="btnText">{{ v.value }}</P>
-              <div class="btnTwo">
-                <b-button @click="getGenreRanking(v.key)" class="btnText2">
-                  go!
-                </b-button>
-              </div>
-            </li>
+    <div>
+      <b-row class="menu-bar-parent">
+        <ul class="menu-bar">
+          <div v-for="genre in genres" :key="genre.key">
+            <div @click="getGenreRanking(genre.key)">
+              <li>{{ genre.value }}</li>
+            </div>
+          </div>
+        </ul>
+      </b-row>
+      <div class="sort-row">
+        <div v-for="sort in sorts" :key="sort.key" class="sort-box">
+          <div class="iconList" @click="getSortRanking(sort.key)">
+            <div v-if="sort.key == 'NOVEL_LIKE_DESC'">
+              <h5>
+                <b-icon icon="hand-thumbs-up"></b-icon>&nbsp;{{ sort.value }}
+              </h5>
+            </div>
+            <div v-else-if="sort.key == 'NOVEL_GRADE_DESC'">
+              <h5><b-icon icon="star"></b-icon>&nbsp;{{ sort.value }}</h5>
+            </div>
+            <div v-else-if="sort.key == 'NOVEL_REVIEW_DESC'">
+              <h5><b-icon icon="chat-text"></b-icon>&nbsp;{{ sort.value }}</h5>
+            </div>
           </div>
         </div>
-      </ul>
-      <br />
+      </div>
     </div>
-    <div class="sort-box">
-      <ul id="list-box">
-        <div v-for="v in sorts" v-bind:key="v" class="sort-box">
-          <div class="sort-button">
-            <li>
-              <P class="btnText">{{ v.value }}</P>
-              <div class="btnTwo">
-                <b-button @click="getSortRanking(v.key)" class="btnText2">
-                  go!
-                </b-button>
-              </div>
-            </li>
-          </div>
-        </div>
-      </ul>
-      <br />
-    </div>
-    <hr />
   </div>
 </template>
 
@@ -111,106 +104,69 @@ export default {
   },
 };
 </script>
-<style scoped>
+<style lang="scss" scoped>
 .info-box {
+  padding: 2%;
   width: 80rem;
-  border: 1px solid black;
-  border-radius: 10px;
-  margin: 10px auto;
-}
-.genre-box {
+  background-color: white;
+  border-radius: 20px;
+  margin-top: 3%;
   display: flex;
-  flex-wrap: wrap;
+  flex-direction: column;
+  align-items: center;
+  box-shadow: 5px 5px 20px 5px rgba(94, 92, 154, 0.2);
 }
-#list-box {
+.menu-bar-parent {
+  margin-top: 50px;
+  margin-bottom: 25px;
   display: flex;
-  flex-wrap: wrap;
-  gap: 1rem;
+  justify-content: center;
 }
-ul {
-  list-style-type: none;
+.menu-bar {
+  border-radius: 25px;
+  height: fit-content;
+  display: inline-flex;
+  background-color: rgb(130, 176, 130);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  align-items: center;
+  padding: 0 10px;
+  width: 66%;
+  li {
+    list-style: none;
+    color: white;
+    padding: 12px 16px;
+    margin: 0 8px;
+    position: relative;
+    cursor: pointer;
+    white-space: nowrap;
+    &::before {
+      content: " ";
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
+      width: 100%;
+      z-index: -1;
+      transition: 0.2s;
+      border-radius: 25px;
+    }
+    &:hover {
+      &::before {
+        background: linear-gradient(to bottom, #e8edec, #d2d1d3);
+        box-shadow: 0px 3px 20px 0px black;
+        transform: scale(1.2);
+      }
+      color: black;
+    }
+  }
 }
-#holder {
-  -moz-user-select: -moz-none;
-  -khtml-user-select: none;
-  -webkit-user-select: none;
-  background: white;
-  padding: 10px;
-  width: 250px;
-  margin: 0 auto;
-  position: relative;
-  top: 50%;
-  transform: translateY(-65%);
-  box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.25);
-  border-radius: 2px;
+.sort-row {
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: flex-end;
 }
-.button {
-  background: #3d4c53;
-  margin: 10px auto;
-  width: 200px;
-  height: 50px;
-  overflow: hidden;
-  text-align: center;
-  transition: 0.2s;
-  cursor: pointer;
-  border-radius: 3px;
-  box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.2);
-}
-.sort-button {
-  background: #8dbcd2;
-  margin: 10px auto;
-  width: 200px;
-  height: 50px;
-  overflow: hidden;
-  text-align: center;
-  transition: 0.2s;
-  cursor: pointer;
-  border-radius: 3px;
-  box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.2);
-}
-.btnTwo {
-  position: relative;
-  width: 200px;
-  height: 100px;
-  margin-top: -100px;
-  padding-top: 2px;
-  left: -250px;
-  transition: 0.3s;
-}
-.btnText {
-  color: white;
-  transition: 0.3s;
-}
-.btnText2 {
-  margin-top: 63px;
-  margin-right: -130px;
-  color: #fff;
-}
-.button:hover .btnTwo {
-  /*When hovering over .button change .btnTwo*/
-  left: -130px;
-}
-.button:hover .btnText {
-  /*When hovering over .button change .btnText*/
-  margin-left: 65px;
-}
-.button:active {
-  /*Clicked and held*/
-  box-shadow: 0px 5px 6px rgba(0, 0, 0, 0.3);
-  background-color: wheat;
-}
-
-.sort-button:hover .btnTwo {
-  /*When hovering over .button change .btnTwo*/
-  left: -130px;
-}
-.sort-button:hover .btnText {
-  /*When hovering over .button change .btnText*/
-  margin-left: 65px;
-}
-.sort-button:active {
-  /*Clicked and held*/
-  box-shadow: 0px 5px 6px rgba(0, 0, 0, 0.3);
-  background-color: wheat;
+.iconList {
+  margin-right: 10px;
 }
 </style>
