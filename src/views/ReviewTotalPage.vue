@@ -20,19 +20,42 @@
                     <img :src="review.image" />
                   </div>
                   <div class="novel-info">
-                    <b>장르 :</b> {{ review.genre }} <br />
-                    <b>작가 :</b> {{ review.author }} <br />
-                    <b>제목 :</b> {{ review.title }} <br />
-                    <b>평점 :</b> {{ review.reviewGrade }} <br />
-                    <b>작품 소개 :</b> {{ review.description }} <br />
+                    <p id="nvTitle">{{ review.title }}</p>
+                    <p>{{ review.genre }} | {{ review.author }}</p>
+                    {{ review.description }} <br />
                   </div>
                 </div>
                 <hr />
                 <div class="review-info">
-                  <b>작성자 :</b> {{ review.nickname }} <br />
-                  <b>리뷰 평점 :</b> {{ review.reviewGrade }} <br />
-                  <b>리뷰 내용 :</b> {{ review.reviewContent }} <br />
-                  <b>좋아요 :</b> {{ review.reviewLike }} <br />
+                  <div id="profile">
+                    <img :src="review.imageUrl" id="rvImg" />
+                    <div id="profile_name">
+                      {{ review.nickname }}
+                    </div>
+                  </div>
+                  <br />
+                  {{ review.reviewContent }} <br /><br />
+                  <div id="star-ragting">
+                    <star-rating
+                      :border-width="4"
+                      border-color="#d8d8d8"
+                      :rounded-corners="true"
+                      :star-size="15"
+                      v-model="review.reviewGrade"
+                      read-only
+                      :star-points="[
+                        23, 2, 14, 17, 0, 19, 10, 34, 7, 50, 23, 43, 38, 50, 36,
+                        34, 46, 19, 31, 17,
+                      ]"
+                    ></star-rating>
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                    <b-icon
+                      icon="hand-thumbs-up"
+                      font-scale="1.5"
+                      variant="danger"
+                    ></b-icon>
+                    &nbsp;{{ review.reviewLike }}
+                  </div>
                 </div>
               </div>
             </div>
@@ -54,6 +77,7 @@
 
 <script>
 import axios from "axios";
+import StarRating from "vue-star-rating";
 
 export default {
   data() {
@@ -119,6 +143,9 @@ export default {
     detailNovelList(item) {
       location.href = "/novel/" + item.novelId;
     },
+  },
+  components: {
+    StarRating,
   },
 };
 </script>
@@ -211,5 +238,29 @@ li {
 }
 .nav-link {
   color: black;
+}
+
+#star-ragting {
+  display: flex;
+  justify-content: flex-end;
+}
+
+#rvImg {
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+}
+
+#profile {
+  display: flex;
+}
+
+#profile_name {
+  margin-left: 20px;
+  margin-top: 10px;
+}
+
+#nvTitle {
+  font-size: calc(1.275rem + 0.3vw);
 }
 </style>
