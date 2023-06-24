@@ -401,4 +401,8 @@ button {
 #joinBtn {
   margin-bottom: 10px;
 }
+
+.carousel-3d-container {
+  overflow: revert !important;
+}
 </style>
