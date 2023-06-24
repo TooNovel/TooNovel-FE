@@ -59,25 +59,7 @@ export default {
   },
   methods: {
     async getLikeNovel() {
-      try {
-        const option = {
-          headers: {
-            Authorization: "Bearer " + this.$getAccessToken(),
-          },
-        };
-
-        const res = await axios.get(
-          `${process.env.VUE_APP_API_URL}/user/novel?novelId=${0}`,
-          option
-        );
-        localStorage.setItem("MyLikeNovel", JSON.stringify(res.data));
-        this.$router.push({
-          name: "MyLikeNovel",
-          params: { data: res.data },
-        });
-      } catch (err) {
-        console.log(err);
-      }
+      this.$router.push("myLikeNovel");
     },
     async getMyReview() {
       try {
@@ -127,52 +109,8 @@ export default {
       }
     },
     async getNovelByAuthor() {
-      try {
-        const option = {
-          headers: {
-            Authorization: "Bearer " + this.$getAccessToken(),
-          },
-        };
-        const res = await axios.get(
-          `${process.env.VUE_APP_API_URL}/novel/author`,
-          option
-        );
-        this.$router.push({
-          name: "AuthorNovelPage",
-          params: { data: res.data },
-        });
-      } catch (err) {
-        if (err.code == "U001") {
-          alert(err.message);
-        } else if (
-          this.$getAccessToken() == null ||
-          this.$getAccessToken() === ""
-        ) {
-          alert("로그인 후 좋아요 눌러주세요!");
-        }
-      }
+      this.$router.push("author");
     },
-    // 현재 회원관리 페이지 api가 없는 관계로 추후 추가되면 사용 예정
-    // async adminUser() {
-    //   // 회원 관리 페이지 이동 및 데이터 전달 추가 예정
-    //   try {
-    //     const option = {
-    //       headers: {
-    //         Authorization: "Bearer " + this.$getAccessToken(),
-    //       },
-    //     };
-    //     const res = await axios.get(
-    //       `${process.env.VUE_APP_API_URL}/user?page=${0}`,
-    //       option
-    //     );
-    //     this.$router.push({
-    //       name: "AdminUserPage",
-    //       params: { data: res.data },
-    //     });
-    //   } catch (err) {
-    //     console.log(err);
-    //   }
-    // },
     async adminAuthor() {
       try {
         const option = {
@@ -205,7 +143,6 @@ export default {
   mounted() {
     const accessToken = this.$getAccessToken();
     this.role = this.$getTokenInfo(accessToken).role;
-    console.log(this.role);
   },
 };
 </script>
