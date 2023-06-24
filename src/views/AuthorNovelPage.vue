@@ -213,7 +213,7 @@ export default {
       this.novels = res.data;
       this.novelId = this.novels[this.novels.length - 1].novelId;
       await this.sleep(1500);
-      if (res.data) {
+      if (!(this.novels.length === 0)) {
         this.isLoading = false;
       }
     } catch (err) {
