@@ -68,7 +68,7 @@ export default {
       this.user = user.data;
       this.chatList = chat.data;
       for (let chats of this.chatList) {
-        if (chats.nickname != this.user.nickname) {
+        if (chats.userId != this.user.userId) {
           this.followChatList.push(chats);
         }
       }
@@ -81,7 +81,7 @@ export default {
     async ToMyFollwingChat(res) {
       try {
         this.$store.commit("setChatRoomName", res.chatRoomName);
-        this.$store.commit("setChatOwnerNickname", res.nickname);
+        this.$store.commit("setChatOwner", res.userId);
         const roomId = res.chatRoomId;
         location.href = `/chatWindow/${roomId}`;
       } catch (err) {

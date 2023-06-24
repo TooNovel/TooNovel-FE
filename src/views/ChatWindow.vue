@@ -15,87 +15,96 @@
           </div>
         </div>
         <br />
-        <div class="button-container">
-          <button
-            v-if="loadChatLimiter < 31"
-            class="w-btn-outline w-btn-indigo-outline"
-            type="button"
-            @click="loadChat()"
-          >
-            더보기
-          </button>
-          <button
-            v-if="loadChatLimiter >= 31"
-            class="w-btn-outline w-btn-indigo-outline"
-            type="button"
-          >
-            최근 30일까지의 채팅만 볼 수 있습니다.
-          </button>
-        </div>
-        <div
-          id="chatLog"
-          v-for="(chatting, index) in chattingList.slice().reverse()"
-          :key="index"
-          ref="chatLog"
-        >
-          <!-- 일반 채팅(답장이 아닌 채팅) -->
-          <div v-if="chatting.replyId == null">
-            <!-- 보낸 사람 = 나 -->
-            <div v-if="chatting.senderId == users.userId">
-              <div class="myMsg">
-                <div class="msg">{{ chatting.message }}</div>
-              </div>
-            </div>
-            <!-- 다른 사용자가 보낸 메세지 -->
-            <div
-              v-if="
-                chatting.senderId != users.userId ||
-                (chatting.creator && chatting.senderId != users.userId)
-              "
+        <div class="chat-container">
+          <div class="button-container">
+            <button
+              v-if="loadChatLimiter < 31"
+              class="w-btn-outline w-btn-indigo-outline"
+              type="button"
+              @click="loadChat()"
             >
-              <div class="anotherMsg">
-                <span class="anotherName">{{ chatting.senderName }}</span>
-                <div :class="{ filtered: isFiltered(chatting.filterResult) }">
-                  <div class="msg" @click="cancleFilter(chatting)">
-                    {{ chatting.message }}
+              더보기
+            </button>
+            <button
+              v-if="loadChatLimiter >= 31"
+              class="w-btn-outline w-btn-indigo-outline"
+              type="button"
+            >
+              최근 30일까지의 채팅만 볼 수 있습니다.
+            </button>
+          </div>
+          <div
+            id="chatLog"
+            v-for="(chatting, index) in chattingList.slice().reverse()"
+            :key="index"
+            ref="chatLog"
+          >
+            <!-- 일반 채팅(답장이 아닌 채팅) -->
+            <div v-if="chatting.replyId == null">
+              <!-- 보낸 사람 = 나 -->
+              <div v-if="chatting.senderId == users.userId">
+                <div class="myMsg">
+                  <div class="msg">{{ chatting.message }}</div>
+                </div>
+              </div>
+              <!-- 다른 사용자가 보낸 메세지 -->
+              <div
+                v-if="
+                  chatting.senderId != users.userId ||
+                  (chatting.creator && chatting.senderId != users.userId)
+                "
+              >
+                <div class="anotherMsg">
+                  <span class="anotherName">{{ chatting.senderName }}</span>
+                  <div :class="{ filtered: isFiltered(chatting.filterResult) }">
+                    <div class="msg" @click="cancleFilter(chatting)">
+                      {{ chatting.message }}
+                    </div>
+                    <!-- 위 div에 마우스 호버되면 아래 span이 보이도록 구상중 -->
+                    <span
+                      @click="selectMsg(chatting)"
+                      v-if="chatOwner == users.userId"
+                    >
+                      <span>답장</span>
+                    </span>
                   </div>
-                  <!-- 위 div에 마우스 호버되면 아래 span이 보이도록 구상중 -->
-                  <span
-                    @click="selectMsg(chatting)"
-                    v-if="chatOwnerNickname == users.nickname"
-                    >답장</span
-                  >
                 </div>
               </div>
             </div>
-          </div>
-          <!-- 답장 -->
-          <div v-if="chatting.replyId != null">
-            <!-- 내가 채팅방 주인이면 -->
-            <div class="myMsg" v-if="chatOwnerNickname == users.nickname">
-              <div class="msg">
-                <div class="reply-msg-sendername">{{ chatting.userName }}</div>
-                <div class="reply-msg">{{ chatting.userMessage }}</div>
-                <hr />
-                답장 : {{ chatting.replyMessage }}
+            <!-- 답장 -->
+            <div v-if="chatting.replyId != null">
+              <!-- 내가 채팅방 주인이면 -->
+              <div class="myMsg" v-if="chatOwner == users.userId">
+                <div class="msg">
+                  <div class="reply-msg-sendername">
+                    {{ chatting.userName }}
+                  </div>
+                  <div class="reply-msg">{{ chatting.userMessage }}</div>
+                  <hr />
+                  {{ chatting.replyMessage }}
+                </div>
               </div>
-            </div>
-            <!-- 내가 채팅방 주인이 아니면 -->
-            <div class="anotherMsg" v-if="chatOwnerNickname != users.nickname">
-              <span class="anotherName">{{ chatting.senderName }}</span>
-              <div class="msg">
-                <div class="reply-msg-sendername">{{ chatting.userName }}</div>
-                <div class="reply-msg">{{ chatting.userMessage }}</div>
-                <hr />
-                {{ chatting.replyMessage }}
+              <!-- 내가 채팅방 주인이 아니면 -->
+              <div class="anotherMsg" v-if="chatOwner != users.userId">
+                <span class="anotherName">{{ chatting.senderName }}</span>
+                <div class="msg">
+                  <div class="reply-msg-sendername">
+                    {{ chatting.userName }}
+                  </div>
+                  <div class="reply-msg">{{ chatting.userMessage }}</div>
+                  <hr />
+                  {{ chatting.replyMessage }}
+                </div>
               </div>
             </div>
           </div>
         </div>
         <div>
           <div v-if="isReply">
-            <span>{{ replyChat.message }}</span>
-            <span @click="cancleReply()">X</span>
+            <div class="reply-box">
+              <span class="reply-box-msg">{{ replyChat.message }}</span>
+              <span class="reply-box-cancle" @click="cancleReply()">X</span>
+            </div>
           </div>
           <form id="chatForm" @submit.prevent="sendMsg">
             <div>
@@ -139,11 +148,19 @@ export default {
       chatRoomName: null,
       isReply: false,
       replyChat: {},
-      chatOwnerNickname: null,
+      chatOwner: null,
     };
   },
   async created() {
     try {
+      // 비정상적인 요청
+      this.chatOwner = await this.$store.getters.getChatOwner;
+      this.chatRoomName = await this.$store.getters.getChatRoomName;
+      if (this.chatOwner == null || this.chatRoomName == null) {
+        this.$router.push({ name: "ChatRoom" });
+        return;
+      }
+
       // 초기 설정
       this.date = new Date();
       const accessToken = this.$getAccessToken();
@@ -161,8 +178,7 @@ export default {
         option
       );
       this.nickname = user.data.nickname;
-      this.chatOwnerNickname = this.$store.getters.getChatOwnerNickname;
-      this.$store.commit("setChatOwnerNickname", null);
+      this.$store.commit("setChatOwner", null);
 
       // 웹소켓 연결
       this.connect();
@@ -175,7 +191,6 @@ export default {
       }, 100);
 
       // 화면 상단 표시용
-      this.chatRoomName = this.$store.getters.getChatRoomName;
       this.$store.commit("setChatRoomName", null);
     } catch (err) {
       console.log(err);
@@ -183,7 +198,7 @@ export default {
   },
   methods: {
     async cancleFilter(chat) {
-      chat.filterResult = "ok";
+      chat.filterResult = "open";
     },
     async toChatRoom() {
       location.href = "/chatRoom";
@@ -435,8 +450,19 @@ export default {
       return msg == "bad" ? true : false;
     },
     selectMsg(chatting) {
-      this.isReply = true;
-      this.replyChat = chatting;
+      if (chatting.filterResult != "ok") {
+        if (
+          confirm(
+            "해당 메세지는 다른 사용자에게 불쾌감을 줄 수 있습니다. 진행하시겠습니까?"
+          )
+        ) {
+          this.isReply = true;
+          this.replyChat = chatting;
+        }
+      } else {
+        this.isReply = true;
+        this.replyChat = chatting;
+      }
     },
     cancleReply() {
       this.isReply = false;
@@ -560,5 +586,36 @@ body {
 .reply-msg {
   /* color: gray; */
   font-size: small;
+}
+.reply-box {
+  display: flex;
+  background-color: #f5f5f5;
+  padding: 10px;
+}
+.reply-box-msg {
+  width: 95%;
+}
+.reply-box-cancle {
+  width: 5%;
+  text-align: center;
+  align-self: center;
+  color: gray;
+}
+.chat-container {
+  height: calc(85% - 3rem) !important;
+  overflow: hidden scroll;
+}
+#contentWrap,
+#contentCover,
+#chatWrap {
+  height: calc(100% - 3rem) !important;
+}
+div::-webkit-scrollbar {
+  width: 4px; /* 스크롤바의 너비 */
+}
+div::-webkit-scrollbar-thumb {
+  height: 30%; /* 스크롤바의 길이 */
+  background: #ccc; /* 스크롤바의 색상 */
+  border-radius: 10px;
 }
 </style>
