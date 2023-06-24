@@ -64,11 +64,11 @@
         </b-card>
       </div>
     </div>
-    <div class="spiner" v-if="isLoading">
-      <div class="loader">Loading...</div>
-    </div>
-    <div class="loading-msg" v-if="isLoading">
-      {{ message }}
+    <div class="loading-box" v-if="isLoading">
+      <img class="robot-img" src="/robot.gif" />
+      <div class="loading-msg">
+        <span v-html="message"></span>
+      </div>
     </div>
     <div id="allProductList">
       <b-row>
@@ -148,7 +148,18 @@ export default {
   },
   methods: {
     async generateRecommend() {
-      this.message = "개인 맞춤 추천 작품 리스트를 생성중입니다.";
+      var today = new Date();
+      var formattedDate =
+        today.getFullYear() +
+        "년 " +
+        ("0" + (today.getMonth() + 1)).slice(-2) +
+        "월 " +
+        ("0" + today.getDate()).slice(-2) +
+        "일";
+      console.log(formattedDate);
+
+      this.message = `TooNovel의 추천 시스템이 개인 맞춤 추천 작품 리스트를 생성중입니다.<br>
+        바로 오늘 ${formattedDate} 04:00에도 모델이 자동으로 학습되었습니다!`;
       this.isLoading = true;
       this.novelList = [];
 
@@ -257,10 +268,20 @@ export default {
 .spiner {
   height: 200px;
 }
+.loading-box {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.robot-img {
+  margin-bottom: 10px;
+}
 .loading-msg {
-  font-size: 18px;
+  font-size: 30px;
   font-weight: 600;
-  color: gray;
+  color: darkseagreen;
+  text-align: center;
 }
 .card-image {
   height: 450px;
