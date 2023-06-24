@@ -37,8 +37,8 @@ export default {
   name: "ChatRoom",
   data() {
     return {
-      roomId: "", // 추후에 api 통신으로 받아올것
-      user: {}, // userId, nickname...
+      roomId: "",
+      user: {},
       role: null,
     };
   },

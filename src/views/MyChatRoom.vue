@@ -25,14 +25,12 @@
           </div>
         </div>
         <div>
-          <button
+          <b-icon
+            font-scale="1.5"
+            icon="trash"
+            aria-hidden="true"
             @click="deleteMyChat(myChatRoom.chatRoomId)"
-            type="button"
-            aria-label="Close"
-            class="close"
-          >
-            ×
-          </button>
+          ></b-icon>
         </div>
       </div>
     </div>
@@ -147,10 +145,7 @@ export default {
             `${process.env.VUE_APP_API_URL}/chat/${roomId}`,
             option
           );
-          alert("삭제 되었습니다!");
           this.$router.go(0);
-        } else {
-          console.log("취소하기");
         }
       } catch (err) {
         console.log(err);
