@@ -186,6 +186,7 @@ export default {
 
       this.message = `TooNovel의 추천 시스템이 개인 맞춤 추천 작품 리스트를 생성중입니다.<br>
         바로 오늘 ${formattedDate} 04:00에도 모델이 자동으로 학습되었습니다!`;
+      this.isLoading = true;
 
       this.novelList = [];
 
@@ -200,7 +201,6 @@ export default {
           `${process.env.VUE_APP_API_URL}/recommend`,
           option
         );
-        this.isLoading = true;
         await this.sleep(2500);
         this.novelList = res.data;
         console.log(res.data);
