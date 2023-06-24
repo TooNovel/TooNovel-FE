@@ -8,7 +8,7 @@
         <hr />
         <div id="reviewBox">
           <div v-for="review in reviews.content" v-bind:key="review.id">
-            <div class="pretty-box">
+            <div class="pretty-box" @click="detailNovelList(review)">
               <div class="review-item">
                 <div class="review-img">
                   <img :src="review.image" />
@@ -92,9 +92,16 @@ export default {
           option
         );
         this.reviews = res.data;
+        window.scrollTo({
+          top: 0,
+          behavior: "instant",
+        });
       } catch (err) {
         console.log(err);
       }
+    },
+    detailNovelList(item) {
+      location.href = "/novel/" + item.novelId;
     },
   },
   components: { MyPageNavbar },

@@ -14,7 +14,7 @@
         <div>
           <div id="reviewBox">
             <div v-for="review in reviews.content" v-bind:key="review.id">
-              <div class="pretty-box">
+              <div class="pretty-box" @click="detailNovelList(review)">
                 <div class="review-item">
                   <div class="review-img">
                     <img :src="review.image" />
@@ -85,6 +85,10 @@ export default {
           `${process.env.VUE_APP_API_URL}/review?page=${n}&sort=${this.sort}&genre=${this.genre}&limit=${this.limit}`
         );
         this.reviews = res.data;
+        window.scrollTo({
+          top: 0,
+          behavior: "instant",
+        });
       } catch (err) {
         console.log(err);
       }
@@ -111,6 +115,9 @@ export default {
     },
     async sleep(sec) {
       return new Promise((resolve) => setTimeout(resolve, sec));
+    },
+    detailNovelList(item) {
+      location.href = "/novel/" + item.novelId;
     },
   },
 };
