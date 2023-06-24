@@ -29,7 +29,13 @@
             <b-card-text id="novel-text"
               >{{ novel.genre }} | {{ novel.author }}</b-card-text
             >
-            <b-card-title>{{ novel.title }}</b-card-title>
+            <b-card-title>
+              {{
+                novel.title.length < 25
+                  ? novel.title
+                  : novel.title.slice(0, 20) + "..."
+              }}
+            </b-card-title>
             <template #footer>
               <div class="response-footer">
                 <star-rating
