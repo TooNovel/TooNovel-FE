@@ -160,7 +160,7 @@ export default {
 
       this.message = `TooNovel의 추천 시스템이 개인 맞춤 추천 작품 리스트를 생성중입니다.<br>
         바로 오늘 ${formattedDate} 04:00에도 모델이 자동으로 학습되었습니다!`;
-      this.isLoading = true;
+
       this.novelList = [];
 
       try {
@@ -174,16 +174,24 @@ export default {
           `${process.env.VUE_APP_API_URL}/recommend`,
           option
         );
-
+        this.isLoading = true;
         await this.sleep(2500);
         this.novelList = res.data;
         console.log(res.data);
         this.isLoading = false;
       } catch (err) {
-        alert("모델은 매일 새벽 4시에 갱신됩니다. 조금만 기다려주세요.");
-        console.log(err);
+        alert("새로 남기신 리뷰는 새벽 4시에 반영됩니다! 조금만 기다려주세요!");
+        this.isLoading = false;
+        this.getDefaultNovel();
       }
     },
+    async getDefaultNovel() {
+      const res = await axios.get(
+        `${process.env.VUE_APP_API_URL}/novel?sort=NOVEL_GRADE_DESC`
+      );
+      this.novelList = res.data;
+    },
+
     async sleep(sec) {
       return new Promise((resolve) => setTimeout(resolve, sec));
     },
