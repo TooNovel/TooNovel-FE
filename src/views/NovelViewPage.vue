@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <div id="loading" v-if="isLoading" style="height: 800px">
+    <div id="loading" v-if="isLoading">
       <div class="loader">Loading...</div>
     </div>
     <div v-else class="novel-list-box" ref="allProductList">
