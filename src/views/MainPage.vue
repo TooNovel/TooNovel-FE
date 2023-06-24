@@ -107,10 +107,19 @@
           <div @click="detailNovelList(review)" class="review-form">
             <p>{{ review.nickname }}</p>
             <div class="review-grade">
-              <span style="font-size: 20px; letter-spacing: -0.2em">
-                {{ "★".repeat(review.reviewGrade) }}
-                {{ "☆".repeat(5 - review.reviewGrade) }}
-              </span>
+              <star-rating
+                :border-width="4"
+                border-color="#d8d8d8"
+                :rounded-corners="true"
+                :star-size="20"
+                v-model="review.reviewGrade"
+                read-only
+                :star-points="[
+                  23, 2, 14, 17, 0, 19, 10, 34, 7, 50, 23, 43, 38, 50, 36, 34,
+                  46, 19, 31, 17,
+                ]"
+                :show-rating="false"
+              ></star-rating>
             </div>
             <p class="review-content">
               {{
@@ -133,6 +142,7 @@
 <script>
 import axios from "axios";
 import { Carousel3d, Slide } from "vue-carousel-3d";
+import StarRating from "vue-star-rating";
 
 export default {
   name: "MainPage",
@@ -190,6 +200,7 @@ export default {
   components: {
     Carousel3d,
     Slide,
+    StarRating,
   },
   methods: {
     goToSlide(index) {
@@ -311,6 +322,9 @@ h5 {
 .review-content {
   margin-top: 10px !important;
   margin-bottom: 10px !important;
+}
+.vue-star-rating {
+  justify-content: center;
 }
 
 #joinBtn {
