@@ -13,23 +13,6 @@
           </div>
         </ul>
       </b-row>
-      <div class="sort-row">
-        <div v-for="sort in sorts" :key="sort.key" class="sort-box">
-          <div class="iconList" @click="getSortRanking(sort.key)">
-            <div v-if="sort.key == 'NOVEL_LIKE_DESC'">
-              <h5>
-                <b-icon icon="hand-thumbs-up"></b-icon>&nbsp;{{ sort.value }}
-              </h5>
-            </div>
-            <div v-else-if="sort.key == 'NOVEL_GRADE_DESC'">
-              <h5><b-icon icon="star"></b-icon>&nbsp;{{ sort.value }}</h5>
-            </div>
-            <div v-else-if="sort.key == 'NOVEL_REVIEW_DESC'">
-              <h5><b-icon icon="chat-text"></b-icon>&nbsp;{{ sort.value }}</h5>
-            </div>
-          </div>
-        </div>
-      </div>
       <br />
       <b-row>
         <b-col
@@ -48,13 +31,7 @@
             >
             <b-card-title>{{ novel.title }}</b-card-title>
             <template #footer>
-              <div
-                style="
-                  display: flex;
-                  justify-content: space-between;
-                  align-items: center;
-                "
-              >
+              <div class="response-footer">
                 <star-rating
                   :border-width="4"
                   border-color="#d8d8d8"
@@ -101,9 +78,8 @@ export default {
       isLoading: true,
       novelGrade: 0,
       genre: "",
-      sort: "",
       genres: [
-        { key: "top30", value: "top30" },
+        { key: "all", value: "전체" },
         { key: "FANTASY", value: "판타지" },
         { key: "ROMANCE", value: "로맨스" },
         { key: "ROMANCE_FANTASY", value: "로맨스판타지" },
@@ -113,11 +89,6 @@ export default {
         { key: "LIGHT_NOVEL", value: "라이트노벨" },
         { key: "BL", value: "BL" },
       ],
-      sorts: [
-        { key: "NOVEL_LIKE_DESC", value: "좋아요 순" },
-        { key: "NOVEL_GRADE_DESC", value: "평점 순" },
-        { key: "NOVEL_REVIEW_DESC", value: "리뷰개수 순" },
-      ],
     };
   },
   async created() {
@@ -126,26 +97,15 @@ export default {
   },
   methods: {
     async getGenreRanking(genre) {
-      console.log(genre);
-      if (genre === "top30") {
+      if (genre === "all") {
         genre = "";
       }
       this.genre = genre;
       try {
         const res = await axios.get(
-          `${process.env.VUE_APP_API_URL}/novel?genre=${this.genre}&sort=${this.sort}`
+          `${process.env.VUE_APP_API_URL}/novel?genre=${this.genre}`
         );
-        this.novels = res.data;
-      } catch (err) {
-        console.log(err);
-      }
-    },
-    async getSortRanking(sort) {
-      this.sort = sort;
-      try {
-        const res = await axios.get(
-          `${process.env.VUE_APP_API_URL}/novel?genre=${this.genre}&sort=${this.sort}`
-        );
+        this.novels = [];
         this.novels = res.data;
       } catch (err) {
         console.log(err);
@@ -153,7 +113,6 @@ export default {
     },
     async infiniteHandler($state) {
       if (!this.novels.length) {
-        // 데이터가 없는 경우 초기 데이터를 가져옵니다.
         try {
           const res = await axios.get(`${process.env.VUE_APP_API_URL}/novel`);
           this.novels = res.data;
@@ -166,15 +125,14 @@ export default {
       }
       try {
         const res = await axios.get(
-          `${process.env.VUE_APP_API_URL}/novel?novelId=` + this.novelId
+          `${process.env.VUE_APP_API_URL}/novel?novelId=${this.novelId}&genre=${this.genre}`
         );
-        console.log("length :" + res.data.length);
         if (res.data.length) {
           this.novels = this.novels.concat(res.data);
           this.novelId = this.novels[this.novels.length - 1].novelId;
-          $state.loaded(); //데이터 로딩
+          $state.loaded();
           if (this.novelId / res.data.length == 0) {
-            $state.complete(); //데이터가 없으면 로딩 끝
+            $state.complete();
           }
         } else {
           $state.complete();
@@ -268,6 +226,21 @@ p {
 }
 .title {
   margin: 20px;
+}
+.response-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+@media (max-width: 600px) {
+  .response-footer {
+    flex-wrap: wrap;
+  }
+}
+@media (min-width: 170px) {
+  .response-footer {
+    flex-wrap: wrap;
+  }
 }
 .novel-list-box {
   margin-top: 2%;
