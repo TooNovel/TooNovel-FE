@@ -117,7 +117,6 @@ export default {
           `${process.env.VUE_APP_API_URL}/user/novel?novelId=${this.novelId}`,
           option
         );
-        console.log("length :" + res.data.length);
         if (res.data.length) {
           this.novels = this.novels.concat(res.data);
           this.novelId = this.novels[this.novels.length - 1].novelId;

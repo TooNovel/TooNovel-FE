@@ -143,7 +143,6 @@ export default {
   mounted() {
     const accessToken = this.$getAccessToken();
     this.role = this.$getTokenInfo(accessToken).role;
-    console.log(this.role);
   },
 };
 </script>
