@@ -138,7 +138,7 @@ export default {
           labels: this.reviewIdxValue,
           datasets: [
             {
-              label: "Dataset",
+              label: "추가된 리뷰 개수",
               data: this.reviewIdxCount,
               borderColor: "red",
               backgroundColor: "rgba(255, 0, 0, 0.5)",
@@ -151,10 +151,6 @@ export default {
         options: {
           responsive: true,
           plugins: {
-            title: {
-              display: true,
-              text: "dssssssss",
-            },
             tooltip: {
               callbacks: {
                 label: (context) => {
@@ -184,7 +180,7 @@ export default {
           labels: this.novelIdxValue,
           datasets: [
             {
-              label: "Dataset",
+              label: "추가된 웹소설 개수",
               data: this.novelIdxCount,
               borderColor: "red",
               backgroundColor: "rgba(255, 0, 0, 0.5)",
@@ -197,11 +193,6 @@ export default {
         options: {
           responsive: true,
           plugins: {
-            title: {
-              display: true,
-              text: (ctx2) =>
-                "Point Style: " + ctx2.chart.data.datasets[0].pointStyle,
-            },
             tooltip: {
               callbacks: {
                 label: (context) => {
