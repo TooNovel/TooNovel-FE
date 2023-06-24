@@ -21,14 +21,12 @@
             </div>
           </div>
           <div>
-            <button
-              @click="deleteMyChat(myChatRoom.chatRoomId)"
-              type="button"
-              aria-label="Close"
-              class="close"
-            >
-              ×
-            </button>
+            <b-icon
+              font-scale="1.5"
+              icon="trash"
+              aria-hidden="true"
+              @click="deleteFollowChat(chat.chatRoomId)"
+            ></b-icon>
           </div>
         </div>
       </div>
@@ -72,7 +70,6 @@ export default {
           this.followChatList.push(chats);
         }
       }
-      console.log(this.followChatList, "--> followsChat");
     } catch (err) {
       console.log(err);
     }
@@ -84,6 +81,24 @@ export default {
         this.$store.commit("setChatOwner", res.userId);
         const roomId = res.chatRoomId;
         location.href = `/chatWindow/${roomId}`;
+      } catch (err) {
+        console.log(err);
+      }
+    },
+    async deleteFollowChat(rId) {
+      try {
+        if (confirm("정말로 탈퇴하시겠습니까?")) {
+          const option = {
+            headers: {
+              Authorization: "Bearer " + this.$getAccessToken(),
+            },
+          };
+          await axios.delete(
+            `${process.env.VUE_APP_API_URL}/chat/leave/${rId}`,
+            option
+          );
+          this.$router.go(0);
+        }
       } catch (err) {
         console.log(err);
       }
