@@ -33,7 +33,7 @@
       </div>
     </b-col>
     <div v-if="isEmpty">
-      <h1>검색된 결과가 없습니다.</h1>
+      <h1 class="none-result">검색된 결과가 없습니다.</h1>
     </div>
     <div v-else>
       <div class="novel-list-box">
@@ -211,5 +211,9 @@ export default {
 .descrption {
   display: grid;
   place-items: center;
+}
+.none-result {
+  text-align: center;
+  margin: 2%;
 }
 </style>

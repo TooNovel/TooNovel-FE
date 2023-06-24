@@ -1,7 +1,7 @@
 <template>
   <div id="reviewContent">
     <div id="reviewWrap">
-      <div id="loading" v-if="isLoading" style="height: 600px">
+      <div id="loading" v-if="isLoading">
         <div class="loader">Loading...</div>
       </div>
       <main v-else style="margin-top: 3%">
