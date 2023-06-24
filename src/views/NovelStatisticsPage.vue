@@ -116,7 +116,7 @@ export default {
           labels: this.idxValue,
           datasets: [
             {
-              label: "데이터 개수",
+              label: "리뷰 개수",
               data: this.ageCount,
               backgroundColor: [
                 "rgba(255, 99, 132, 0.2)",
@@ -160,7 +160,7 @@ export default {
           labels: ["남성", "여성"],
           datasets: [
             {
-              label: "데이터 개수",
+              label: "리뷰 개수",
               data: this.genderCount,
               backgroundColor: [
                 "rgba(54, 162, 235, 0.2)",
@@ -190,10 +190,6 @@ export default {
               fontSize: 15,
               precision: 2,
             },
-          },
-          title: {
-            display: true,
-            text: "Chart.js Pie Chart",
           },
         },
       };
