@@ -1,7 +1,6 @@
 <template>
   <div class="container">
     <RankingNavbar @setNovels="setNovels"></RankingNavbar>
-    <h3 class="title"><b>전체 작품 리스트</b></h3>
     <div id="loading" v-if="isLoading" style="height: 800px">
       <div class="loader">Loading...</div>
     </div>
@@ -18,15 +17,39 @@
         >
           <b-card @click="detailNovelList(novel.novelId)">
             <b-card-img :src="novel.image" class="card-image"></b-card-img>
-            <b-card-title>{{ novel.title }}</b-card-title>
-            <b-card-text>{{ novel.author }}</b-card-text>
-            <b-card-text>{{ novel.genre }}</b-card-text>
-            <b-card-text>좋아요 {{ novel.likeCount }}</b-card-text>
-            <b-card-text
-              >{{ novel.grade ? novel.grade : 0 }} ({{
-                novel.reviewCount
-              }})</b-card-text
+            <b-card-text id="novel-text"
+              >{{ novel.genre }} | {{ novel.author }}</b-card-text
             >
+            <b-card-title>
+              {{
+                novel.title.length < 25
+                  ? novel.title
+                  : novel.title.slice(0, 20) + "..."
+              }}
+            </b-card-title>
+            <template #footer>
+              <div class="response-footer">
+                <star-rating
+                  :border-width="4"
+                  border-color="#d8d8d8"
+                  :rounded-corners="true"
+                  :star-size="20"
+                  v-model="novel.grade"
+                  read-only
+                  :star-points="[
+                    23, 2, 14, 17, 0, 19, 10, 34, 7, 50, 23, 43, 38, 50, 36, 34,
+                    46, 19, 31, 17,
+                  ]"
+                ></star-rating
+                >&nbsp;({{ novel.reviewCount }})&nbsp;&nbsp;
+                <b-icon
+                  icon="hand-thumbs-up"
+                  font-scale="1.5"
+                  variant="danger"
+                ></b-icon>
+                {{ novel.likeCount }}
+              </div>
+            </template>
           </b-card>
         </b-col>
       </b-row>
@@ -36,6 +59,7 @@
 
 <script>
 import RankingNavbar from "@/components/RankingNavbar.vue";
+import StarRating from "vue-star-rating";
 
 export default {
   data() {
@@ -62,6 +86,7 @@ export default {
   },
   components: {
     RankingNavbar,
+    StarRating,
   },
 };
 </script>
@@ -80,5 +105,23 @@ export default {
 }
 .card-image {
   height: 300px;
+}
+.response-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+@media (max-width: 600px) {
+  .response-footer {
+    flex-wrap: wrap;
+  }
+}
+@media (min-width: 170px) {
+  .response-footer {
+    flex-wrap: wrap;
+  }
+}
+.card-body {
+  height: 420px;
 }
 </style>
