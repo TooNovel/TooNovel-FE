@@ -144,10 +144,6 @@ export default {
       return new Promise((resolve) => setTimeout(resolve, sec));
     },
   },
-  async created() {
-    await this.sleep(1500);
-    this.isLoading = false;
-  },
   async mounted() {
     try {
       const option = {
@@ -162,6 +158,10 @@ export default {
       );
       this.novels = res.data;
       this.novelId = this.novels[this.novels.length - 1].likeNovelId;
+      await this.sleep(1500);
+      if (res.data) {
+        this.isLoading = false;
+      }
     } catch (err) {
       console.log(err);
     }
