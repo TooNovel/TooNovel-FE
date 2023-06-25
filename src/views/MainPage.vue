@@ -318,6 +318,7 @@ h5 {
 .title-author {
   display: flex;
   flex-direction: column;
+  font-size: 12px;
 }
 .review-content {
   margin-top: 10px !important;
