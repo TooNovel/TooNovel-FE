@@ -37,7 +37,7 @@
     </div>
     <div v-else>
       <div class="novel-list-box">
-        <b-row id="work" style="margin-top: 20px">
+        <b-row>
           <b-col
             v-for="(novel, index) in novels"
             :key="index"
@@ -49,15 +49,39 @@
           >
             <b-card @click="detailNovelList(novel.novelId)">
               <b-card-img :src="novel.image" class="card-image"></b-card-img>
-              <b-card-title>{{ novel.title }}</b-card-title>
-              <b-card-text>{{ novel.author }}</b-card-text>
-              <b-card-text>{{ novel.genre }}</b-card-text>
-              <b-card-text>좋아요 {{ novel.likeCount }}</b-card-text>
-              <b-card-text
-                >{{ novel.grade ? novel.grade : 0 }} ({{
-                  novel.reviewCount
-                }})</b-card-text
+              <b-card-text id="novel-text"
+                >{{ novel.genre }} | {{ novel.author }}</b-card-text
               >
+              <b-card-title>
+                {{
+                  novel.title.length < 25
+                    ? novel.title
+                    : novel.title.slice(0, 20) + "..."
+                }}
+              </b-card-title>
+              <template #footer>
+                <div class="response-footer">
+                  <star-rating
+                    :border-width="4"
+                    border-color="#d8d8d8"
+                    :rounded-corners="true"
+                    :star-size="20"
+                    v-model="novel.grade"
+                    read-only
+                    :star-points="[
+                      23, 2, 14, 17, 0, 19, 10, 34, 7, 50, 23, 43, 38, 50, 36,
+                      34, 46, 19, 31, 17,
+                    ]"
+                  ></star-rating
+                  >({{ novel.reviewCount }})&nbsp;&nbsp;
+                  <b-icon
+                    icon="hand-thumbs-up"
+                    font-scale="1.5"
+                    variant="danger"
+                  ></b-icon>
+                  {{ novel.likeCount }}
+                </div>
+              </template>
             </b-card>
           </b-col>
         </b-row>
@@ -73,6 +97,7 @@
 <script>
 import axios from "axios";
 import InfiniteLoading from "vue-infinite-loading";
+import StarRating from "vue-star-rating";
 
 export default {
   name: "WorkSearchPage",
@@ -174,16 +199,15 @@ export default {
   },
   components: {
     InfiniteLoading,
+    StarRating,
   },
 };
 </script>
 <style scoped>
 #WorkSearchPage {
-  padding-top: 50px;
+  padding-top: 20px;
   display: flex;
   justify-content: center;
-  align-items: center;
-  display: flex;
   flex-direction: row;
 }
 .title {
@@ -195,17 +219,11 @@ export default {
   margin-right: 5%;
 }
 .card-image {
-  height: 350px;
+  height: 300px;
 }
 
 #search {
   flex-wrap: wrap;
-}
-
-#work {
-  margin-top: 2%;
-  margin-left: 5%;
-  margin-right: 5%;
 }
 
 .descrption {
@@ -215,5 +233,35 @@ export default {
 .none-result {
   text-align: center;
   margin: 2%;
+}
+
+.card-body {
+  height: 420px;
+}
+
+.response-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+@media (max-width: 600px) {
+  .response-footer {
+    flex-wrap: wrap;
+  }
+}
+@media (min-width: 170px) {
+  .response-footer {
+    flex-wrap: wrap;
+  }
+}
+
+.title {
+  margin: 20px;
+}
+
+p {
+  margin-top: 5px;
+  margin-bottom: 5px;
 }
 </style>
