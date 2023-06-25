@@ -39,7 +39,9 @@
           type="text"
           v-model="searchTitle"
         />
-        <b-button size="sm" class="my-2 my-sm-0" type="submit">검색</b-button>
+        <b-button size="sm" class="my-2 my-sm-0" type="submit">
+          <b-icon icon="search" scale="1" style="margin-top: 3px"></b-icon>
+        </b-button>
       </b-nav-form>
       <div v-if="isLogined">
         <b-nav-form class="mt-1">
@@ -48,7 +50,7 @@
             @click="mypage()"
             id="loginBtn"
             style="margin-right: 20px"
-            variant="primary"
+            variant="success"
           >
             마이페이지
           </b-button>
@@ -57,7 +59,7 @@
             @click="logout()"
             id="loginBtn"
             style="margin-right: 20px"
-            variant="primary"
+            variant="success"
           >
             로그아웃
           </b-button>
@@ -70,7 +72,7 @@
             @click="goToLoginPage()"
             id="loginBtn"
             style="margin-right: 20px"
-            variant="primary"
+            variant="success"
           >
             로그인
           </b-button>
