@@ -188,15 +188,7 @@ export default {
       this.$router.push("/community");
     },
     toSearch() {
-      this.$router.push({
-        path: "/search",
-        query: {
-          novelId: null,
-          genre: "",
-          author: "",
-          title: this.searchTitle,
-        },
-      });
+      location.href = `/search?title=${this.searchTitle}`;
     },
     toFanclub() {
       this.$router.push("/fanclub");
