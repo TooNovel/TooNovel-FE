@@ -32,10 +32,7 @@
         <b-button variant="info" @click="novelRequest()">신청하기</b-button>
       </div>
     </b-col>
-    <div v-if="isEmpty">
-      <h1 class="none-result">검색된 결과가 없습니다.</h1>
-    </div>
-    <div v-else>
+    <div>
       <div class="novel-list-box">
         <b-row>
           <b-col
@@ -103,7 +100,6 @@ export default {
   name: "WorkSearchPage",
   data() {
     return {
-      isEmpty: false,
       title: "",
       novels: [],
       novelId: 0,
@@ -133,11 +129,7 @@ export default {
         `${process.env.VUE_APP_API_URL}/novel?title=${this.searchTitle}`
       );
       this.novels = res.data;
-      if (!this.novels.length) {
-        this.isEmpty = true;
-      } else {
-        this.novelId = this.novels[this.novels.length - 1].novelId;
-      }
+      this.novelId = this.novels[this.novels.length - 1].novelId;
     } catch (err) {
       console.log(err);
     }
