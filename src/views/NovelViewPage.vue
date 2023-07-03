@@ -129,6 +129,7 @@ export default {
         genre = "";
       }
       this.genre = genre;
+      this.sort = "";
       try {
         location.href = `/novels?genre=${this.genre}&sort=${this.sort}`;
       } catch (err) {
@@ -243,6 +244,9 @@ export default {
     );
     this.novels = novelList.data;
     this.novelId = this.novels[this.novels.length - 1].novelId;
+    this.reviewCount = this.novels[this.novels.length - 1].reviewCount;
+    this.grade = this.novels[this.novels.length - 1].grade;
+    this.likeCount = this.novels[this.novels.length - 1].likeCount;
     await this.sleep(500);
     if (!(this.novels.length === 0)) {
       this.isLoading = false;
