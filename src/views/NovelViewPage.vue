@@ -123,10 +123,6 @@ export default {
       ],
     };
   },
-  async created() {
-    await this.sleep(500);
-    this.isLoading = false;
-  },
   methods: {
     async getGenreRanking(genre) {
       if (genre === "all") {
@@ -148,72 +144,84 @@ export default {
       }
     },
     async infiniteHandler($state) {
-      try {
-        if (this.sort == "NOVEL_LIKE_DESC") {
-          try {
-            const res = await axios.get(
-              `${process.env.VUE_APP_API_URL}/novel?novelId=${this.novelId}&genre=${this.genre}&sort=${this.sort}&likeCount=${this.likeCount}`
-            );
-            if (res.data.length) {
-              this.novels = this.novels.concat(res.data);
-              this.novelId = this.novels[this.novels.length - 1].novelId;
-              this.likeCount = this.novels[this.novels.length - 1].likeCount;
-              $state.loaded();
-              if (this.novelId / res.data.length == 0) {
-                $state.complete();
-              }
-            } else {
+      if (this.sort == "") {
+        try {
+          const res = await axios.get(
+            `${process.env.VUE_APP_API_URL}/novel?novelId=${this.novelId}&genre=${this.genre}&sort=CREATED_DATE_DESC`
+          );
+          if (res.data.length) {
+            this.novels = this.novels.concat(res.data);
+            this.novelId = this.novels[this.novels.length - 1].novelId;
+            $state.loaded();
+            if (this.novelId / res.data.length == 0) {
               $state.complete();
             }
-          } catch (err) {
-            console.log(err);
+          } else {
+            $state.complete();
           }
+        } catch (err) {
+          console.log(err);
         }
-        if (this.sort == "NOVEL_GRADE_DESC") {
-          try {
-            const res = await axios.get(
-              `${process.env.VUE_APP_API_URL}/novel?novelId=${this.novelId}&genre=${this.genre}&sort=${this.sort}&grade=${this.grade}`
-            );
-            if (res.data.length) {
-              this.novels = this.novels.concat(res.data);
-              this.novelId = this.novels[this.novels.length - 1].novelId;
-              this.grade = this.novels[this.novels.length - 1].grade;
-              $state.loaded();
-              if (this.novelId / res.data.length == 0) {
-                $state.complete();
-              }
-            } else {
+      }
+      if (this.sort == "NOVEL_LIKE_DESC") {
+        try {
+          const res = await axios.get(
+            `${process.env.VUE_APP_API_URL}/novel?novelId=${this.novelId}&genre=${this.genre}&sort=${this.sort}&likeCount=${this.likeCount}`
+          );
+          if (res.data.length) {
+            this.novels = this.novels.concat(res.data);
+            this.novelId = this.novels[this.novels.length - 1].novelId;
+            this.likeCount = this.novels[this.novels.length - 1].likeCount;
+            $state.loaded();
+            if (this.novelId / res.data.length == 0) {
               $state.complete();
             }
-          } catch (err) {
-            console.log(err);
+          } else {
+            $state.complete();
           }
+        } catch (err) {
+          console.log(err);
         }
-        if (this.sort == "NOVEL_REVIEW_DESC") {
-          try {
-            const res = await axios.get(
-              `${process.env.VUE_APP_API_URL}/novel?novelId=${this.novelId}&genre=${this.genre}&sort=${this.sort}&reviewCount=${this.reviewCount}`
-            );
-            if (res.data.length) {
-              this.novels = this.novels.concat(res.data);
-              this.novelId = this.novels[this.novels.length - 1].novelId;
-              this.reviewCount =
-                this.novels[this.novels.length - 1].reviewCount;
-              $state.loaded();
-              if (this.novelId / res.data.length == 0) {
-                $state.complete();
-              }
-            } else {
+      }
+      if (this.sort == "NOVEL_GRADE_DESC") {
+        try {
+          const res = await axios.get(
+            `${process.env.VUE_APP_API_URL}/novel?novelId=${this.novelId}&genre=${this.genre}&sort=${this.sort}&grade=${this.grade}`
+          );
+          if (res.data.length) {
+            this.novels = this.novels.concat(res.data);
+            this.novelId = this.novels[this.novels.length - 1].novelId;
+            this.grade = this.novels[this.novels.length - 1].grade;
+            $state.loaded();
+            if (this.novelId / res.data.length == 0) {
               $state.complete();
             }
-          } catch (err) {
-            console.log(err);
+          } else {
+            $state.complete();
           }
+        } catch (err) {
+          console.log(err);
         }
-      } catch (err) {
-        console.log(err);
-        alert("에러");
-        location.href = "/";
+      }
+      if (this.sort == "NOVEL_REVIEW_DESC") {
+        try {
+          const res = await axios.get(
+            `${process.env.VUE_APP_API_URL}/novel?novelId=${this.novelId}&genre=${this.genre}&sort=${this.sort}&reviewCount=${this.reviewCount}`
+          );
+          if (res.data.length) {
+            this.novels = this.novels.concat(res.data);
+            this.novelId = this.novels[this.novels.length - 1].novelId;
+            this.reviewCount = this.novels[this.novels.length - 1].reviewCount;
+            $state.loaded();
+            if (this.novelId / res.data.length == 0) {
+              $state.complete();
+            }
+          } else {
+            $state.complete();
+          }
+        } catch (err) {
+          console.log(err);
+        }
       }
     },
     detailNovelList(novelId) {
@@ -235,6 +243,10 @@ export default {
     );
     this.novels = novelList.data;
     this.novelId = this.novels[this.novels.length - 1].novelId;
+    await this.sleep(500);
+    if (!(this.novels.length === 0)) {
+      this.isLoading = false;
+    }
   },
   components: {
     InfiniteLoading,
