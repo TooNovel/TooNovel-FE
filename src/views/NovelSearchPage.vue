@@ -110,6 +110,7 @@ export default {
       selectedOption: "title",
       searchTitle: "",
       text: "",
+      createdDate: "",
       options: [
         { text: "전체", value: "" },
         { text: "로맨스", value: "ROMANCE" },
@@ -126,11 +127,15 @@ export default {
   async mounted() {
     try {
       this.searchTitle = this.$route.query.title || "";
+      this.author = this.$route.query.author || "";
+      this.selected = this.$route.query.genre || "";
       const res = await axios.get(
-        `${process.env.VUE_APP_API_URL}/novel?title=${this.searchTitle}`
+        `${process.env.VUE_APP_API_URL}/novel?title=${this.searchTitle}&author=${this.author}&genre=${this.selected}`
       );
       this.novels = res.data;
       this.novelId = this.novels[this.novels.length - 1].novelId || 0;
+      this.createdDate =
+        this.novels[this.novels.length - 1].createdDate || null;
     } catch (err) {
       console.log(err);
     }
@@ -139,11 +144,12 @@ export default {
     async infiniteHandler($state) {
       try {
         const res = await axios.get(
-          `${process.env.VUE_APP_API_URL}/novel?novelId=${this.novelId}&title=${this.searchTitle}&author=${this.author}&genre=${this.selected}`
+          `${process.env.VUE_APP_API_URL}/novel?novelId=${this.novelId}&title=${this.searchTitle}&author=${this.author}&genre=${this.selected}&created_date=${this.createdDate}&sort=CREATED_DATE_DESC`
         );
         if (res.data.length) {
           this.novels = this.novels.concat(res.data);
           this.novelId = this.novels[this.novels.length - 1].novelId;
+          this.createdDate = this.novels[this.novels.length - 1].createdDate;
           $state.loaded(); //데이터 로딩
           if (this.novelId / res.data.length == 0) {
             $state.complete(); //데이터가 없으면 로딩 끝
@@ -159,12 +165,7 @@ export default {
     },
     async search() {
       try {
-        const res = await axios.get(
-          `${process.env.VUE_APP_API_URL}/novel/?novelId=&title=${this.searchTitle}&author=${this.author}&genre=${this.selected}`
-        );
-        this.novels = [];
-        this.novels = res.data;
-        this.novelId = this.novels[this.novels.length - 1].novelId;
+        location.href = `/search?title=${this.searchTitle}&author=${this.author}&genre=${this.selected}`;
       } catch (err) {
         console.log(err);
       }

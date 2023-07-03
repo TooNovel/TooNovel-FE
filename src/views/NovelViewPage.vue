@@ -13,6 +13,23 @@
           </div>
         </ul>
       </b-row>
+      <div class="sort-row">
+        <div v-for="sort in sorts" :key="sort.key" class="sort-box">
+          <div class="iconList" @click="getSortRanking(sort.key)">
+            <div v-if="sort.key == 'NOVEL_LIKE_DESC'">
+              <h5>
+                <b-icon icon="hand-thumbs-up"></b-icon>&nbsp;{{ sort.value }}
+              </h5>
+            </div>
+            <div v-else-if="sort.key == 'NOVEL_GRADE_DESC'">
+              <h5><b-icon icon="star"></b-icon>&nbsp;{{ sort.value }}</h5>
+            </div>
+            <div v-else-if="sort.key == 'NOVEL_REVIEW_DESC'">
+              <h5><b-icon icon="chat-text"></b-icon>&nbsp;{{ sort.value }}</h5>
+            </div>
+          </div>
+        </div>
+      </div>
       <br />
       <b-row>
         <b-col
@@ -84,6 +101,10 @@ export default {
       isLoading: true,
       novelGrade: 0,
       genre: "",
+      sort: "",
+      likeCount: 0,
+      grade: 0.0,
+      reviewCount: 0,
       genres: [
         { key: "all", value: "전체" },
         { key: "FANTASY", value: "판타지" },
@@ -95,10 +116,15 @@ export default {
         { key: "LIGHT_NOVEL", value: "라이트노벨" },
         { key: "BL", value: "BL" },
       ],
+      sorts: [
+        { key: "NOVEL_LIKE_DESC", value: "좋아요 순" },
+        { key: "NOVEL_GRADE_DESC", value: "평점 순" },
+        { key: "NOVEL_REVIEW_DESC", value: "리뷰개수 순" },
+      ],
     };
   },
   async created() {
-    await this.sleep(1500);
+    await this.sleep(500);
     this.isLoading = false;
   },
   methods: {
@@ -108,40 +134,81 @@ export default {
       }
       this.genre = genre;
       try {
-        const res = await axios.get(
-          `${process.env.VUE_APP_API_URL}/novel?genre=${this.genre}`
-        );
-        this.novels = [];
-        this.novels = res.data;
+        location.href = `/novels?genre=${this.genre}&sort=${this.sort}`;
+      } catch (err) {
+        console.log(err);
+      }
+    },
+    async getSortRanking(sort) {
+      this.sort = sort;
+      try {
+        location.href = `/novels?genre=${this.genre}&sort=${this.sort}`;
       } catch (err) {
         console.log(err);
       }
     },
     async infiniteHandler($state) {
-      if (!this.novels.length) {
-        try {
-          const res = await axios.get(`${process.env.VUE_APP_API_URL}/novel`);
-          this.novels = res.data;
-          this.novelId = this.novels[this.novels.length - 1].novelId;
-          $state.loaded();
-        } catch (err) {
-          console.log(err);
-        }
-        return;
-      }
       try {
-        const res = await axios.get(
-          `${process.env.VUE_APP_API_URL}/novel?novelId=${this.novelId}&genre=${this.genre}`
-        );
-        if (res.data.length) {
-          this.novels = this.novels.concat(res.data);
-          this.novelId = this.novels[this.novels.length - 1].novelId;
-          $state.loaded();
-          if (this.novelId / res.data.length == 0) {
-            $state.complete();
+        if (this.sort == "NOVEL_LIKE_DESC") {
+          try {
+            const res = await axios.get(
+              `${process.env.VUE_APP_API_URL}/novel?novelId=${this.novelId}&genre=${this.genre}&sort=${this.sort}&likeCount=${this.likeCount}`
+            );
+            if (res.data.length) {
+              this.novels = this.novels.concat(res.data);
+              this.novelId = this.novels[this.novels.length - 1].novelId;
+              this.likeCount = this.novels[this.novels.length - 1].likeCount;
+              $state.loaded();
+              if (this.novelId / res.data.length == 0) {
+                $state.complete();
+              }
+            } else {
+              $state.complete();
+            }
+          } catch (err) {
+            console.log(err);
           }
-        } else {
-          $state.complete();
+        }
+        if (this.sort == "NOVEL_GRADE_DESC") {
+          try {
+            const res = await axios.get(
+              `${process.env.VUE_APP_API_URL}/novel?novelId=${this.novelId}&genre=${this.genre}&sort=${this.sort}&grade=${this.grade}`
+            );
+            if (res.data.length) {
+              this.novels = this.novels.concat(res.data);
+              this.novelId = this.novels[this.novels.length - 1].novelId;
+              this.grade = this.novels[this.novels.length - 1].grade;
+              $state.loaded();
+              if (this.novelId / res.data.length == 0) {
+                $state.complete();
+              }
+            } else {
+              $state.complete();
+            }
+          } catch (err) {
+            console.log(err);
+          }
+        }
+        if (this.sort == "NOVEL_REVIEW_DESC") {
+          try {
+            const res = await axios.get(
+              `${process.env.VUE_APP_API_URL}/novel?novelId=${this.novelId}&genre=${this.genre}&sort=${this.sort}&reviewCount=${this.reviewCount}`
+            );
+            if (res.data.length) {
+              this.novels = this.novels.concat(res.data);
+              this.novelId = this.novels[this.novels.length - 1].novelId;
+              this.reviewCount =
+                this.novels[this.novels.length - 1].reviewCount;
+              $state.loaded();
+              if (this.novelId / res.data.length == 0) {
+                $state.complete();
+              }
+            } else {
+              $state.complete();
+            }
+          } catch (err) {
+            console.log(err);
+          }
         }
       } catch (err) {
         console.log(err);
@@ -161,7 +228,11 @@ export default {
     },
   },
   async mounted() {
-    const novelList = await axios.get(`${process.env.VUE_APP_API_URL}/novel`);
+    this.genre = this.$route.query.genre || "";
+    this.sort = this.$route.query.sort || "";
+    const novelList = await axios.get(
+      `${process.env.VUE_APP_API_URL}/novel?genre=${this.genre}&sort=${this.sort}`
+    );
     this.novels = novelList.data;
     this.novelId = this.novels[this.novels.length - 1].novelId;
   },
