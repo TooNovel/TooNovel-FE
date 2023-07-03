@@ -32,10 +32,7 @@
         <b-button variant="info" @click="novelRequest()">신청하기</b-button>
       </div>
     </b-col>
-    <div v-if="isEmpty">
-      <h1 class="none-result">검색된 결과가 없습니다.</h1>
-    </div>
-    <div v-else>
+    <div>
       <div class="novel-list-box">
         <b-row>
           <b-col
@@ -87,6 +84,7 @@
         </b-row>
       </div>
       <infinite-loading
+        v-if="this.novelId != 0"
         @infinite="infiniteHandler"
         spinner="waveDots"
       ></infinite-loading>
@@ -103,7 +101,6 @@ export default {
   name: "WorkSearchPage",
   data() {
     return {
-      isEmpty: false,
       title: "",
       novels: [],
       novelId: 0,
@@ -133,33 +130,14 @@ export default {
         `${process.env.VUE_APP_API_URL}/novel?title=${this.searchTitle}`
       );
       this.novels = res.data;
-      if (!this.novels.length) {
-        this.isEmpty = true;
-      } else {
-        this.novelId = this.novels[this.novels.length - 1].novelId;
-      }
+      this.novelId = this.novels[this.novels.length - 1].novelId || 0;
     } catch (err) {
       console.log(err);
     }
   },
   methods: {
     async infiniteHandler($state) {
-      if (!this.novels.length) {
-        // 데이터가 없는 경우 초기 데이터를 가져옵니다.
-        try {
-          const res = await axios.get(
-            `${process.env.VUE_APP_API_URL}/novel?title=${this.searchTitle}`
-          );
-          this.novels = res.data;
-          this.novelId = this.novels[this.novels.length - 1].novelId;
-          $state.loaded();
-        } catch (err) {
-          console.log(err);
-        }
-        return;
-      }
       try {
-        console.log(this.novelId);
         const res = await axios.get(
           `${process.env.VUE_APP_API_URL}/novel?novelId=${this.novelId}&title=${this.searchTitle}&author=${this.author}&genre=${this.selected}`
         );
@@ -186,6 +164,7 @@ export default {
         );
         this.novels = [];
         this.novels = res.data;
+        this.novelId = this.novels[this.novels.length - 1].novelId;
       } catch (err) {
         console.log(err);
       }
